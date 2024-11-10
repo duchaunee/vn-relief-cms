@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
 
 export function Login() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const {
     register,
     handleSubmit,

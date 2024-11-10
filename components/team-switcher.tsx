@@ -29,7 +29,7 @@ export function TeamSwitcher() {
               ></Image>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">VNRelief</span>
-                <span className="truncate text-gray-300 text-xs">
+                <span className="truncate text-xs">
                   Nền tảng cứu trợ thiên tai
                 </span>
               </div>
