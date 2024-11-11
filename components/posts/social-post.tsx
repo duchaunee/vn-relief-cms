@@ -15,9 +15,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MoreHorizontal, MessageCircle, Share2, ThumbsUp } from "lucide-react";
 
 import { PostDialog } from "./dialog-post";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { useRouter } from "next/navigation";
 
 export default function Post() {
   const [isPostOpen, setIsPostOpen] = useState(false);
+  const isMobile = useIsMobile();
+  const router = useRouter();
 
   return (
     <PostDialog open={isPostOpen} setOpen={setIsPostOpen}>
@@ -70,7 +74,10 @@ export default function Post() {
             <Button
               variant="ghost"
               className="flex-1 gap-2"
-              onClick={() => setIsPostOpen(true)}
+              onClick={() => {
+                if (isMobile) router.push("/post/123");
+                else setIsPostOpen(true);
+              }}
             >
               <MessageCircle className="w-5 h-5" />
               Comment
