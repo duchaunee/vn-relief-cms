@@ -12,7 +12,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 214, 28%, 95%;
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
@@ -37,7 +37,7 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
-    --sidebar-background: 0 0% 98%;
+    --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
     --sidebar-primary-foreground: 0 0% 98%;
@@ -45,9 +45,27 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    /* notification */
+    --notification-background: 0 0% 100%;
+    --notification-foreground: 240 5.3% 26.1%;
+    /* post */
+    --post-background: 0 0% 100%;
+    --post-foreground: 240 5.3% 26.1%;
+    /* header */
+    --header-background: 0 0% 98%;
+    --header-foreground: 240 5.3% 26.1%;
+    /* icon */
+    --icon-background: 214, 14%, 90%;
+    --icon-hover-background: 220, 8%, 85%;
+    --icon-foreground: 215.4 16.3% 46.9%;
+    --icon-hover-foreground: 221, 83%, 53%
+    /* border status */
+    --warning-border: 0, 0, 100%;
+    --fail-border: 0, 0, 100%;
+    --success-border: 0, 0, 100%;
   }
   .dark {
-    --background: 222.2 84% 4.9%;
+    --background: 216, 28%, 7%;
     --foreground: 210 40% 98%;
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
@@ -71,7 +89,7 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
-    --sidebar-background: 221 39% 11%;
+    --sidebar-background: 221 39% 15%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
     --sidebar-primary-foreground: 0 0% 100%;
@@ -79,12 +97,32 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    /* notification */
+    --notification-background: 215, 28%, 17%;
+    --notification-foreground: 215.4 16.3% 46.9%;
+    /* post */
+    --post-background: 218, 39%, 13%;
+    --post-foreground: 240 5.3% 26.1%;
+    /* header */
+    --header-background: 221 39% 15%;
+    --header-foreground: 240 5.3% 26.1%;
+    /* icon */
+    --icon-background: 211, 43%, 23%;
+    --icon-hover-background: 211, 43%, 36%;
+    --icon-foreground: 215 20.2% 65.1%;
+    --icon-hover-foreground: 0, 0, 100%;
+    /* border status */
+    --warning-border: 0, 0, 100%;
+    --fail-border: 0, 0, 100%;
+    --success-border: 0, 0, 100%;
   }
 }
 
 @layer base {
   * {
     @apply border-border;
+    
+    scrollbar-width: thin;
   }
   body {
     @apply bg-background text-foreground;

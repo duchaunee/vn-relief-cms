@@ -7,10 +7,15 @@ import { Login } from "@/components/auth";
 
 import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+
+import Notification from "@/components/notification/notification";
+
 import { CommandMenu } from "@/components/shared-layout/command/command-dialog";
 
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useIsClient } from "@/hooks/use-client";
+import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 export const Header = () => {
   const isMobile = useIsMobile();
@@ -28,8 +33,9 @@ export const Header = () => {
           Cần cứu hộ khẩn cấp
         </Button>
       </div>
+      {isClient && !isMobile && <CommandMenu />}
       <div className="flex items-center gap-3 ml-auto">
-        {isClient && !isMobile && <CommandMenu />}
+        <Notification />
         <Login />
         <ModeToggle />
       </div>

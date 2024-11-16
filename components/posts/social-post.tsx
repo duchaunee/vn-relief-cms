@@ -25,7 +25,7 @@ export default function Post() {
 
   return (
     <PostDialog open={isPostOpen} setOpen={setIsPostOpen}>
-      <Card className="md:w-[580px] bg-sidebar">
+      <Card className="md:w-[580px] bg-post border border-red-500">
         <CardHeader className="flex flex-row items-center space-x-4 p-4">
           <Avatar className="w-10 h-10">
             <AvatarImage src="https://images.unsplash.com/photo-1457369804613-52c61a468e7d?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
@@ -46,7 +46,7 @@ export default function Post() {
         <CardContent className="p-0">
           <div className="relative aspect-[4/3] overflow-hidden">
             <Image
-              src="https://images.unsplash.com/reserve/LJIZlzHgQ7WPSh5KVTCB_Typewriter.jpg?q=80&w=1896&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              src="https://images.unsplash.com/photo-1495001258031-d1b407bc1776?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8cmFuZG9tfGVufDB8fDB8fHww"
               alt="Autumn landscape with a pink cherry blossom tree reflected in a lake"
               className="object-cover"
               fill
@@ -96,7 +96,7 @@ export default function Post() {
               <input
                 type="text"
                 placeholder="Write a comment..."
-                className="w-full px-4 py-2 bg-muted rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-4 py-2 bg-icon rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
           </div>

@@ -19,6 +19,20 @@ const roboto = Roboto({
 export const metadata: Metadata = {
   title: "VNRelief - Nền tảng cứu trợ thiên tai Việt Nam",
   description: "VNRelief - Nền tảng cứu trợ thiên tai Việt Nam",
+  icons: {
+    icon: [
+      {
+        media: '(prefers-color-scheme: light)',
+        url: '/logo/logo-vnrelief.png',
+        href: '/logo/logo-vnrelief.png',
+      },
+      {
+        media: '(prefers-color-scheme: dark)',
+        url: '/logo/logo-vnrelief.png',
+        href: '/logo/logo-vnrelief.png',
+      },
+    ],
+  },
 };
 
 export default function RootLayout({

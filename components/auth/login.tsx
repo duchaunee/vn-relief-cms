@@ -42,7 +42,7 @@ export function Login() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Đăng nhập</Button>
+        <Button variant="outline" className="bg-blue-600 text-white hover:bg-blue-700 hover:text-white">Đăng nhập</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
