@@ -55,17 +55,17 @@
     --header-background: 0 0% 98%;
     --header-foreground: 240 5.3% 26.1%;
     /* icon */
-    --icon-background: 214, 14%, 90%;
-    --icon-hover-background: 220, 8%, 85%;
+    --icon-background: 214, 28%, 95%;
+    --icon-hover-background: 214, 14%, 90%;
     --icon-foreground: 215.4 16.3% 46.9%;
-    --icon-hover-foreground: 221, 83%, 53%
+    --icon-hover-foreground: 221, 83%, 40%
     /* border status */
     --warning-border: 0, 0, 100%;
     --fail-border: 0, 0, 100%;
     --success-border: 0, 0, 100%;
   }
   .dark {
-    --background: 216, 28%, 7%;
+    --background: 210, 17%, 98%;
     --foreground: 210 40% 98%;
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;

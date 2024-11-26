@@ -22,22 +22,26 @@ export const Header = () => {
   const isClient = useIsClient();
 
   return (
-    <header className="sticky top-0 right-0 flex z-[10] h-14 shrink-0 items-center gap-2 border-b px-4 bg-header transition-[width,height] ease-linear">
+    <header className="sticky top-0 right-0 flex z-[10] h-14 shrink-0 items-center gap-2 px-4 bg-header transition-[width,height] ease-linear border-b border-b-gray-300">
       <div className={`flex items-center gap-2 ${isMobile ? "flex-1" : ""}`}>
         <SidebarTrigger
-          className="h-9 w-9 bg-secondary text-muted-foreground"
+          className="h-9 w-9 bg-icon text-muted-foreground hover:bg-icon-hover/background"
           size="icon"
         />
         <Separator orientation="vertical" className="mr-[2px] h-4" />
-        <Button className="bg-red-600 text-white hover:bg-red-500">
-          Cần cứu hộ khẩn cấp
-        </Button>
+        <Image
+          src={"/logo/logo-center.png"}
+          alt="logo-relief"
+          width={140}
+          height={140}
+          className="rounded-md mt-3"
+        ></Image>
       </div>
-      {isClient && !isMobile && <CommandMenu />}
       <div className="flex items-center gap-3 ml-auto">
+        {isClient && !isMobile && <CommandMenu />}
         <Notification />
         <Login />
-        <ModeToggle />
+        {/* <ModeToggle /> */}
       </div>
     </header>
   );

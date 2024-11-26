@@ -98,8 +98,7 @@ const SearchBar = ({
     <Button
       variant="outline"
       className={cn(
-        "h-9 min-w-[320px] flex items-center gap-2 justify-start text-sm",
-        "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
+        "h-9 min-w-[200px] flex items-center gap-2 justify-start text-sm",
         "bg-icon text-icon-foreground",
         "hover:bg-icon-hover/background"
       )}

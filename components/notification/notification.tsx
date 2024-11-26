@@ -165,7 +165,7 @@ export default function Notification() {
       message: "Team standup in 30 minutes",
       time: "25m",
       read: false,
-    }
+    },
   ]);
 
   const unreadCount = notifications.filter((n) => !n.read).length;
@@ -200,25 +200,39 @@ export default function Notification() {
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          className={mergeClasses(
+        <button
+          type="button"
+          aria-haspopup="dialog"
+          aria-expanded="false"
+          aria-controls="radix-:r2:"
+          data-state="closed"
+          className={cn(
+            "size-10 flex items-center justify-center rounded-lg",
             "relative bg-icon transition-colors duration-200",
-            "bg-icon text-icon-foreground",
-            "hover:bg-icon-hover/background hover:text-icon-hover/foreground",
-            "data-[state=open]:text-icon-hover/foreground",
+            "bg-icon text-gray-600",
+            "hover:bg-icon-hover/background hover:text-icon-hover/foreground"
           )}
         >
-          <Bell className="h-5 w-5"/>
-          {unreadCount > 0 && (
-            <Badge className="absolute -top-[6px] -right-[6px] h-5 w-5 flex items-center justify-center rounded-full bg-red-500 text-white text-xs transition-all animate-in zoom-in duration-200 px-1.5 hover:bg-red-500" >
-              {/* {unreadCount > 2 ? "99+" : unreadCount} */}
-              {unreadCount}
+          {/* {unreadCount > 0 && (
+            <Badge className="absolute -top-[6px] -right-[6px] h-[18px] w-[18px] flex items-center justify-center rounded-full bg-red-500 text-white text-xs transition-all animate-in zoom-in duration-200 px-1.5 hover:bg-red-500 z-100">
+              {unreadCount > 2 ? "99+" : unreadCount}
             </Badge>
-          )}
-          <span className="sr-only">Notifications</span>
-        </Button>
+          )} */}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="1.5"
+            stroke="currentColor"
+            className="w-6 h-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0M3.124 7.5A8.969 8.969 0 015.292 3m13.416 0a8.969 8.969 0 012.168 4.5"
+            />
+          </svg>
+        </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"

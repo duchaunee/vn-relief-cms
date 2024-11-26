@@ -17,7 +17,11 @@ import { dataSidebar } from "@/constants/side-bar";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="icon" {...props} className="flex-1">
+    <Sidebar
+      collapsible="icon"
+      {...props}
+      className="flex-1 border-r border-r-gray-300"
+    >
       <SidebarHeader>
         <TeamSwitcher />
       </SidebarHeader>

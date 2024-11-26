@@ -22,14 +22,14 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        media: '(prefers-color-scheme: light)',
-        url: '/logo/logo-vnrelief.png',
-        href: '/logo/logo-vnrelief.png',
+        media: "(prefers-color-scheme: light)",
+        url: "/logo/logo-vnrelief.png",
+        href: "/logo/logo-vnrelief.png",
       },
       {
-        media: '(prefers-color-scheme: dark)',
-        url: '/logo/logo-vnrelief.png',
-        href: '/logo/logo-vnrelief.png',
+        media: "(prefers-color-scheme: dark)",
+        url: "/logo/logo-vnrelief.png",
+        href: "/logo/logo-vnrelief.png",
       },
     ],
   },
@@ -61,7 +61,7 @@ export default function RootLayout({
                 <AppSidebar />
                 <SidebarInset>
                   <Header />
-                  <div className="pt-4">{children}</div>
+                  {children}
                 </SidebarInset>
               </ThemeProvider>
             </AppContextProvider>

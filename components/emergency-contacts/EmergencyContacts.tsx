@@ -45,6 +45,21 @@ const contacts = [
     role: "Quản lý",
     phone: "0956789012",
   },
+  {
+    name: "Judy Nguyen",
+    role: "Quản lý",
+    phone: "0956789012",
+  },
+  {
+    name: "Judy Nguyen",
+    role: "Quản lý",
+    phone: "0956789012",
+  },
+  {
+    name: "Judy Nguyen",
+    role: "Quản lý",
+    phone: "0956789012",
+  },
 ];
 
 const EmergencyContacts = () => {
@@ -64,7 +79,7 @@ const EmergencyContacts = () => {
     <React.Fragment>
       {/* tạo 1 thẻ div với width bằng với Cart để trông như "fixed" vẫn chiếm diện tích */}
       <div className="w-72"></div>
-      <Card className="fixed top-4 right-4 bottom-4 w-72 bg-header text-header-foreground h-full mt-14">
+      <Card className="fixed top-4 right-4 w-72 bg-header text-header-foreground mt-14 mb-4">
         <CardHeader className="pb-3">
           <CardTitle className="text-lg font-semibold">
             Liên hệ khẩn cấp
