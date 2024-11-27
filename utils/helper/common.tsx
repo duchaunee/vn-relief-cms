@@ -1,7 +1,47 @@
-// utils/status-badge.tsx
+"use client";
+
 import { STATUS_CONFIG } from "@/constants/bagde-status";
 import { cn } from "@/lib/utils";
 import { StatusBadgeProps, StatusType } from "@/types/status";
+
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { Ibreadcrumb } from "@/types/breadcrumb";
+import { redirect } from "next/navigation";
+import Link from "next/link";
+
+export const CustomBreadcrumb = ({ items = [] }: { items: Ibreadcrumb[] }) => {
+  return (
+    <div className="sticky top-0 left-0 w-full bg-white flex border-b border-b-gray-300 px-4 py-3">
+      <Breadcrumb className="flex bg-transparent">
+        <BreadcrumbList>
+          {items.map((item, index) => (
+            <>
+              <BreadcrumbItem key={`item-${index}`}>
+                {item.isPage ? (
+                  <BreadcrumbPage>{item.text}</BreadcrumbPage>
+                ) : (
+                  <BreadcrumbLink asChild={true}>
+                    <Link href={item.link}>{item.text}</Link>
+                  </BreadcrumbLink>
+                )}
+              </BreadcrumbItem>
+              {index < items.length - 1 && (
+                <BreadcrumbSeparator key={`separator-${index}`} />
+              )}
+            </>
+          ))}
+        </BreadcrumbList>
+      </Breadcrumb>
+    </div>
+  );
+};
 
 export const StatusBadge = ({
   status,
@@ -9,7 +49,6 @@ export const StatusBadge = ({
   showText = true,
 }: StatusBadgeProps) => {
   const config = STATUS_CONFIG[status];
-  console.log("\n🔥 ~ file: common.tsx:12 ~ config::\n", config);
 
   return (
     <span

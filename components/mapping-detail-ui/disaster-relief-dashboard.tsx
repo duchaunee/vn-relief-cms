@@ -7,12 +7,12 @@ import { Location } from "@/types/location";
 import { Card } from "../ui/card";
 
 interface DisasterReliefDashboardProps {
-  title: string;
+  titleList: string;
   locations: Location[];
 }
 
 export function DisasterReliefDashboard({
-  title,
+  titleList,
   locations,
 }: DisasterReliefDashboardProps) {
   const [selectedLocation, setSelectedLocation] = useState<Location>();
@@ -28,7 +28,7 @@ export function DisasterReliefDashboard({
       </div>
       <div className="flex-1">
         <LocationList
-          titleList="Danh sách các nơi đang cần cứu trợ khẩn cấp"
+          titleList={titleList}
           locations={locations}
           selectedLocation={selectedLocation}
           onLocationSelect={setSelectedLocation}

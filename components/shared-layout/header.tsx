@@ -22,7 +22,7 @@ export const Header = () => {
   const isClient = useIsClient();
 
   return (
-    <header className="sticky top-0 right-0 flex z-[10] h-14 shrink-0 items-center gap-2 px-4 bg-header transition-[width,height] ease-linear border-b border-b-gray-300">
+    <header className="sticky top-0 right-0 flex z-[20] h-14 shrink-0 items-center gap-2 px-4 bg-header transition-[width,height] ease-linear border-b border-b-gray-300">
       <div className={`flex items-center gap-2 ${isMobile ? "flex-1" : ""}`}>
         <SidebarTrigger
           className="h-9 w-9 bg-icon text-muted-foreground hover:bg-icon-hover/background"

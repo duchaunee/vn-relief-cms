@@ -1,3 +1,14 @@
+import { Fragment } from "react";
+
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+
 import { DisasterReliefDashboard } from "@/components/mapping-detail-ui/disaster-relief-dashboard";
 import { CommandMenu } from "@/components/shared-layout/command/command-dialog";
 import { CustomBreadcrumb } from "@/utils/helper/common";
@@ -77,7 +88,7 @@ export default function Page() {
     <div className="flex-1 flex flex-col relative">
       <CustomBreadcrumb items={breadcrumbItems} />
       <DisasterReliefDashboard
-        titleList="Danh sách các nơi đang cần cứu trợ khẩn cấp"
+        titleList="Danh sách các nơi HAHAHA"
         locations={SAMPLE_LOCATIONS}
       />
     </div>
