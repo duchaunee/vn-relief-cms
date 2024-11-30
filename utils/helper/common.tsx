@@ -18,7 +18,7 @@ import Link from "next/link";
 
 export const CustomBreadcrumb = ({ items = [] }: { items: Ibreadcrumb[] }) => {
   return (
-    <div className="sticky top-0 left-0 w-full bg-white flex border-b border-b-gray-300 px-4 py-3">
+    <div className="fixed lg:sticky z-[15] top-14 left-0 w-full bg-white flex border-b border-b-gray-300 px-4 py-3 h-12">
       <Breadcrumb className="flex bg-transparent">
         <BreadcrumbList>
           {items.map((item, index) => (
