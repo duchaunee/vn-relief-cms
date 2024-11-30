@@ -3,7 +3,6 @@ import { Roboto } from "next/font/google";
 
 import AppContextProvider from "@/components/providers/app-context-provider";
 import TanStackProvider from "@/components/providers/tan-stack-provider";
-import { ThemeProvider } from "@/components/providers/theme-provider";
 
 import { Header } from "@/components/shared-layout/header";
 
@@ -52,18 +51,11 @@ export default function RootLayout({
         <TanStackProvider>
           <SidebarProvider>
             <AppContextProvider>
-              <ThemeProvider
-                attribute="class"
-                defaultTheme="system"
-                enableSystem
-                disableTransitionOnChange
-              >
-                <AppSidebar />
-                <SidebarInset>
-                  <Header />
-                  {children}
-                </SidebarInset>
-              </ThemeProvider>
+              <AppSidebar />
+              <SidebarInset>
+                <Header />
+                {children}
+              </SidebarInset>
             </AppContextProvider>
           </SidebarProvider>
         </TanStackProvider>
