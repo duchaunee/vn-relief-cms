@@ -28,7 +28,6 @@ export const Header = () => {
           className="h-9 w-9 bg-icon text-muted-foreground hover:bg-icon-hover/background"
           size="icon"
         />
-        <Separator orientation="vertical" className="mr-[2px] h-4" />
         <Image
           src={"/logo/logo-center.png"}
           alt="logo-relief"
