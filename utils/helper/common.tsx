@@ -15,6 +15,7 @@ import {
 import { Ibreadcrumb } from "@/types/breadcrumb";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { Fragment } from "react";
 
 export const CustomBreadcrumb = ({ items = [] }: { items: Ibreadcrumb[] }) => {
   return (
@@ -22,8 +23,8 @@ export const CustomBreadcrumb = ({ items = [] }: { items: Ibreadcrumb[] }) => {
       <Breadcrumb className="flex bg-transparent">
         <BreadcrumbList>
           {items.map((item, index) => (
-            <>
-              <BreadcrumbItem key={`item-${index}`}>
+            <Fragment key={`item-${index}`}>
+              <BreadcrumbItem>
                 {item.isPage ? (
                   <BreadcrumbPage>{item.text}</BreadcrumbPage>
                 ) : (
@@ -35,7 +36,7 @@ export const CustomBreadcrumb = ({ items = [] }: { items: Ibreadcrumb[] }) => {
               {index < items.length - 1 && (
                 <BreadcrumbSeparator key={`separator-${index}`} />
               )}
-            </>
+            </Fragment>
           ))}
         </BreadcrumbList>
       </Breadcrumb>

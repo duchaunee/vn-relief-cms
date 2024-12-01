@@ -23,9 +23,9 @@ export const STATUS_CONFIG: Record<StatusType, StatusConfig> = {
     icon: <CheckCircle2 className="w-4 h-4" />,
   },
   "Đang tìm đội cứu trợ": {
-    background: "bg-purple-50",
-    text: "text-purple-600",
-    border: "border-purple-200",
+    background: "bg-orange-50",
+    text: "text-orange-600",
+    border: "border-orange-200",
     icon: <Search className="w-4 h-4" />,
   },
   "Đã có kế hoạch cứu trợ": {

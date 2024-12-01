@@ -5,5 +5,9 @@ export default function MappingDetailLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <Fragment>{children}</Fragment>;
+  return (
+    <div className="w-full flex-1 flex flex-col mt-[104px] lg:mt-0 lg:static fixed">
+      {children}
+    </div>
+  );
 }

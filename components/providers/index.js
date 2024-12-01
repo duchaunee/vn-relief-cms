@@ -1,4 +1,4 @@
 // export { AppBridgeProvider } from "./AppBridgeProvider";
-export { AppContextProvider } from "./app-context-provider";
-export { TanStackProvider } from "./tan-stack-provider";
-export { ThemeProvider } from "./theme-provider";
+export { default as AppContextProvider } from "./app-context-provider";
+export { default as TanStackProvider } from "./tan-stack-provider";
+export { default as ThemeProvider } from "./theme-provider";

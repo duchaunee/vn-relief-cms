@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 
-import AppContextProvider from "@/components/providers/app-context-provider";
-import TanStackProvider from "@/components/providers/tan-stack-provider";
+import { AppContextProvider, TanStackProvider } from "@/components/providers";
 
 import { Header } from "@/components/shared-layout/header";
 
-import "./globals.css";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { Toaster } from "@/components/ui/toaster";
+
 import { AppSidebar } from "@/components/app-sidebar";
+
+import "./globals.css";
 
 const roboto = Roboto({
   weight: ["100", "300", "400", "500", "700", "900"],
@@ -55,6 +57,7 @@ export default function RootLayout({
               <SidebarInset>
                 <Header />
                 {children}
+                <Toaster />
               </SidebarInset>
             </AppContextProvider>
           </SidebarProvider>

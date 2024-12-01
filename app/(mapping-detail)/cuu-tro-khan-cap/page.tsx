@@ -1,7 +1,7 @@
 import { DisasterReliefDashboard } from "@/components/mapping-detail-ui/disaster-relief-dashboard";
 import { CommandMenu } from "@/components/shared-layout/command/command-dialog";
-import { CustomBreadcrumb } from "@/utils/helper/common";
 import { Ibreadcrumb } from "@/types/breadcrumb";
+import { Fragment } from "react";
 
 const SAMPLE_LOCATIONS = [
   {
@@ -117,19 +117,6 @@ const SAMPLE_LOCATIONS = [
   },
 ];
 
-const breadcrumbItems: Ibreadcrumb[] = [
-  {
-    text: "Thông tin các nơi đang cần cứu trợ khẩn cấp",
-    link: "/haha",
-    isPage: false,
-  },
-  // {
-  //   text: "Thông tin cần cứu trợ",
-  //   link: "",
-  //   isPage: true,
-  // },
-];
-
 const titleList = {
   title: "Danh sách các nơi đang cần cứu trợ khẩn cấp",
   button: "Cần cứu trợ khẩn cấp",
@@ -137,12 +124,9 @@ const titleList = {
 
 export default function Page() {
   return (
-    <div className="w-full flex-1 flex flex-col mt-[104px] lg:mt-0 lg:static fixed">
-      <CustomBreadcrumb items={breadcrumbItems} />
-      <DisasterReliefDashboard
-        titleList={titleList}
-        locations={SAMPLE_LOCATIONS}
-      />
-    </div>
+    <DisasterReliefDashboard
+      titleList={titleList}
+      locations={SAMPLE_LOCATIONS}
+    />
   );
 }
