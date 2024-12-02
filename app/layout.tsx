@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 
-import { AppContextProvider, TanStackProvider } from "@/components/providers";
-
 import { Header } from "@/components/shared-layout/header";
 
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
@@ -11,6 +9,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { AppSidebar } from "@/components/app-sidebar";
 
 import "./globals.css";
+import TanStackProvider from "@/providers/tan-stack-provider";
+// import AppContextProvider from "@/providers/app-context-provider/breadcrumb-context-provider";
 
 const roboto = Roboto({
   weight: ["100", "300", "400", "500", "700", "900"],
@@ -52,14 +52,14 @@ export default function RootLayout({
       <body className={roboto.className}>
         <TanStackProvider>
           <SidebarProvider>
-            <AppContextProvider>
-              <AppSidebar />
-              <SidebarInset>
-                <Header />
-                {children}
-                <Toaster />
-              </SidebarInset>
-            </AppContextProvider>
+            {/* <AppContextProvider> */}
+            <AppSidebar />
+            <SidebarInset>
+              <Header />
+              {children}
+              <Toaster />
+            </SidebarInset>
+            {/* </AppContextProvider> */}
           </SidebarProvider>
         </TanStackProvider>
       </body>

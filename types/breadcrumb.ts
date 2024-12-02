@@ -1,5 +1,8 @@
 export interface Ibreadcrumb {
-  text: string;
-  link: string;
-  isPage: boolean;
+  url: string;
+  "bread-crum": {
+    text: string;
+    link: string | null;
+    isPage: boolean;
+  }[];
 }

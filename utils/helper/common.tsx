@@ -1,8 +1,14 @@
 "use client";
 
+import { Fragment } from "react";
+
 import { STATUS_CONFIG } from "@/constants/bagde-status";
 import { cn } from "@/lib/utils";
+
 import { StatusBadgeProps, StatusType } from "@/types/status";
+import { Ibreadcrumb } from "@/types/breadcrumb";
+
+import { breadcrumbItems } from "@/constants";
 
 import {
   Breadcrumb,
@@ -12,32 +18,51 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Ibreadcrumb } from "@/types/breadcrumb";
-import { redirect } from "next/navigation";
-import Link from "next/link";
-import { Fragment } from "react";
 
-export const CustomBreadcrumb = ({ items = [] }: { items: Ibreadcrumb[] }) => {
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+export const CustomBreadcrumb = () => {
+  const currentPathname = usePathname();
+
+  const getCurrentBreadcrumbItems = (): Ibreadcrumb["bread-crum"] | null => {
+    const pathParts = currentPathname.split("/");
+    const matchedItem = breadcrumbItems.find((item) => {
+      const itemPathParts = item.url.split("/");
+      if (itemPathParts.length !== pathParts.length) return false;
+      for (let i = 0; i < itemPathParts.length; i++) {
+        if (itemPathParts[i] === "[id]" || itemPathParts[i] === pathParts[i])
+          continue;
+        return false;
+      }
+      return true;
+    });
+    return matchedItem ? matchedItem["bread-crum"] : null;
+  };
+
+  const items = getCurrentBreadcrumbItems();
+
   return (
     <div className="fixed lg:sticky z-[15] top-14 left-0 w-full bg-white flex border-b border-b-gray-300 px-4 py-3 h-12">
       <Breadcrumb className="flex bg-transparent">
         <BreadcrumbList>
-          {items.map((item, index) => (
-            <Fragment key={`item-${index}`}>
-              <BreadcrumbItem>
-                {item.isPage ? (
-                  <BreadcrumbPage>{item.text}</BreadcrumbPage>
-                ) : (
-                  <BreadcrumbLink asChild={true}>
-                    <Link href={item.link}>{item.text}</Link>
-                  </BreadcrumbLink>
+          {items &&
+            items.map((item, index) => (
+              <Fragment key={`item-${index}`}>
+                <BreadcrumbItem>
+                  {item.isPage ? (
+                    <BreadcrumbPage>{item.text}</BreadcrumbPage>
+                  ) : (
+                    <BreadcrumbLink asChild={true}>
+                      <Link href={item.link}>{item.text}</Link>
+                    </BreadcrumbLink>
+                  )}
+                </BreadcrumbItem>
+                {index < items.length - 1 && (
+                  <BreadcrumbSeparator key={`separator-${index}`} />
                 )}
-              </BreadcrumbItem>
-              {index < items.length - 1 && (
-                <BreadcrumbSeparator key={`separator-${index}`} />
-              )}
-            </Fragment>
-          ))}
+              </Fragment>
+            ))}
         </BreadcrumbList>
       </Breadcrumb>
     </div>
