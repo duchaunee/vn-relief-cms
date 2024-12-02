@@ -33,25 +33,20 @@ const CopyTemplateText = ({ content, title }: ICopyTemplateText) => {
 
   return (
     <div className="space-y-2">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between">
         <h3 className="font-medium">{title}</h3>
         <Button
           onClick={handleCopy}
           variant="outline"
           size="sm"
-          className="gap-2"
+          className="gap-2 w-fit my-1 lg:my-0"
         >
           {copied ? (
-            <>
-              <CheckCircle className="h-4 w-4 text-green-500" />
-              Đã sao chép
-            </>
+            <CheckCircle className="h-4 w-4 text-green-500" />
           ) : (
-            <>
-              <Copy className="h-4 w-4" />
-              Sao chép
-            </>
+            <Copy className="h-4 w-4" />
           )}
+          Sao chép
         </Button>
       </div>
       <Textarea

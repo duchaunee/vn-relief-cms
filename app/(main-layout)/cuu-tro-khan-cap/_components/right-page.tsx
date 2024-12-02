@@ -3,9 +3,26 @@ import QRCodeWithLogo from "@/components/qr-code/qr-code-logo";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { templateTextRelief } from "@/constants/template-text-relief";
-import { Copy, Share2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { CheckCircle, Copy, Share2 } from "lucide-react";
+import { useState } from "react";
 
 const RightPage = () => {
+  const { toast } = useToast();
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async (content: string) => {
+    try {
+      await navigator.clipboard.writeText(content);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      toast({
+        variant: "destructive",
+        description: "Không thể sao chép. Vui lòng thử lại",
+      });
+    }
+  };
   return (
     <Card className="rounded-sm self-start">
       <CardContent className="p-6 space-y-4">
@@ -19,8 +36,17 @@ const RightPage = () => {
         <div className="!mt-0 py-3 border-b border-b-gray-300">
           <div className="flex items-center justify-between">
             <div className="text-sm font-medium">Link chia sẻ thông tin</div>
-            <Button variant="ghost" size="icon">
-              <Copy className="w-4 h-4" />
+            <Button
+              onClick={handleCopy}
+              variant="outline"
+              size="sm"
+              className="gap-2 w-fit my-1 lg:my-0"
+            >
+              {copied ? (
+                <CheckCircle className="h-4 w-4 text-green-500" />
+              ) : (
+                <Copy className="h-4 w-4" />
+              )}
             </Button>
           </div>
           <div className="text-sm text-muted-foreground truncate">

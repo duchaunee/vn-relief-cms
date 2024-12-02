@@ -15,6 +15,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 
 interface ModalProps {
   open: boolean;
@@ -56,7 +57,13 @@ const RequestReliefModal = ({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right">
+      <SheetContent
+        side="right"
+        className={cn(
+          "data-[state=closed]:duration-150 data-[state=open]:duration-150",
+          "transition-transform duration-150 ease-custom-bezier"
+        )}
+      >
         {(title || description) && (
           <SheetHeader className="text-left">
             {title && <SheetTitle>{title}</SheetTitle>}

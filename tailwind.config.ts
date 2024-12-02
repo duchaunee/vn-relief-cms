@@ -11,6 +11,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      transitionTimingFunction: {
+        "custom-bezier": "cubic-bezier(0, 0, 0.2, 1)",
+      },
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
