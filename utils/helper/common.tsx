@@ -43,29 +43,35 @@ export const CustomBreadcrumb = () => {
   const items = getCurrentBreadcrumbItems();
 
   return (
-    <div className="fixed lg:sticky z-[15] top-14 left-0 w-full bg-white flex border-b border-b-gray-300 px-4 py-3 h-12">
-      <Breadcrumb className="flex bg-transparent">
-        <BreadcrumbList>
-          {items &&
-            items.map((item, index) => (
-              <Fragment key={`item-${index}`}>
-                <BreadcrumbItem>
-                  {item.isPage ? (
-                    <BreadcrumbPage>{item.text}</BreadcrumbPage>
-                  ) : (
-                    <BreadcrumbLink asChild={true}>
-                      <Link href={item.link}>{item.text}</Link>
-                    </BreadcrumbLink>
+    <Fragment>
+      <div
+        className={cn(
+          "hidden lg:flex z-[15] sticky top-14 left-0 w-full bg-white border-b border-b-gray-300 px-4 py-3 min-h-12 lg:mb-0"
+        )}
+      >
+        <Breadcrumb className="flex bg-transparent">
+          <BreadcrumbList>
+            {items &&
+              items.map((item, index) => (
+                <Fragment key={`item-${index}`}>
+                  <BreadcrumbItem>
+                    {item.isPage ? (
+                      <BreadcrumbPage>{item.text}</BreadcrumbPage>
+                    ) : (
+                      <BreadcrumbLink asChild={true}>
+                        <Link href={item.link}>{item.text}</Link>
+                      </BreadcrumbLink>
+                    )}
+                  </BreadcrumbItem>
+                  {index < items.length - 1 && (
+                    <BreadcrumbSeparator key={`separator-${index}`} />
                   )}
-                </BreadcrumbItem>
-                {index < items.length - 1 && (
-                  <BreadcrumbSeparator key={`separator-${index}`} />
-                )}
-              </Fragment>
-            ))}
-        </BreadcrumbList>
-      </Breadcrumb>
-    </div>
+                </Fragment>
+              ))}
+          </BreadcrumbList>
+        </Breadcrumb>
+      </div>
+    </Fragment>
   );
 };
 

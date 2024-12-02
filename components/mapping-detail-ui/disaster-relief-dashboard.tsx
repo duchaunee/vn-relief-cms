@@ -24,23 +24,27 @@ export function DisasterReliefDashboard({
   const [expand, setExpand] = useState(false);
 
   return (
-    <div className={cn("flex flex-col lg:flex-row lg:flex-1 lg:p-4")}>
+    <div className="w-full flex-1 flex">
       <div
         className={cn(
-          "h-[400px] w-full lg:w-0 lg:min-h-full transition-all duration-500 ease-in-out",
-          expand
-            ? "h-0 lg:w-0 lg:basis-0 lg:flex-none left-0"
-            : "lg:flex-1 mr-4"
+          "relative flex flex-col lg:flex-row flex-1 lg:p-4 overflow-auto"
         )}
       >
-        <ReliefMap
-          expand={expand}
-          locations={locations}
-          selectedLocation={selectedLocation}
-          onLocationSelect={setSelectedLocation}
-        />
-      </div>
-      <div className={cn("flex-1")}>
+        <div
+          className={cn(
+            "sticky top-14 mb-14 lh:top-0 lg:mb-0 h-[400px] w-full lg:w-0 lg:min-h-full transition-all duration-500 ease-in-out",
+            expand
+              ? "h-0 lg:w-0 lg:basis-0 lg:flex-none left-0"
+              : "lg:flex-1 mr-4"
+          )}
+        >
+          <ReliefMap
+            expand={expand}
+            locations={locations}
+            selectedLocation={selectedLocation}
+            onLocationSelect={setSelectedLocation}
+          />
+        </div>
         <LocationList
           expand={expand}
           setExpand={setExpand}
