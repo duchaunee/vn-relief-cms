@@ -1,7 +1,9 @@
+"use client";
+
 import { DisasterReliefDashboard } from "@/components/mapping-detail-ui/disaster-relief-dashboard";
-import { CommandMenu } from "@/components/shared-layout/command/command-dialog";
-import { Ibreadcrumb } from "@/types/breadcrumb";
-import { Fragment } from "react";
+import RequestReliefModal from "@/components/modal/request-relief-modal";
+import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import RequestReliefContext from "@/providers/app-context-provider/request-relief-provider";
 
 const SAMPLE_LOCATIONS = [
   {
@@ -124,9 +126,11 @@ const titleList = {
 
 export default function Page() {
   return (
-    <DisasterReliefDashboard
-      titleList={titleList}
-      locations={SAMPLE_LOCATIONS}
-    />
+    <RequestReliefContext>
+      <DisasterReliefDashboard
+        titleList={titleList}
+        locations={SAMPLE_LOCATIONS}
+      />
+    </RequestReliefContext>
   );
 }

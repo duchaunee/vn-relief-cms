@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Location } from "@/types/location";
 import TooltipContainer from "../tooltip-container/tooltip-container";
 import { ExpandIcon } from "../icon/expand-icon";
+import { useRequestReliefContext } from "@/providers/app-context-provider/request-relief-provider";
 interface LocationListProps {
   expand: boolean;
   setExpand: Dispatch<SetStateAction<boolean>>;
@@ -114,6 +115,9 @@ export function LocationList({
   onLocationSelect,
   selectedLocation,
 }: LocationListProps) {
+  const { open, setOpen } = useRequestReliefContext();
+  console.log("\n🔥 ~ file: location-list.tsx:119 ~ open::\n", open);
+
   return (
     <div className="flex-1 flex h-full min-h-0 flex-col bg-[#fcfcfc] border border-gray-300">
       <div className="fixed z-[20] h-14 lg:h-auto lg:static top-14 left-0 right-0 flex items-center justify-between p-2 px-2 lg:px-5 bg-[#f1f1f1] border-b border-b-gray-300">
@@ -122,7 +126,13 @@ export function LocationList({
           <div className="lg:hidden block flex-1 w-full border border-gray-300 p-2 rounded-md text-sm bg-white">
             <input type="text" placeholder="Tìm kiếm..." className="w-full" />
           </div>
-          <Button className="flex-1 lg:flex-none bg-red-600 text-white hover:bg-red-500">
+          <Button
+            onClick={() => {
+              setOpen((prev) => !prev);
+              console.log("================");
+            }}
+            className="flex-1 lg:flex-none bg-red-600 text-white hover:bg-red-500"
+          >
             {titleList.button}
           </Button>
           <ExpandIcon

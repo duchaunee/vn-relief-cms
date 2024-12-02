@@ -7,6 +7,9 @@ import { Location } from "@/types/location";
 import { Card } from "../ui/card";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
+import RequestReliefModal from "../modal/request-relief-modal";
+import { useRequestReliefContext } from "@/providers/app-context-provider/request-relief-provider";
+import { DialogHeader, DialogTitle } from "../ui/dialog";
 
 interface DisasterReliefDashboardProps {
   titleList: {
@@ -23,6 +26,7 @@ export function DisasterReliefDashboard({
   const [selectedLocation, setSelectedLocation] = useState<Location>();
   const [expand, setExpand] = useState(false);
 
+  const { open, setOpen } = useRequestReliefContext();
   return (
     <div className="w-full flex-1 flex">
       <div
@@ -54,6 +58,20 @@ export function DisasterReliefDashboard({
           onLocationSelect={setSelectedLocation}
         />
       </div>
+
+      <RequestReliefModal
+        open={open}
+        onOpenChange={() => setOpen((prev: boolean) => !prev)}
+        title="Mẫu cứu trợ khẩn cấp"
+        children={
+          <>
+            <DialogHeader>
+              <DialogTitle>Modal Title</DialogTitle>
+            </DialogHeader>
+            <div className="p-4">Modal content goes here</div>
+          </>
+        }
+      />
     </div>
   );
 }
