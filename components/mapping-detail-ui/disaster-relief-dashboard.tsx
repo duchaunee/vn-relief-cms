@@ -7,7 +7,7 @@ import { Location } from "@/types/location";
 import { Card } from "../ui/card";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
-import RequestReliefModal from "../modal/request-relief-modal";
+import RequestReliefModal from "../modal/request-rescue-modal";
 import { useRequestReliefContext } from "@/providers/app-context-provider/request-relief-provider";
 import { DialogHeader, DialogTitle } from "../ui/dialog";
 
