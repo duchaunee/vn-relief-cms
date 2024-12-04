@@ -129,7 +129,6 @@ export function LocationList({
           <Button
             onClick={() => {
               setOpen((prev) => !prev);
-              console.log("================");
             }}
             className="flex-1 lg:flex-none bg-red-600 text-white hover:bg-red-500"
           >

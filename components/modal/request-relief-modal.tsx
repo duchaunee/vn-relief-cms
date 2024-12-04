@@ -34,34 +34,16 @@ const RequestReliefModal = ({
   children,
   footer,
 }: ModalProps) => {
-  console.log("\n🔥 ~ file: request-relief-modal.tsx:36 ~ open::\n", open);
   const isMobile = useIsMobile();
-
-  if (isMobile) {
-    return (
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="sm:max-w-[425px]">
-          {(title || description) && (
-            <DialogHeader>
-              {title && <DialogTitle>{title}</DialogTitle>}
-              {description && (
-                <DialogDescription>{description}</DialogDescription>
-              )}
-            </DialogHeader>
-          )}
-          {children}
-        </DialogContent>
-      </Dialog>
-    );
-  }
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
-        side="right"
+        side={isMobile ? "left" : "right"}
         className={cn(
-          "data-[state=closed]:duration-150 data-[state=open]:duration-150",
-          "transition-transform duration-150 ease-custom-bezier"
+          "data-[state=closed]:duration-200 data-[state=open]:duration-200",
+          "transition-transform duration-200",
+          "lg:w-[700px] w-full sm:max-w-[700px]"
         )}
       >
         {(title || description) && (
