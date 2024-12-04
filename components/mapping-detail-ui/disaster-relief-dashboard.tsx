@@ -7,9 +7,10 @@ import { Location } from "@/types/location";
 import { Card } from "../ui/card";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
-import RequestReliefModal from "../modal/request-rescue-modal/request-rescue-modal";
+import ModalContainer from "../modal/modal-container";
 import { useRequestReliefContext } from "@/providers/app-context-provider/request-relief-provider";
 import { DialogHeader, DialogTitle } from "../ui/dialog";
+import RescueRequestForm from "../modal/request-rescue-modal/rescue-form";
 
 interface DisasterReliefDashboardProps {
   titleList: {
@@ -59,18 +60,11 @@ export function DisasterReliefDashboard({
         />
       </div>
 
-      <RequestReliefModal
+      <ModalContainer
         open={open}
         onOpenChange={() => setOpen((prev: boolean) => !prev)}
-        title="Mẫu cứu trợ khẩn cấp"
-        children={
-          <>
-            <DialogHeader>
-              <DialogTitle>Modal Title</DialogTitle>
-            </DialogHeader>
-            <div className="p-4">Modal content goes here</div>
-          </>
-        }
+        title="Cần cứu trợ khẩn cấp"
+        children={<RescueRequestForm />}
       />
     </div>
   );
