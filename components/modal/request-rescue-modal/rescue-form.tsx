@@ -208,6 +208,7 @@ export default function RescueRequestForm() {
                 </p>
                 <div className="flex items-center w-fit h-11 border rounded-lg overflow-hidden border-gray-300">
                   <button
+                    type="button"
                     onClick={() => {}}
                     className="h-full flex items-center justify-center bg-gray-100 border border-gray-300 text-center text-gray-900 text-sm p-4 hover:bg-gray-200"
                   >
@@ -220,6 +221,7 @@ export default function RescueRequestForm() {
                     className="block h-full text-center bg-white border-x border-x-gray-300 w-[100px] px-3"
                   />
                   <button
+                    type="button"
                     onClick={() => {}}
                     className="h-full flex items-center justify-center bg-gray-100 border border-gray-300 text-center text-gray-900 text-sm p-4 hover:bg-gray-200"
                   >

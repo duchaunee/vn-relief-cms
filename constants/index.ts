@@ -2,6 +2,21 @@ import { Ibreadcrumb } from "@/types/breadcrumb";
 
 export const breadcrumbItems: Ibreadcrumb[] = [
   {
+    url: "/dang-nhap",
+    "bread-crum": [
+      {
+        text: "Trang chủ",
+        link: "/",
+        isPage: false,
+      },
+      {
+        text: "Đăng nhập vào nền tảng",
+        link: "/dang-nhap",
+        isPage: true,
+      },
+    ],
+  },
+  {
     url: "/cuu-tro-khan-cap",
     "bread-crum": [
       {

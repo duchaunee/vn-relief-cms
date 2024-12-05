@@ -20,7 +20,7 @@ const Middle = () => {
           <Button
             variant="outline"
             size="sm"
-            className={cn("mt-4 border border-gray-300 hover:bg-gray-200")}
+            className={cn("mt-4 border border-gray-300 bg-gray-200")}
           >
             Đăng ký cứu trợ
             <ArrowRight className="w-6 h-6" />

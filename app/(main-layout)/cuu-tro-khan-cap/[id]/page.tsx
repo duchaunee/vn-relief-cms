@@ -18,10 +18,7 @@ export default function RescueRequest() {
 
   return (
     <div className="w-full p-0 lg:p-4">
-      <BackButton
-        text="Các nơi đang cần cứu trợ khẩn cấp"
-        onClick={handleBack}
-      />
+      <BackButton text="Thông tin cần cứu trợ VN133" onClick={handleBack} />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <LeftPage />
         <MiddlePage />

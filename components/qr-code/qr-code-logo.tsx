@@ -32,7 +32,6 @@ const QRCodeWithLogo = () => {
       }
 
       const data = await response.json();
-      console.log("\n🔥 ~ file: qr-code-logo.tsx:34 ~ data::\n", data);
 
       if (data.qrCodeUrl) {
         setQrCodeUrl(data.qrCodeUrl);

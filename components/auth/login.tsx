@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
+import Link from "next/link";
 
 export function Login() {
   const [open, setOpen] = useState(false);
@@ -40,16 +41,17 @@ export function Login() {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          className="bg-blue-600 text-white hover:bg-blue-700 hover:text-white"
-        >
-          Đăng nhập
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+    <Fragment>
+      {/* <Dialog open={open} onOpenChange={setOpen}> */}
+      {/* <DialogTrigger asChild> */}
+      <Button
+        variant="outline"
+        className="bg-blue-600 text-white hover:bg-blue-700 hover:text-white"
+      >
+        <Link href="/dang-nhap">Đăng nhập</Link>
+      </Button>
+      {/* </DialogTrigger> */}
+      {/* <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Create an account</DialogTitle>
         </DialogHeader>
@@ -99,7 +101,8 @@ export function Login() {
             Register
           </Button>
         </form>
-      </DialogContent>
-    </Dialog>
+      </DialogContent> */}
+      {/* </Dialog> */}
+    </Fragment>
   );
 }
