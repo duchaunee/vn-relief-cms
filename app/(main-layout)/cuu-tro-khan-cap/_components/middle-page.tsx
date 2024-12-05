@@ -1,6 +1,8 @@
+import RescueIcon from "@/components/icon/rescue-icon";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { ImagePlus } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { ArrowRight, HandHeart, HeartHandshake, ImagePlus } from "lucide-react";
 
 const Middle = () => {
   return (
@@ -15,6 +17,14 @@ const Middle = () => {
           <div className="border-2 border-dashed rounded-lg py-10 flex items-center justify-center">
             <span>Chưa có đoàn nào</span>
           </div>
+          <Button
+            variant="outline"
+            size="sm"
+            className={cn("mt-4 border border-gray-300 hover:bg-gray-200")}
+          >
+            Đăng ký cứu trợ
+            <ArrowRight className="w-6 h-6" />
+          </Button>
         </CardContent>
       </Card>
       <Card className="w-full rounded-sm">
