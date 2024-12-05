@@ -63,7 +63,13 @@ export function DisasterReliefDashboard({
       <ModalContainer
         open={open}
         onOpenChange={() => setOpen((prev: boolean) => !prev)}
-        title="Cần cứu trợ khẩn cấp"
+        title="Gửi thông tin cứu trợ khẩn cấp"
+        description="Việc gửi đơn sẽ cần xác minh đề phòng trường hợp giả mạo"
+        button={{
+          primary: "Gửi đơn cứu trợ",
+          secondary: "Lưu bản nháp",
+        }}
+        formId="rescue-form-id"
         children={<RescueRequestForm />}
       />
     </div>

@@ -4,27 +4,39 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
+  SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 
 import "@/styles/custom-shadcn.css";
+import { ArrowLeft, X } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => boolean;
   title?: string;
   description?: string;
+  button?: {
+    primary: string;
+    secondary: string;
+  };
   children: React.ReactNode;
-  footer?: React.ReactNode;
+  formId?: string;
 }
 
 const ModalContainer = ({
   open,
   onOpenChange,
   title,
+  description,
+  button,
   children,
+  formId,
 }: ModalProps) => {
+  const isMobile = useIsMobile();
+
   /**
    * ==== Solution 1: useEffect
    *
@@ -49,32 +61,65 @@ const ModalContainer = ({
       <SheetContent
         side="left"
         className={cn(
-          "data-[state=closed]:duration-200 data-[state=open]:duration-200",
-          "transition-transform duration-200",
-          "p-0",
-          "lg:w-[750px] w-full sm:max-w-[800px] h-screen", // Thêm h-screen
-          "flex flex-col" // Thêm flex layout
+          "transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out",
+          "data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left",
+          "p-0 bg-white",
+          "lg:w-[700px] w-full sm:max-w-[700px] h-screen", // Thêm h-screen
+          "flex flex-col gap-0" // Thêm flex layout
         )}
         id="modal-container"
       >
-        {title && (
-          <SheetHeader className=" text-left flex-none px-8 lg:px-12 pt-8 lg:pb-0">
-            {title && <SheetTitle>{title}</SheetTitle>}
-          </SheetHeader>
-        )}
-        <div className="flex-1 overflow-y-auto p-8 lg:p-12 lg:pt-0">
+        <SheetHeader
+          className={cn(
+            "text-left flex-none px-6 py-3",
+            "bg-gray-200",
+            "border-b border-b-gray-300"
+          )}
+        >
+          {isMobile ? (
+            <SheetTrigger asChild>
+              <button className="w-full flex items-center gap-2">
+                <ArrowLeft className="w-6 h-6" />
+                <SheetTitle className="tracking-tight text-lg font-bold text-primary">
+                  {title}
+                </SheetTitle>
+              </button>
+            </SheetTrigger>
+          ) : (
+            <div className="w-full flex items-center justify-between">
+              <SheetTitle className="tracking-tight text-lg font-bold text-primary">
+                {title}
+              </SheetTitle>
+              <SheetTrigger>
+                <Button
+                  size="icon"
+                  className={cn(
+                    "text-black bg-transparent hover:bg-gray-200 hover:text-red-500 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center shadow-none"
+                  )}
+                >
+                  <X className="!h-7 !w-7" />
+                </Button>
+              </SheetTrigger>
+            </div>
+          )}
+        </SheetHeader>
+        <div className="flex-1 overflow-y-auto lg:px-8 lg:py-8 px-3 py-6">
           {children}
         </div>
-        <div className="absolute bottom-0 right-0 bg-gray-200 w-full py-4 px-6 flex items-center justify-between border-t border-t-gray-300">
-          <span className="italic text-[13px] text-gray-500">
-            Việc gửi đơn sẽ cần xác minh đề phòng trường hợp giả mạo
+        <div className="sticky bottom-0 right-0 bg-gray-200 w-full py-4 px-6 flex items-center lg:justify-between justify-center border-t border-t-gray-300">
+          <span className="italic text-[13px] text-gray-500 hidden lg:block">
+            {description}
           </span>
-          <div className="flex gap-4 items-center">
-            <Button variant="outline" className="px-6 py-4">
-              Lưu bản nháp
+          <div className="flex gap-3 items-center">
+            <Button variant="outline" className="px-6 py-4 bg-white">
+              {button?.secondary}
             </Button>
-            <Button className="px-6 py-4 bg-red-500 hover:bg-red-600">
-              Gửi đơn cứu trợ
+            <Button
+              type="submit"
+              form={formId}
+              className="px-6 py-4 bg-red-500 hover:bg-red-600"
+            >
+              {button?.primary}
             </Button>
           </div>
         </div>

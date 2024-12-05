@@ -41,6 +41,18 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Ẩn spinner trên Chrome, Edge, và Safari */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Ẩn spinner trên Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
 #__next {
   height: 100%;
 }
