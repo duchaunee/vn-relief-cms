@@ -25,6 +25,8 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { RequiredLabel } from "@/components/require-field/require-label";
+import MinusIcon from "@/components/icon/minus-icon";
+import PlusIcon from "@/components/icon/plus-icon";
 
 export default function RescueRequestForm() {
   const [formData, setFormData] = useState({
@@ -202,45 +204,27 @@ export default function RescueRequestForm() {
                   Số người cần hỗ trợ
                 </Label>
                 <p className="text-sm text-gray-500">
-                  Nhập số lượng người cần được hỗ trợ
+                  Nhập số lượng người cần được hỗ trợ (ước lượng)
                 </p>
-                <div className="flex items-center space-x-3 mt-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="icon"
-                    className="h-10 w-10"
-                    onClick={() => {
-                      const newValue = Math.max(0, formData.numberOfPeople - 1);
-                      setFormData((prev) => ({
-                        ...prev,
-                        numberOfPeople: newValue,
-                      }));
-                    }}
+                <div className="flex items-center w-fit h-11 border rounded-lg overflow-hidden border-gray-300">
+                  <button
+                    onClick={() => {}}
+                    className="h-full flex items-center justify-center bg-gray-100 border border-gray-300 text-center text-gray-900 text-sm p-4 hover:bg-gray-200"
                   >
-                    <Minus className="h-4 w-4" />
-                  </Button>
-                  <Input
-                    name="numberOfPeople"
+                    <MinusIcon />
+                  </button>
+                  <input
                     type="number"
-                    className="w-28 text-center h-10"
-                    value={formData.numberOfPeople}
-                    onChange={handleInputChange}
+                    defaultValue="1"
+                    min={0}
+                    className="block h-full text-center bg-white border-x border-x-gray-300 w-[100px] px-3"
                   />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="icon"
-                    className="h-10 w-10"
-                    onClick={() => {
-                      setFormData((prev) => ({
-                        ...prev,
-                        numberOfPeople: prev.numberOfPeople + 1,
-                      }));
-                    }}
+                  <button
+                    onClick={() => {}}
+                    className="h-full flex items-center justify-center bg-gray-100 border border-gray-300 text-center text-gray-900 text-sm p-4 hover:bg-gray-200"
                   >
-                    <Plus className="h-4 w-4" />
-                  </Button>
+                    <PlusIcon />
+                  </button>
                 </div>
               </div>
             </div>
