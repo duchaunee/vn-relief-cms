@@ -1,6 +1,6 @@
 "use client";
 
-import { CustomBreadcrumb } from "@/utils/helper/common";
+import { CustomBreadcrumb } from "@/components/custom-bread-crumb/custom-bread-crumb";
 
 export default function MainLayout({
   children,

@@ -4,8 +4,6 @@ import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import BackButton from "@/components/button/back-header";
-import { useRouter } from "next/navigation";
 
 const reliefActivities = [
   {
@@ -93,20 +91,9 @@ export default function ReliefRegistrationForm() {
     }));
   };
 
-  // ===== router
-  const router = useRouter();
-
-  const handleBack = () => {
-    router.push("/");
-  };
-
-  React.useEffect(() => {
-    router.prefetch("/");
-  }, [router]);
-
   return (
     <div className="w-full p-0 lg:p-4">
-      <BackButton text="Đăng nhập nền tảng" onClick={handleBack} />
+      {/* <BackButton text="Đăng nhập nền tảng" onClick={handleBack} /> */}
       <form
         onSubmit={handleSubmit}
         className="space-y-8 max-w-2xl mx-auto p-6 lg:my-6 bg-white"
