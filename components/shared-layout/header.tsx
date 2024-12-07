@@ -32,13 +32,13 @@ export const Header = () => {
         />
         <Separator
           orientation="vertical"
-          className="shrink-0 bg-gray-300 w-[1px] mr-2 h-6"
+          className="shrink-0 bg-gray-300 w-[1px] lg:mr-2 h-6"
         />
         <Image
           src={"/logo/logo-header.png"}
           alt="logo-relief"
-          width={160}
-          height={160}
+          width={isMobile ? 130 : 160}
+          height={isMobile ? 130 : 160}
           className="rounded-md mt-[6px]"
         ></Image>
       </div>
