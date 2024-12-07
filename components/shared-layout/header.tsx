@@ -25,17 +25,21 @@ export const Header = () => {
 
   return (
     <header className="sticky top-0 right-0 lg:mb-0 flex z-[30] h-14 shrink-0 items-center gap-2 px-4 bg-header transition-[width,height] ease-linear border-b border-b-gray-300">
-      <div className={`flex items-center gap-3 ${isMobile ? "flex-1" : ""}`}>
+      <div className={`flex items-center gap-2 ${isMobile ? "flex-1" : ""}`}>
         <SidebarTrigger
-          className="h-9 w-9 bg-icon text-black hover:bg-icon-hover/background"
+          className="h-9 w-9 text-black hover:bg-[#f4f4f5]"
           size="icon"
+        />
+        <Separator
+          orientation="vertical"
+          className="shrink-0 bg-gray-300 w-[1px] mr-2 h-6"
         />
         <Image
           src={"/logo/logo-header.png"}
           alt="logo-relief"
-          width={120}
-          height={120}
-          className="rounded-md"
+          width={160}
+          height={160}
+          className="rounded-md mt-[6px]"
         ></Image>
       </div>
       <div className="flex items-center gap-3 ml-auto">
