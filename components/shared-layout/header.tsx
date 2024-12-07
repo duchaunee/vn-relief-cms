@@ -27,7 +27,7 @@ export const Header = () => {
     <header className="sticky top-0 right-0 lg:mb-0 flex z-[30] h-14 shrink-0 items-center gap-2 px-4 bg-header transition-[width,height] ease-linear border-b border-b-gray-300">
       <div className={`flex items-center gap-3 ${isMobile ? "flex-1" : ""}`}>
         <SidebarTrigger
-          className="h-9 w-9 bg-icon text-muted-foreground hover:bg-icon-hover/background"
+          className="h-9 w-9 bg-icon text-black hover:bg-icon-hover/background"
           size="icon"
         />
         <Image
