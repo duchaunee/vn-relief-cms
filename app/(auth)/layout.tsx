@@ -11,7 +11,7 @@ export default function AuthLayout({
   return (
     <div className="flex-1 w-full flex flex-col">
       <CustomBreadcrumb />
-      <div className="relative">
+      <div className="relative h-full">
         <Image
           src={"/logo/VN-right.png"}
           alt="logo-relief"

@@ -17,6 +17,7 @@ import { useIsClient } from "@/hooks/use-client";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { Fragment } from "react";
+import Link from "next/link";
 
 export const Header = () => {
   const isMobile = useIsMobile();
@@ -40,7 +41,12 @@ export const Header = () => {
       <div className="flex items-center gap-3 ml-auto">
         {isClient && !isMobile && <CommandMenu />}
         <Notification />
-        <Login />
+        <Button
+          variant="outline"
+          className="bg-blue-600 text-white hover:bg-blue-700 hover:text-white"
+        >
+          <Link href="/dang-nhap">Đăng nhập</Link>
+        </Button>
         {/* <ModeToggle /> */}
       </div>
     </header>

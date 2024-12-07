@@ -11,7 +11,27 @@ export const breadcrumbItems: Ibreadcrumb[] = [
       },
       {
         text: "Đăng nhập vào nền tảng",
+        link: null,
+        isPage: true,
+      },
+    ],
+  },
+  {
+    url: "/dang-ky",
+    "bread-crum": [
+      {
+        text: "Trang chủ",
+        link: "/",
+        isPage: false,
+      },
+      {
+        text: "Đăng nhập vào nền tảng",
         link: "/dang-nhap",
+        isPage: false,
+      },
+      {
+        text: "Đăng ký tài khoản",
+        link: null,
         isPage: true,
       },
     ],
