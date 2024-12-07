@@ -37,8 +37,8 @@ export const Header = () => {
         <Image
           src={"/logo/logo-header.png"}
           alt="logo-relief"
-          width={isMobile ? 130 : 160}
-          height={isMobile ? 130 : 160}
+          width={140}
+          height={140}
           className="rounded-md mt-[6px]"
         ></Image>
       </div>
