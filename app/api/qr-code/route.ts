@@ -18,9 +18,9 @@ export async function POST(request: Request) {
         config: {
           body: "square",
           //post logo to https://api.qrcode-monkey.com/qr/uploadImage to get url
-          logo: "4057f57666ee0ba8d359a2dea617475c7ba08166.png",
+          logo: "ac7aaae042e5cd1df530c68997b8b642330b80a2.png",
         },
-        size: 500,
+        size: 1000,
         download: false,
         file: "png",
       }),
