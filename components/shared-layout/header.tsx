@@ -34,13 +34,15 @@ export const Header = () => {
           orientation="vertical"
           className="shrink-0 bg-gray-300 w-[1px] lg:mr-2 h-6"
         />
-        <Image
-          src={"/logo/logo-header.png"}
-          alt="logo-relief"
-          width={140}
-          height={140}
-          className="rounded-md mt-[6px]"
-        ></Image>
+        <Link href="/">
+          <Image
+            src={"/logo/logo-header.png"}
+            alt="logo-relief"
+            width={140}
+            height={140}
+            className="rounded-md mt-[6px]"
+          ></Image>
+        </Link>
       </div>
       <div className="flex items-center gap-3 ml-auto">
         {isClient && !isMobile && <CommandMenu />}
