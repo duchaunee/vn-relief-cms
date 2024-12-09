@@ -36,8 +36,8 @@ export const dataSidebar = {
   ],
   navMain: [
     {
-      title: "Playground",
-      url: "#",
+      title: "Cứu trợ khẩn cấp",
+      url: "/cuu-tro-khan-cap",
       icon: SquareTerminal,
       isActive: true,
       items: [

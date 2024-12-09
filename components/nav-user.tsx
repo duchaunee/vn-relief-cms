@@ -57,10 +57,12 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Thông tin tài khoản
-              </DropdownMenuItem>
+              <Link href="/tai-khoan">
+                <DropdownMenuItem>
+                  <BadgeCheck />
+                  Thông tin tài khoản
+                </DropdownMenuItem>
+              </Link>
               <DropdownMenuItem>
                 <CreditCard />
                 Billing
