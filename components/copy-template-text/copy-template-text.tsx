@@ -24,6 +24,7 @@ const CopyTemplateText = ({ content, title }: ICopyTemplateText) => {
       // });
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
+      console.log("\n🔥 ~ file: copy-template-text.tsx:27 ~ err::\n", err);
       toast({
         variant: "destructive",
         description: "Không thể sao chép. Vui lòng thử lại",
@@ -52,7 +53,7 @@ const CopyTemplateText = ({ content, title }: ICopyTemplateText) => {
       <Textarea
         value={content}
         readOnly
-        className="min-h-[300px] font-medium resize-none py-0"
+        className="min-h-[300px] leading-5 resize-none py-0"
       />
     </div>
   );

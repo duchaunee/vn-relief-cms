@@ -1,15 +1,12 @@
 "use client";
 
-import { Fragment, useState } from "react";
+import { useState } from "react";
 import { ReliefMap } from "./relief-map";
 import { LocationList } from "./location-list";
 import { Location } from "@/types/location";
-import { Card } from "../ui/card";
-import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 import ModalContainer from "../modal/modal-container";
 import { useRequestReliefContext } from "@/providers/app-context-provider/request-relief-provider";
-import { DialogHeader, DialogTitle } from "../ui/dialog";
 import RescueRequestForm from "../modal/request-rescue-modal/rescue-form";
 
 interface DisasterReliefDashboardProps {
@@ -62,7 +59,7 @@ export function DisasterReliefDashboard({
 
       <ModalContainer
         open={open}
-        onOpenChange={() => setOpen((prev: boolean) => !prev)}
+        onOpenChange={(value: boolean) => setOpen(value)}
         title="Gửi thông tin cứu trợ khẩn cấp"
         description="Việc gửi đơn sẽ cần xác minh đề phòng trường hợp giả mạo"
         button={{
@@ -70,8 +67,9 @@ export function DisasterReliefDashboard({
           secondary: "Lưu bản nháp",
         }}
         formId="rescue-form-id"
-        children={<RescueRequestForm />}
-      />
+      >
+        <RescueRequestForm />
+      </ModalContainer>
     </div>
   );
 }

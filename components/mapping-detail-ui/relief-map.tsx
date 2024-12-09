@@ -52,7 +52,7 @@ export function ReliefMap({
         >
           {locations.map((location) => (
             <Marker
-              key={location.id}
+              key={location.name}
               position={location.coordinates}
               onClick={() => onLocationSelect(location)}
             />

@@ -62,6 +62,10 @@ axiosInstance.interceptors.response.use(
           return axios(originalRequest);
         }
       } catch (refreshError) {
+        console.log(
+          "\n🔥 ~ file: axios.ts:65 ~ refreshError::\n",
+          refreshError
+        );
         // Nếu refresh token failed, logout
         handleLogout();
       }

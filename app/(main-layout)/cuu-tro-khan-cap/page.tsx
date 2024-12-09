@@ -1,8 +1,6 @@
 "use client";
 
 import { DisasterReliefDashboard } from "@/components/mapping-detail-ui/disaster-relief-dashboard";
-import RequestReliefModal from "@/components/modal/modal-container";
-import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import RequestReliefContext from "@/providers/app-context-provider/request-relief-provider";
 
 const SAMPLE_LOCATIONS = [

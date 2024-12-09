@@ -37,6 +37,51 @@ export const breadcrumbItems: Ibreadcrumb[] = [
     ],
   },
   {
+    url: "/thong-bao",
+    "bread-crum": [
+      {
+        text: "Trang chủ",
+        link: "/",
+        isPage: false,
+      },
+      {
+        text: "Tất cả thông báo",
+        link: null,
+        isPage: true,
+      },
+    ],
+  },
+  {
+    url: "/tai-khoan",
+    "bread-crum": [
+      {
+        text: "Trang chủ",
+        link: "/",
+        isPage: false,
+      },
+      {
+        text: "Thông tin tài khoản",
+        link: null,
+        isPage: true,
+      },
+    ],
+  },
+  {
+    url: "/ve-chung-toi",
+    "bread-crum": [
+      {
+        text: "Trang chủ",
+        link: "/",
+        isPage: false,
+      },
+      {
+        text: "Về chúng tôi",
+        link: null,
+        isPage: true,
+      },
+    ],
+  },
+  {
     url: "/cuu-tro-khan-cap",
     "bread-crum": [
       {

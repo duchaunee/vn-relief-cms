@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Sheet,
   SheetContent,
@@ -15,7 +15,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ModalProps {
   open: boolean;
-  onOpenChange: (open: boolean) => boolean;
+  onOpenChange: (open: boolean) => void;
   title?: string;
   description?: string;
   button?: {

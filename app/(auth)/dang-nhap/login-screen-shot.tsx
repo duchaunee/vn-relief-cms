@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+
 import {
   emptyScreenshot,
   screenshot1,
@@ -9,6 +10,7 @@ import {
   screenshot3,
   screenshot4,
 } from "@/public/images";
+
 import { cn } from "@/lib/utils";
 
 const screenshots = [screenshot1, screenshot2, screenshot3, screenshot4];

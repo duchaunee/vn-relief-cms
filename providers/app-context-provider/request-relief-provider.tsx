@@ -4,7 +4,7 @@ import { Dispatch, createContext, useContext, useState } from "react";
 
 interface IContext {
   open: boolean;
-  setOpen: Dispatch<boolean>;
+  setOpen: (value: React.SetStateAction<boolean>) => void;
 }
 
 const RequestReliefProvider = createContext<IContext>({

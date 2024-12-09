@@ -5,14 +5,11 @@ import {
   CalendarIcon,
   Camera,
   MapPin,
-  Minus,
-  Plus,
   QrCode,
   UserRound,
   Users,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -41,7 +38,9 @@ export default function RescueRequestForm() {
     region: "",
   });
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -49,14 +48,14 @@ export default function RescueRequestForm() {
     }));
   };
 
-  const handleSelectChange = (value, name) => {
+  const handleSelectChange = (value: string, name: string) => {
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(formData);
   };
@@ -331,7 +330,7 @@ export default function RescueRequestForm() {
                 <Select
                   value={formData.region}
                   onValueChange={(value) => handleSelectChange(value, "region")}
-                  className="mt-2"
+                  // className="mt-2"
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Chọn khu vực" />

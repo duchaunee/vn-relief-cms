@@ -39,14 +39,14 @@ export const CustomBreadcrumb = () => {
     });
     return matchedItem ? matchedItem["bread-crum"] : null;
   };
-  const items = getCurrentBreadcrumbItems();
+  const items = getCurrentBreadcrumbItems()!;
 
   return (
     <Fragment>
       {items.length > 1 && (
         <BackButton
-          text={items?.at(-1).text}
-          onClick={() => router.push(items?.at(-2).link)}
+          text={items?.at(-1)!.text}
+          onClick={() => router.push(items?.at(-2)!.link || "/")}
         />
       )}
       <div
@@ -64,7 +64,7 @@ export const CustomBreadcrumb = () => {
                       <BreadcrumbPage>{item.text}</BreadcrumbPage>
                     ) : (
                       <BreadcrumbLink asChild={true}>
-                        <Link href={item.link}>{item.text}</Link>
+                        <Link href={item.link as string}>{item.text}</Link>
                       </BreadcrumbLink>
                     )}
                   </BreadcrumbItem>

@@ -2,26 +2,19 @@
 
 import { Separator } from "@radix-ui/react-separator";
 
-import { ModeToggle } from "@/components/button/mode-toggle";
-import { Login } from "@/components/auth";
-
-import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
 import Notification from "@/components/notification/notification";
 
-import { CommandMenu } from "@/components/shared-layout/command/command-dialog";
-
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useIsClient } from "@/hooks/use-client";
-import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { Fragment } from "react";
 import Link from "next/link";
+import { dataSidebar } from "@/constants/side-bar";
+import { NavUser } from "../nav-user";
+import Hotline from "../hotline";
 
 export const Header = () => {
   const isMobile = useIsMobile();
-  const isClient = useIsClient();
 
   return (
     <header className="sticky top-0 right-0 lg:mb-0 flex z-[30] h-14 shrink-0 items-center gap-2 px-4 bg-header transition-[width,height] ease-linear border-b border-b-gray-300">
@@ -30,10 +23,7 @@ export const Header = () => {
           className="h-9 w-9 text-black hover:bg-[#f4f4f5]"
           size="icon"
         />
-        <Separator
-          orientation="vertical"
-          className="shrink-0 bg-gray-300 w-[1px] lg:mr-2 h-6"
-        />
+        <Separator className="shrink-0 bg-gray-300 w-[1px] lg:mr-2 h-6" />
         <Link href="/">
           <Image
             src={"/logo/logo-header.png"}
@@ -44,16 +34,13 @@ export const Header = () => {
           ></Image>
         </Link>
       </div>
-      <div className="flex items-center gap-3 ml-auto">
-        {isClient && !isMobile && <CommandMenu />}
+      <div className="flex items-center gap-2.5 ml-auto">
+        {/* {isClient && !isMobile && <CommandMenu />} */}
+        <Hotline />
+        <Separator className="shrink-0 bg-gray-300 w-[1px] h-6" />
         <Notification />
-        <Button
-          variant="outline"
-          className="bg-blue-600 text-white hover:bg-blue-700 hover:text-white"
-        >
-          <Link href="/dang-nhap">Đăng nhập</Link>
-        </Button>
-        {/* <ModeToggle /> */}
+        {/* <ButtonSignIn /> */}
+        <NavUser user={dataSidebar.user} />
       </div>
     </header>
   );

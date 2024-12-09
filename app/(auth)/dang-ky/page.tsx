@@ -1,8 +1,10 @@
 "use client";
 
 import * as React from "react";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+
 import { cn } from "@/lib/utils";
 
 const reliefActivities = [
@@ -55,7 +57,6 @@ export default function Register() {
   const [selectedActivities, setSelectedActivities] = React.useState<string[]>(
     []
   );
-  const [openTeams, setOpenTeams] = React.useState(false);
   const [formData, setFormData] = React.useState({
     name: "",
     phone: "",

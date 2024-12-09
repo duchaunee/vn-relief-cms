@@ -5,14 +5,12 @@ export interface Location {
     lat: number;
     lng: number;
   };
-  groupRequest: [
-    {
-      id: string;
-      name: string;
-      status: string;
-      address: string;
-      description: string;
-      imageUrl?: string;
-    }
-  ];
+  groupRequest: {
+    id: number;
+    name: string;
+    status: string;
+    address: string;
+    description: string;
+    imageUrl?: string;
+  }[];
 }

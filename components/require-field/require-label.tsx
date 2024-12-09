@@ -1,5 +1,4 @@
 import React from "react";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
@@ -20,18 +19,24 @@ const RequiredLabel = ({
 };
 
 // FormField component with validation styling
-const FormInput = React.forwardRef(({ error, ...props }, ref) => {
-  return (
-    <Input
-      ref={ref}
-      {...props}
-      className={cn(
-        props.className,
-        error && "border-red-500 focus-visible:ring-red-500"
-      )}
-    />
-  );
-});
+interface FormInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  error?: boolean; // Định nghĩa `error` là boolean (hoặc kiểu khác nếu cần)
+}
+
+const FormInput = React.forwardRef<HTMLInputElement, FormInputProps>(
+  ({ error, className, ...props }, ref) => {
+    return (
+      <Input
+        ref={ref}
+        {...props}
+        className={cn(
+          className,
+          error && "border-red-500 focus-visible:ring-red-500"
+        )}
+      />
+    );
+  }
+);
 
 FormInput.displayName = "FormInput";
 

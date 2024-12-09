@@ -5,13 +5,14 @@ import { cn } from "@/lib/utils";
 import { StatusBadge } from "@/utils/helper/common";
 
 import { Badge } from "../ui/badge";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 
 import { Location } from "@/types/location";
 import TooltipContainer from "../tooltip-container/tooltip-container";
 import { ExpandIcon } from "../icon/expand-icon";
 import { useRequestReliefContext } from "@/providers/app-context-provider/request-relief-provider";
+import Image from "next/image";
 interface LocationListProps {
   expand: boolean;
   setExpand: Dispatch<SetStateAction<boolean>>;
@@ -31,6 +32,11 @@ const LocationItem = ({
 }: Omit<LocationListProps, "expand" | "titleList" | "locations"> & {
   location: Location;
 }) => {
+  console.log(
+    "\n🔥 ~ file: location-list.tsx:34 ~ selectedLocation ~ onLocationSelect::\n",
+    selectedLocation,
+    onLocationSelect
+  );
   return (
     <div key={location.name} className="bg-gray-50">
       <div className="px-5 py-3 flex items-center gap-2 border-b border-gray-300 shadow-sm bg-gray-100">
@@ -45,6 +51,7 @@ const LocationItem = ({
       <div className="">
         {location.groupRequest.map((request) => (
           <div
+            key={request.name}
             className={cn(
               "px-5 py-3 transition-colors bg-white",
               "border-b border-gray-300",
@@ -54,10 +61,12 @@ const LocationItem = ({
           >
             <div
               className="flex gap-4"
-              onClick={() => onLocationSelect(request)}
+              // onClick={() => onLocationSelect(request)}
             >
-              <img
-                src={request.imageUrl}
+              <Image
+                src={request.imageUrl!}
+                width={70}
+                height={70}
                 alt={request.name}
                 className="h-[70px] rounded-md aspect-square object-cover"
               />
@@ -116,7 +125,7 @@ export function LocationList({
   selectedLocation,
 }: LocationListProps) {
   const { open, setOpen } = useRequestReliefContext();
-  console.log("\n🔥 ~ file: location-list.tsx:119 ~ open::\n", open);
+  console.log("\n🔥 ~ file: location-list.tsx:127 ~ open::\n", open);
 
   return (
     <div className="flex-1 flex h-full min-h-0 flex-col bg-[#fcfcfc] border border-gray-300">
@@ -153,7 +162,7 @@ export function LocationList({
           <div className="flex flex-col">
             {locations.map((location) => (
               <LocationItem
-                key={location?.id || location.name}
+                key={location.name}
                 setExpand={setExpand}
                 location={location}
                 onLocationSelect={onLocationSelect}

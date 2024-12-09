@@ -17,6 +17,7 @@ const RightPage = () => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
+      console.log("\n🔥 ~ file: right-page.tsx:20 ~ err::\n", err);
       toast({
         variant: "destructive",
         description: "Không thể sao chép. Vui lòng thử lại",
@@ -37,8 +38,10 @@ const RightPage = () => {
           <div className="flex items-center justify-between">
             <div className="text-sm font-medium">Link chia sẻ thông tin</div>
             <Button
-              onClick={handleCopy}
               variant="outline"
+              onClick={() =>
+                handleCopy("https://vnrelief.com/cuu-tro-khan-cap/123")
+              }
               size="sm"
               className="gap-2 w-fit my-1 lg:my-0"
             >

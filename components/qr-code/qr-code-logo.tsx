@@ -2,20 +2,14 @@
 
 import React from "react";
 import { Skeleton } from "../ui/skeleton";
+import Image from "next/image";
 
 const QRCodeWithLogo = () => {
-  const currentUrl = React.useRef("");
   const [qrCodeUrl, setQrCodeUrl] = React.useState("");
 
   React.useEffect(() => {
-    currentUrl.current = window.location.href;
+    generateQRCode();
   }, []);
-
-  React.useEffect(() => {
-    if (currentUrl.current) {
-      generateQRCode();
-    }
-  }, [currentUrl.current]);
 
   const generateQRCode = async () => {
     try {
@@ -24,7 +18,7 @@ const QRCodeWithLogo = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ url: currentUrl.current }),
+        body: JSON.stringify({ url: window.location.href }),
       });
 
       if (!response.ok) {
@@ -49,8 +43,10 @@ const QRCodeWithLogo = () => {
   return (
     <div className="w-fit relative">
       {qrCodeUrl ? (
-        <img
+        <Image
           src={qrCodeUrl}
+          width={160}
+          height={160}
           alt="QR Code"
           className="w-40 h-40 border border-gray-300 rounded-sm"
         />

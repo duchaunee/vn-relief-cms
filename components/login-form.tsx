@@ -1,12 +1,6 @@
 "use client";
 
-// import { NavLink, useNavigate } from "react-router-dom";
-// import { logo } from "../../assets/images";
 import { useForm } from "react-hook-form";
-// import { ButtonLoading } from "../../components/Button";
-import { useContext, useState } from "react";
-// import axiosInstance from "../../axios";
-// import toast from "react-hot-toast";
 import { Input } from "@/components/ui/input";
 import {
   FormControl,
@@ -15,42 +9,40 @@ import {
   FormMessage,
   Form,
 } from "@/components/ui/form";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 
 const LoginForm = () => {
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  // const router = useRouter();
+  // const [loading, setLoading] = useState(false);
   const form = useForm();
 
-  const handleLogin = async () => {
-    // setLoading(true);
-    // await new Promise((resolve, reject) => {
-    //   setTimeout(async () => {
-    //     try {
-    //       const logged = await axiosInstance.post("/auth/login", {
-    //         email: form.getValues("email"),
-    //         password: form.getValues("password"),
-    //       });
-    //       if (logged.message === "Login successfully") {
-    //         setLoading(false);
-    //         toast.success(logged.message);
-    //         window.location.reload();
-    //         resolve();
-    //       }
-    //     } catch (error) {
-    //       setLoading(false);
-    //       reject(error);
-    //       toast.error(error.message);
-    //       console.log("Error:", error);
-    //     }
-    //   }, 500);
-    // });
-  };
+  // const handleLogin = async () => {
+  // setLoading(true);
+  // await new Promise((resolve, reject) => {
+  //   setTimeout(async () => {
+  //     try {
+  //       const logged = await axiosInstance.post("/auth/login", {
+  //         email: form.getValues("email"),
+  //         password: form.getValues("password"),
+  //       });
+  //       if (logged.message === "Login successfully") {
+  //         setLoading(false);
+  //         toast.success(logged.message);
+  //         window.location.reload();
+  //         resolve();
+  //       }
+  //     } catch (error) {
+  //       setLoading(false);
+  //       reject(error);
+  //       toast.error(error.message);
+  //       console.log("Error:", error);
+  //     }
+  //   }, 500);
+  // });
+  // };
 
   return (
     <Card

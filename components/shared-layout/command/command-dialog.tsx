@@ -23,7 +23,6 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -99,14 +98,14 @@ const SearchBar = ({
       variant="outline"
       className={cn(
         "h-9 min-w-[200px] flex items-center gap-2 justify-start text-sm",
-        "bg-icon text-icon-foreground",
+        "bg-header text-icon-foreground",
         "hover:bg-icon-hover/background"
       )}
       onClick={() => setOpen(true)}
     >
       <SearchIcon className="mr-2 h-4 w-4" />
       Tìm kiếm...
-      <kbd className="pointer-events-none hidden h-5 select-none items-center gap-1 rounded px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex ml-auto">
+      <kbd className="pointer-events-none hidden h-5 select-none items-center gap-1 rounded px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex ml-auto border shadow-sm">
         <span className="text-base">⌘K</span>
       </kbd>
     </Button>

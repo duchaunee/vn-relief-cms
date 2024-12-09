@@ -6,7 +6,7 @@ import { Header } from "@/components/shared-layout/header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/toaster";
 
-import { AppSidebar } from "@/components/app-sidebar";
+import { AppSidebar } from "@/components/app-sidebar/app-sidebar";
 
 import "./globals.css";
 import TanStackProvider from "@/providers/tan-stack-provider";

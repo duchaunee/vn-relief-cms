@@ -19,7 +19,11 @@ const roleConfig = {
   "Quản lý": { color: "text-yellow-500", bgColor: "bg-yellow-500/10" },
 };
 
-const contacts = [
+const contacts: {
+  name: string;
+  role: keyof typeof roleConfig;
+  phone: string;
+}[] = [
   {
     name: "Frances Guerrero",
     role: "Y tế",
@@ -63,11 +67,11 @@ const contacts = [
 ];
 
 const EmergencyContacts = () => {
-  const handleCall = (phoneNumber) => {
+  const handleCall = (phoneNumber: string) => {
     window.location.href = `tel:${phoneNumber}`;
   };
 
-  const getInitials = (name) => {
+  const getInitials = (name: string) => {
     return name
       .split(" ")
       .map((word) => word[0])
