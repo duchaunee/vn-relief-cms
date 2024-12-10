@@ -16,10 +16,9 @@ const ButtonTriggerNotification = React.forwardRef<
         "size-9 items-center justify-center rounded-sm",
         "relative transition-colors duration-200",
         "text-gray-600",
-        "border border-red-600",
         "hidden lg:flex",
-        "data-[state=open]:text-blue-600",
-        isNotificationPage && "text-blue-600 cursor-default"
+        "data-[state=open]:text-blue-600 data-[state=open]:bg-blue-50",
+        isNotificationPage && "text-blue-600 bg-blue-50 cursor-default"
       )}
     >
       <svg
