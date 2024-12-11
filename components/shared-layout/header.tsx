@@ -25,7 +25,7 @@ export const Header = () => {
           className={cn(
             "h-9 w-9 text-black rounded-md",
             state == "expanded" &&
-              "text-blue-600 hover:text-blue-600 bg-blue-50"
+              "lg:text-blue-600 lg:hover:text-blue-600 lg:bg-blue-50"
           )}
           size="icon"
         />
