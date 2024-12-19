@@ -36,86 +36,64 @@ export const dataSidebar = {
   ],
   navMain: [
     {
-      title: "Cứu trợ khẩn cấp",
-      url: "/cuu-tro-khan-cap",
+      title: "Cứu trợ thiên tai",
       icon: SquareTerminal,
       isActive: true,
       items: [
         {
-          title: "History",
-          url: "#",
+          title: "Cứu trợ khẩn cấp",
+          url: "/cuu-tro-khan-cap",
         },
         {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
+          title: "Thông tin các nơi cần hỗ trợ",
           url: "#",
         },
       ],
     },
     {
-      title: "Models",
-      url: "#",
+      title: "Nhân lực cứu trợ",
       icon: Bot,
+      isActive: true,
       items: [
         {
-          title: "Genesis",
+          title: "Thông tin các đội cứu trợ",
           url: "#",
         },
         {
-          title: "Explorer",
+          title: "Thông tin các tình nguyện viên",
           url: "#",
         },
         {
-          title: "Quantum",
+          title: "Danh sách các phương tiện",
           url: "#",
         },
       ],
     },
     {
-      title: "Documentation",
-      url: "#",
+      title: "Địa điểm hỗ trợ",
       icon: BookOpen,
+      isActive: true,
       items: [
         {
-          title: "Introduction",
+          title: "Các địa điểm tạm trú",
           url: "#",
         },
         {
-          title: "Get Started",
+          title: "Các địa điểm dừng chân",
           url: "#",
         },
         {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
+          title: "Các kho tập kết",
           url: "#",
         },
       ],
     },
     {
-      title: "Settings",
-      url: "#",
+      title: "Thông tin liên lạc khẩn cấp",
       icon: Settings2,
       items: [
         {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
+          title: "Liên lạc chính quyền khu vực",
           url: "#",
         },
       ],
