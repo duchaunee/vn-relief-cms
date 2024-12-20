@@ -225,11 +225,9 @@ const Page = () => {
       </div>
 
       <div>
-        {[...filteredProvinces, ...filteredProvinces, ...filteredProvinces].map(
-          (province) => (
-            <ProvinceCard key={province.id} province={province} />
-          )
-        )}
+        {filteredProvinces.map((province) => (
+          <ProvinceCard key={province.id} province={province} />
+        ))}
       </div>
     </div>
   );
