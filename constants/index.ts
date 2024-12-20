@@ -417,7 +417,6 @@ export const breadcrumbItems: Ibreadcrumb[] = [
   },
   {
     url: "/lien-lac-chinh-quyen",
-    isShowMobile: false,
     "bread-crum": [
       {
         text: "Trang chủ",
@@ -433,7 +432,6 @@ export const breadcrumbItems: Ibreadcrumb[] = [
   },
   {
     url: "/tin-tuc-thien-tai",
-    isShowMobile: false,
     "bread-crum": [
       {
         text: "Trang chủ",
@@ -469,7 +467,6 @@ export const breadcrumbItems: Ibreadcrumb[] = [
   },
   {
     url: "/ung-ho-thien-tai",
-    isShowMobile: false,
     "bread-crum": [
       {
         text: "Trang chủ",
