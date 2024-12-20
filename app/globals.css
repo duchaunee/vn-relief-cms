@@ -128,3 +128,7 @@
     @apply bg-background text-foreground;
   }
 }
+
+#modal-container {
+  border-radius: unset !important;
+}

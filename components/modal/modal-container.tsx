@@ -1,18 +1,18 @@
 import React from "react";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 
 import "@/styles/custom-shadcn.css";
 import { ArrowLeft, X } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
-
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 interface ModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -57,19 +57,16 @@ const ModalContainer = ({
    */
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent
-        side="left"
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
         className={cn(
-          "transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out",
-          "data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left",
           "p-0 bg-white",
-          "lg:w-[700px] w-full sm:max-w-[700px] h-screen", // Thêm h-screen
-          "flex flex-col gap-0" // Thêm flex layout
+          "lg:w-[700px] w-full sm:max-w-[700px] h-screen",
+          "flex flex-col gap-0 rounded-none"
         )}
         id="modal-container"
       >
-        <SheetHeader
+        <DialogHeader
           className={cn(
             "text-left flex-none px-6 py-3",
             "bg-gray-200",
@@ -77,20 +74,20 @@ const ModalContainer = ({
           )}
         >
           {isMobile ? (
-            <SheetTrigger asChild>
+            <DialogTrigger asChild>
               <button className="w-full flex items-center gap-2">
                 <ArrowLeft className="w-6 h-6" />
-                <SheetTitle className="tracking-tight text-lg font-bold text-primary">
+                <DialogTitle className="tracking-tight text-lg font-bold text-primary">
                   {title}
-                </SheetTitle>
+                </DialogTitle>
               </button>
-            </SheetTrigger>
+            </DialogTrigger>
           ) : (
             <div className="w-full flex items-center justify-between">
-              <SheetTitle className="tracking-tight text-lg font-bold text-primary">
+              <DialogTitle className="tracking-tight text-lg font-bold text-primary">
                 {title}
-              </SheetTitle>
-              <SheetTrigger>
+              </DialogTitle>
+              <DialogTrigger>
                 <Button
                   size="icon"
                   className={cn(
@@ -99,14 +96,16 @@ const ModalContainer = ({
                 >
                   <X className="!h-7 !w-7" />
                 </Button>
-              </SheetTrigger>
+              </DialogTrigger>
             </div>
           )}
-        </SheetHeader>
+        </DialogHeader>
+
         <div className="flex-1 overflow-y-auto lg:px-8 lg:py-8 px-3 py-6">
           {children}
         </div>
-        <div className="sticky bottom-0 right-0 bg-gray-200 w-full py-4 px-6 flex items-center lg:justify-between justify-center border-t border-t-gray-300">
+
+        <div className="mt-auto bg-gray-200 w-full py-4 px-6 flex items-center lg:justify-between justify-center border-t border-t-gray-300">
           <span className="italic text-[13px] text-gray-500 hidden lg:block">
             {description}
           </span>
@@ -123,8 +122,8 @@ const ModalContainer = ({
             </Button>
           </div>
         </div>
-      </SheetContent>
-    </Sheet>
+      </DialogContent>
+    </Dialog>
   );
 };
 
