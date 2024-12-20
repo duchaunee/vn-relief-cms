@@ -175,26 +175,27 @@ const Page = () => {
   );
 
   return (
-    <div className="container mx-auto p-4 max-w-2xl">
-      <div className="flex justify-between items-center mb-6">
-        <div className="relative flex-1 w-full">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-          <Input
-            type="text"
-            placeholder="Tìm kiếm theo tên tỉnh hoặc số điện thoại..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10 py-3 h-auto bg-white"
-          />
-        </div>
+    <div className="relative container mx-auto px-4 max-w-2xl">
+      <div className="sticky top-[105px] pt-6 pb-4 left-0 z-10 bg-background">
+        <div className="flex justify-between items-center">
+          <div className="relative flex-1 w-full">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <Input
+              type="text"
+              placeholder="Tìm kiếm theo tên tỉnh hoặc số điện thoại..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 py-3 h-auto bg-white"
+            />
+          </div>
 
-        <Dialog open={isAddDialogOpen}>
-          {/* <DialogTrigger asChild>
+          {/* <Dialog open={isAddDialogOpen}>
+          <DialogTrigger asChild>
             <Button onClick={() => setIsAddDialogOpen(true)}>
               <Plus className="h-4 w-4 mr-2" />
               Thêm mới
             </Button>
-          </DialogTrigger> */}
+          </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Thêm tỉnh mới</DialogTitle>
@@ -219,13 +220,16 @@ const Page = () => {
               </div>
             </div>
           </DialogContent>
-        </Dialog>
+        </Dialog> */}
+        </div>
       </div>
 
       <div>
-        {filteredProvinces.map((province) => (
-          <ProvinceCard key={province.id} province={province} />
-        ))}
+        {[...filteredProvinces, ...filteredProvinces, ...filteredProvinces].map(
+          (province) => (
+            <ProvinceCard key={province.id} province={province} />
+          )
+        )}
       </div>
     </div>
   );
