@@ -39,7 +39,7 @@ export function NavMain({
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Platform</SidebarGroupLabel>
+      <SidebarGroupLabel>Các chức năng</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
           <Collapsible
@@ -69,7 +69,7 @@ export function NavMain({
                           className={cn(
                             "py-4",
                             pathname === subItem.url &&
-                              "bg-red-100 !text-red-600 hover:bg-red-100 active:bg-red-100"
+                              "bg-red-100 !text-red-600 hover:!bg-red-100 active:bg-red-100"
                           )}
                         >
                           <span>{subItem.title}</span>

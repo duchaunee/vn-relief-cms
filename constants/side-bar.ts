@@ -89,11 +89,19 @@ export const dataSidebar = {
       ],
     },
     {
-      title: "Thông tin liên lạc khẩn cấp",
+      title: "Thông tin thiên tai",
       icon: Settings2,
       items: [
         {
-          title: "Liên lạc chính quyền khu vực",
+          title: "Thông tin liên lạc chính quyền",
+          url: "#",
+        },
+        {
+          title: "Thông tin ủng hộ thiên tai",
+          url: "#",
+        },
+        {
+          title: "Tình hình thiên tai",
           url: "#",
         },
       ],
