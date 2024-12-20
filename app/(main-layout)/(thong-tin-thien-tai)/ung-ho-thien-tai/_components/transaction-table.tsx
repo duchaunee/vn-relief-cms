@@ -221,7 +221,11 @@ export default function TransactionTable({ filters }: TransactionTableProps) {
         {isMobile ? (
           currentTransactions.map((transaction: Transaction) => (
             <div key={transaction.id} className="border-b p-4 space-y-2">
-              <div className="text-green-500 text-lg font-medium">
+              <div
+                className={`text-lg font-medium ${
+                  transaction.amount > 0 ? "text-green-500" : "text-red-500"
+                }`}
+              >
                 {transaction.amount > 0 ? "+" : "-"}
                 {Math.abs(transaction.amount).toLocaleString()} VND
               </div>
