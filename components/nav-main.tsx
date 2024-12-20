@@ -67,7 +67,7 @@ export function NavMain({
                         <Link
                           href={subItem.url}
                           className={cn(
-                            "py-4",
+                            "py-4 !rounded-[2px]",
                             pathname === subItem.url &&
                               "bg-red-100 !text-red-600 hover:!bg-red-100 active:bg-red-100"
                           )}

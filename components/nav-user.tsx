@@ -65,7 +65,7 @@ export function NavUser({
               </Link>
               <DropdownMenuItem>
                 <CreditCard />
-                Billing
+                Quản lý
               </DropdownMenuItem>
               <Link href="/thong-bao">
                 <DropdownMenuItem className="flex lg:hidden">

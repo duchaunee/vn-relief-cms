@@ -3,10 +3,7 @@ import {
   BookOpen,
   Bot,
   Command,
-  Frame,
   GalleryVerticalEnd,
-  Map,
-  PieChart,
   Settings2,
   SquareTerminal,
 } from "lucide-react";
@@ -17,23 +14,6 @@ export const dataSidebar = {
     email: "m@example.com",
     avatar: "/logo/logo-vnrelief.png",
   },
-  teams: [
-    {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
   navMain: [
     {
       title: "Cứu trợ thiên tai",
@@ -46,7 +26,7 @@ export const dataSidebar = {
         },
         {
           title: "Thông tin các nơi cần hỗ trợ",
-          url: "#",
+          url: "/can-ho-tro",
         },
       ],
     },
@@ -57,15 +37,15 @@ export const dataSidebar = {
       items: [
         {
           title: "Thông tin các đội cứu trợ",
-          url: "#",
+          url: "/doi-cuu-tro",
         },
         {
           title: "Thông tin các tình nguyện viên",
-          url: "#",
+          url: "/tinh-nguyen-vien",
         },
         {
           title: "Danh sách các phương tiện",
-          url: "#",
+          url: "/phuong-tien",
         },
       ],
     },
@@ -76,52 +56,40 @@ export const dataSidebar = {
       items: [
         {
           title: "Các địa điểm tạm trú",
-          url: "#",
+          url: "/dia-diem-tam-tru",
         },
         {
           title: "Các địa điểm dừng chân",
-          url: "#",
+          url: "/dia-diem-dung-chan",
         },
         {
-          title: "Các kho tập kết",
-          url: "#",
+          title: "Các địa điểm tập kết",
+          url: "/dia-diem-tap-ket",
+        },
+        {
+          title: "Các địa điểm tiếp tế",
+          url: "/dia-diem-tiep-te",
         },
       ],
     },
     {
       title: "Thông tin thiên tai",
+      isActive: true,
       icon: Settings2,
       items: [
         {
           title: "Thông tin liên lạc chính quyền",
-          url: "#",
+          url: "/lien-lac-chinh-quyen",
         },
         {
           title: "Thông tin ủng hộ thiên tai",
-          url: "#",
+          url: "/ung-ho-thien-tai",
         },
         {
-          title: "Tình hình thiên tai",
-          url: "#",
+          title: "Tin tức thiên tai",
+          url: "/tin-tuc-thien-tai",
         },
       ],
-    },
-  ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
     },
   ],
 };

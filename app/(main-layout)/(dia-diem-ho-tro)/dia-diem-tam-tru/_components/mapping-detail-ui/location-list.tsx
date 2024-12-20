@@ -4,15 +4,15 @@ import { Phone, Share2, LinkIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { StatusBadge } from "@/utils/helper/common";
 
-import { Badge } from "../ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 
 import { Location } from "@/types/location";
-import TooltipContainer from "../tooltip-container/tooltip-container";
-import { ExpandIcon } from "../icon/expand-icon";
 import { useRequestReliefContext } from "@/providers/app-context-provider/request-relief-provider";
 import Image from "next/image";
+import { Badge } from "@/components/ui/badge";
+import TooltipContainer from "@/components/tooltip-container/tooltip-container";
+import { ExpandIcon } from "@/components/icon/expand-icon";
 interface LocationListProps {
   expand: boolean;
   setExpand: Dispatch<SetStateAction<boolean>>;
@@ -85,7 +85,7 @@ const LocationItem = ({
               <div className="flex gap-2 ml-auto">
                 <TooltipContainer
                   trigger={
-                    <Button className=" bg-gray-100 hover:bg-gray-300 text-black p-1 h-8 w-8">
+                    <Button className="bg-transparent hover:bg-gray-300 text-black p-1 h-8 w-8">
                       <Phone className="h-3 w-3" />
                     </Button>
                   }
@@ -93,7 +93,7 @@ const LocationItem = ({
                 />
                 <TooltipContainer
                   trigger={
-                    <Button className=" bg-gray-100 hover:bg-gray-300 text-black p-1 h-8 w-8">
+                    <Button className="bg-transparent hover:bg-gray-300 text-black p-1 h-8 w-8">
                       <LinkIcon className="h-3 w-3" />
                     </Button>
                   }
@@ -101,7 +101,7 @@ const LocationItem = ({
                 />
                 <TooltipContainer
                   trigger={
-                    <Button className=" bg-gray-100 hover:bg-gray-300 text-black p-1 h-8 w-8">
+                    <Button className="bg-transparent hover:bg-gray-300 text-black p-1 h-8 w-8">
                       <Share2 className="h-3 w-3" />
                     </Button>
                   }

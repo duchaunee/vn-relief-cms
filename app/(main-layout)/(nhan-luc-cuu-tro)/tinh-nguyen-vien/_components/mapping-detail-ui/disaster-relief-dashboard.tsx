@@ -5,14 +5,14 @@ import { ReliefMap } from "./relief-map";
 import { LocationList } from "./location-list";
 import { Location } from "@/types/location";
 import { cn } from "@/lib/utils";
-import ModalContainer from "../modal/modal-container";
 import { useRequestReliefContext } from "@/providers/app-context-provider/request-relief-provider";
-import RescueRequestForm from "../modal/request-rescue-modal/rescue-form";
+import ModalContainer from "@/components/modal/modal-container";
+import RescueRequestForm from "@/components/modal/request-rescue-modal/rescue-form";
 
 interface DisasterReliefDashboardProps {
   titleList: {
     title: string;
-    button: string;
+    button?: string;
   };
   locations: Location[];
 }

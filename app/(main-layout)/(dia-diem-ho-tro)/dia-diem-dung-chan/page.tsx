@@ -1,7 +1,7 @@
 "use client";
 
-import { DisasterReliefDashboard } from "@/components/mapping-detail-ui/disaster-relief-dashboard";
 import RequestReliefContext from "@/providers/app-context-provider/request-relief-provider";
+import { DisasterReliefDashboard } from "./_components/mapping-detail-ui/disaster-relief-dashboard";
 
 const SAMPLE_LOCATIONS = [
   {
@@ -118,8 +118,8 @@ const SAMPLE_LOCATIONS = [
 ];
 
 const titleList = {
-  title: "Danh sách các nơi đang cần cứu trợ khẩn cấp",
-  button: "Cần cứu trợ khẩn cấp",
+  title: "Danh sách các địa điêm dừng chân",
+  button: "Thêm mới địa điểm dừng chân",
 };
 
 export default function Page() {

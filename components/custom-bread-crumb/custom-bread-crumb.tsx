@@ -25,7 +25,7 @@ export const CustomBreadcrumb = () => {
   // ===== router
   const router = useRouter();
 
-  const getCurrentBreadcrumbItems = (): Ibreadcrumb["bread-crum"] | null => {
+  const getCurrentBreadcrumbItems = (): Ibreadcrumb | null => {
     const pathParts = currentPathname.split("/");
     const matchedItem = breadcrumbItems.find((item) => {
       const itemPathParts = item.url.split("/");
@@ -37,16 +37,18 @@ export const CustomBreadcrumb = () => {
       }
       return true;
     });
-    return matchedItem ? matchedItem["bread-crum"] : null;
+    return matchedItem ? matchedItem : null;
   };
-  const items = getCurrentBreadcrumbItems()!;
+  const items = getCurrentBreadcrumbItems();
+  console.log("\n🔥 ~ file: custom-bread-crumb.tsx:43 ~ items::\n", items);
+  const breakCrums = items!["bread-crum"];
 
   return (
     <Fragment>
-      {items.length > 1 && (
+      {items?.isShowMobile !== false && breakCrums.length > 1 && (
         <BackButton
-          text={items?.at(-1)!.text}
-          onClick={() => router.push(items?.at(-2)!.link || "/")}
+          text={breakCrums?.at(-1)!.text}
+          onClick={() => router.push(breakCrums?.at(-2)!.link || "/")}
         />
       )}
       <div
@@ -56,8 +58,8 @@ export const CustomBreadcrumb = () => {
       >
         <Breadcrumb className="flex bg-transparent">
           <BreadcrumbList>
-            {items &&
-              items.map((item, index) => (
+            {breakCrums &&
+              breakCrums.map((item, index) => (
                 <Fragment key={`item-${index}`}>
                   <BreadcrumbItem>
                     {item.isPage ? (
@@ -68,7 +70,7 @@ export const CustomBreadcrumb = () => {
                       </BreadcrumbLink>
                     )}
                   </BreadcrumbItem>
-                  {index < items.length - 1 && (
+                  {index < breakCrums.length - 1 && (
                     <BreadcrumbSeparator key={`separator-${index}`} />
                   )}
                 </Fragment>
