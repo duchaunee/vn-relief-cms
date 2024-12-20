@@ -63,31 +63,32 @@ const Page = () => {
   );
 
   const ProvinceCard = ({ province }) => (
-    <Card className="mb-4 shadow-none rounded-md border border-gray-200">
-      <CardContent className="p-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Image
-              width={60}
-              height={60}
-              alt={province.name}
-              src="https://lh3.googleusercontent.com/d/1o0apz2p5VWQBPbcFXLoh0KxZQV4es22H"
-              className="rounded-full"
-            />
-            <div>
-              <h3 className="text-base font-medium text-[#18181b]">
-                {province.name}
-              </h3>
-              <div className="flex items-center gap-2">
-                <p className="text-blue-500">
-                  Đường dây nóng: {province.hotline}
-                </p>
+    <a href={`tel:${province.hotline}`}>
+      <Card className="mb-4 shadow-none rounded-md border border-gray-200">
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Image
+                width={60}
+                height={60}
+                alt={province.name}
+                src="https://lh3.googleusercontent.com/d/1o0apz2p5VWQBPbcFXLoh0KxZQV4es22H"
+                className="rounded-full"
+              />
+              <div>
+                <h3 className="text-base font-medium text-[#18181b]">
+                  {province.name}
+                </h3>
+                <div className="flex items-center gap-2">
+                  <p className="text-blue-500">
+                    Đường dây nóng: {province.hotline}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="flex gap-2">
-            {/* <Dialog
+            <div className="flex gap-2">
+              {/* <Dialog
               open={isEditDialogOpen && selectedProvince?.id === province.id}
             >
               <DialogTrigger asChild>
@@ -168,10 +169,11 @@ const Page = () => {
                 </div>
               </DialogContent>
             </Dialog> */}
+            </div>
           </div>
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </a>
   );
 
   return (
