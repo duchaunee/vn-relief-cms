@@ -1,3 +1,4 @@
-#modal-container > button {
+#modal-container > button,
+#modal-container-news > button {
   display: none;
 }

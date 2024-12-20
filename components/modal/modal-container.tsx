@@ -62,7 +62,7 @@ const ModalContainer = ({
         className={cn(
           "p-0 bg-white",
           "lg:w-[700px] w-full sm:max-w-[700px] h-screen",
-          "flex flex-col gap-0 rounded-none"
+          "flex flex-col gap-0 rounded-none lg:max-h-[90vh]"
         )}
         id="modal-container"
       >
