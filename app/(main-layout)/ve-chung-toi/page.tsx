@@ -96,7 +96,7 @@ const AboutUs = () => {
             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg">
               <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-transparent" />
               <Image
-                src="/api/placeholder/800/600"
+                src="https://lh3.googleusercontent.com/d/19Fn5uezT-bM3CgUO0-faji-F9wrMIaky"
                 alt="ERIN Emergency Response"
                 width={800}
                 height={600}
