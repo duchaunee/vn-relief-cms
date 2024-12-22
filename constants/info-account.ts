@@ -1,5 +1,5 @@
-import TabAccount from "@/app/(main-layout)/tai-khoan/_components/tab-content/tab-account";
-import TabRequest from "@/app/(main-layout)/tai-khoan/_components/tab-content/tab-request";
+import TabAccount from "@/app/(client)/(main-layout)/tai-khoan/_components/tab-content/tab-account";
+import TabRequest from "@/app/(client)/(main-layout)/tai-khoan/_components/tab-content/tab-request";
 import { Bell, CircleUser, CreditCard, Eye, PaintBucket } from "lucide-react";
 
 export const menuAccountItems = [

@@ -9,11 +9,11 @@ import InfoAccountContext from "@/providers/app-context-provider/info-account-pr
 export default function SettingsPage() {
   return (
     <InfoAccountContext>
-      <div className="relative w-full h-full px-6 py-2 lg:py-10 lg:px-[120px] bg-white">
+      <div className="relative w-full h-full px-6 py-2 lg:py-10 lg:px-[80px] bg-white">
         <Heading />
         <Tabs
           defaultValue="account"
-          className="flex lg:flex-row flex-col items-start gap-3 lg:gap-20 lg:pt-10 pt-3"
+          className="flex lg:flex-row flex-col items-start gap-3 lg:gap-16 lg:pt-10 pt-3"
         >
           <Navbar />
           <ListContent />
