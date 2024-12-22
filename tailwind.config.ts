@@ -89,11 +89,61 @@ const config: Config = {
           border: "hsl(var(--header-border))",
           ring: "hsl(var(--header-ring))",
         },
+        transparentAdmin: "transparent",
+        currentAdmin: "currentColor",
+        whiteAdmin: "#FFFFFF",
+        blackAdmin: "#171718",
+        primaryAdmin: "#335CFF",
+        grayAdmin: {
+          "100": "#FAFBFC",
+          "200": "#F9FAFB",
+          "300": "#E2E8F0",
+          "400": "#F5F7FA",
+          "500": "#B9BEC6",
+          "600": "#9CA3AF",
+          "700": "#6B7280",
+          DEFAULT: "#525866",
+        },
+        dangerAdmin: {
+          DEFAULT: "#EF4444",
+          light: "#FEE2E2",
+        },
+        successAdmin: {
+          DEFAULT: "#22C55E",
+          light: "#DCFCE7",
+        },
+        warningAdmin: "#EAB308",
+        "light-theme": "#F4F7FF",
+        "light-orange": "#FFEDD5",
+        "light-blue": "#E0F2FE",
+        "light-purple": "#F3E8FF",
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      keyframes: {
+        "accordion-down": {
+          from: {
+            height: "0",
+          },
+          to: {
+            height: "var(--radix-accordion-content-height)",
+          },
+        },
+        "accordion-up": {
+          from: {
+            height: "var(--radix-accordion-content-height)",
+          },
+          to: {
+            height: "0",
+          },
+        },
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
       },
     },
   },

@@ -129,6 +129,54 @@
   }
 }
 
+@layer components {
+  #admin .sidebar .nav-link {
+      @apply flex items-center gap-2.5 px-5 py-2.5 text-sm font-medium leading-tight text-grayAdmin transition hover:text-blackAdmin;
+  }
+  #admin .nav-item.sub-menu-active {
+      @apply bg-light-theme !text-primaryAdmin;
+  }
+  #admin .nav-item.active {
+      @apply !text-blackAdmin;
+  }
+  #admin .sidebar .submenu > li > a {
+      @apply flex rounded-lg px-2 py-1 font-medium text-gray-700 transition hover:bg-light-theme hover:text-primaryAdmin;
+  }
+  #admin .sidebar.closed {
+      @apply w-[260px] lg:w-[60px];
+  }
+  #admin .sidebar.closed h3 {
+      @apply rounded-none;
+  }
+  #admin .sidebar.closed h3 > span {
+      @apply hidden;
+  }
+  #admin .sidebar.closed h3 > svg {
+      @apply block;
+  }
+  #admin .sidebar.closed .submenu {
+      @apply lg:hidden;
+  }
+  #admin .sidebar .nav-link span {
+      @apply whitespace-nowrap transition-all;
+  }
+  #admin .sidebar.closed .nav-link span {
+      @apply lg:invisible lg:w-0;
+  }
+  #admin .sidebar.closed .sidemenu {
+      @apply px-2.5 lg:px-0;
+  }
+  #admin .sidebar.closed .upgrade-menu {
+      @apply hidden;
+  }
+  #admin .sidebar.open {
+      @apply left-0;
+  }
+  #admin #overlay.open {
+      @apply block;
+  }
+}
+
 #modal-container {
   border-radius: unset !important;
 }

@@ -63,10 +63,12 @@ export function NavUser({
                   Thông tin tài khoản
                 </DropdownMenuItem>
               </Link>
-              <DropdownMenuItem>
-                <CreditCard />
-                Quản lý
-              </DropdownMenuItem>
+              <Link href="/quan-ly">
+                <DropdownMenuItem>
+                  <CreditCard />
+                  Trang quản lý
+                </DropdownMenuItem>
+              </Link>
               <Link href="/thong-bao">
                 <DropdownMenuItem className="flex lg:hidden">
                   <Bell />

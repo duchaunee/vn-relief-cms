@@ -8,7 +8,7 @@ import { Toaster } from "@/components/ui/toaster";
 
 import { AppSidebar } from "@/components/app-sidebar/app-sidebar";
 
-import "./globals.css";
+import "../globals.css";
 import TanStackProvider from "@/providers/tan-stack-provider";
 // import AppContextProvider from "@/providers/app-context-provider/breadcrumb-context-provider";
 

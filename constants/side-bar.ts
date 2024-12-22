@@ -82,7 +82,7 @@ export const dataSidebar = {
           url: "/lien-lac-chinh-quyen",
         },
         {
-          title: "Thông tin ủng hộ thiên tai",
+          title: "Ủng hộ đồng bào thiên tai",
           url: "/ung-ho-thien-tai",
         },
         {
