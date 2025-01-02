@@ -13,12 +13,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useRequestReliefContext } from "@/providers/app-context-provider/request-relief-provider";
 interface ModalProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  // open: boolean;
+  // onOpenChange: (open: boolean) => void;
   title?: string;
   description?: string;
-  button?: {
+  buttons?: {
     primary: string;
     secondary: string;
   };
@@ -27,14 +28,16 @@ interface ModalProps {
 }
 
 const ModalContainer = ({
-  open,
-  onOpenChange,
+  // open,
+  // onOpenChange,
   title,
   description,
-  button,
+  buttons,
   children,
   formId,
 }: ModalProps) => {
+  const { open, setOpen } = useRequestReliefContext();
+  console.log("\n🔥 ~ file: modal-container.tsx:40 ~ open::\n", open);
   const isMobile = useIsMobile();
 
   /**
@@ -57,7 +60,7 @@ const ModalContainer = ({
    */
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={(value) => setOpen(value)}>
       <DialogContent
         className={cn(
           "p-0 bg-white",
@@ -110,15 +113,19 @@ const ModalContainer = ({
             {description}
           </span>
           <div className="flex gap-3 items-center">
-            <Button variant="outline" className="px-6 py-4 bg-white">
-              {button?.secondary}
+            <Button
+              onClick={() => setOpen(false)}
+              variant="outline"
+              className="px-6 py-4 bg-white"
+            >
+              {buttons?.secondary}
             </Button>
             <Button
               type="submit"
               form={formId}
               className="px-6 py-4 bg-red-500 hover:bg-red-600"
             >
-              {button?.primary}
+              {buttons?.primary}
             </Button>
           </div>
         </div>

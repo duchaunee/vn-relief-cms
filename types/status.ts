@@ -1,13 +1,14 @@
 export type StatusType =
-  | "Chờ xác minh thông tin"
-  | "Đã xác minh"
-  | "Đang tìm đội cứu trợ"
-  | "Đã có kế hoạch cứu trợ"
-  | "Cứu trợ thành công"
-  | "Đang cần hỗ trợ"
-  | "Đã đủ nguồn hỗ trợ";
+  | "verify-pending"
+  | "verify-closed"
+  | "recipient-pending"
+  | "recipient-doing"
+  | "recipient-closed"
+  | "goods-pending"
+  | "goods-closed";
 
 export interface StatusConfig {
+  content: string;
   background: string;
   text: string;
   border: string;

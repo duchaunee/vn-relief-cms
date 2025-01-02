@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   CalendarIcon,
   Camera,
@@ -8,6 +8,7 @@ import {
   QrCode,
   UserRound,
   Users,
+  X,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -24,24 +25,157 @@ import { cn } from "@/lib/utils";
 import { RequiredLabel } from "@/components/require-field/require-label";
 import MinusIcon from "@/components/icon/minus-icon";
 import PlusIcon from "@/components/icon/plus-icon";
+import { useRequestReliefContext } from "@/providers/app-context-provider/request-relief-provider";
+
+import dataLocation from "@/constants/location.json";
+import { findProvinceByCode } from "@/utils/helper/common";
+import firebaseApi from "@/configs/firebase/firebase.stogare";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { RESCUE_REQUEST_APIS } from "@/apis/rescue-request";
+import toast from "react-hot-toast";
+import { RequestData } from "@/types/models/rescue-request";
+
+const DRAFT_KEY = "rescue_request_draft";
+
+const FormError = ({ message }: { message: string }) => (
+  <span className="text-sm text-red-500 mt-1">{message}</span>
+);
+
+interface ValidationErrors {
+  senderType?: string;
+  title?: string;
+  description?: string;
+  numberOfPeopleNeedingHelp?: string;
+  phone?: string;
+  wardCode?: string;
+  contentNeedsRelief?: string;
+}
+
+interface ImagePreview {
+  url: string;
+  file: File;
+}
+
+const handleImageUpload = async (files: File[]) => {
+  try {
+    // Example structure for Firebase upload
+    const uploadedUrls = await Promise.all(
+      files.map(async (file) => {
+        // Your Firebase upload logic here
+        // const storageRef = ref(storage, `rescue-requests/${Date.now()}-${file.name}`);
+        // const uploadTask = await uploadBytes(storageRef, file);
+        // const url = await getDownloadURL(uploadTask.ref);
+        // return url;
+
+        // await updateUserMutation.mutateAsync({ profileUrl });
+        return await firebaseApi.uploadImageToFirebase(file); // Replace with actual URL
+      })
+    );
+    return uploadedUrls;
+  } catch (error) {
+    console.error("Error uploading images:", error);
+    throw error;
+  }
+};
 
 export default function RescueRequestForm() {
   const [formData, setFormData] = useState({
-    id: "KHANCAP146",
-    assistanceType: "person-in-need",
-    submissionTime: "12/05/2024 11:56:20 AM",
-    currentStatus: "",
-    numberOfPeople: 0,
-    contactNumber: "",
-    location: "0.000000, 0.000000",
-    additionalDetails: "",
-    region: "",
+    type: "emergency",
+    informantId: null,
+    wardCode: "",
+    description: "",
+    title: "",
+    contentNeedsRelief: "",
+    phone: "",
+    senderType: "Tự gửi đơn cứu trợ",
+    priorityContact: "",
+    priorityPhone: "",
+    address: "",
+    numberOfPeopleNeedingHelp: 1,
+    verifierId: null,
+    // requiredRescueTime: new Date().toISOString(),
+    // currentLocation: {
+    //   type: "Point",
+    //   coordinates: [105.8342, 21.0285],
+    // },
+    status: {
+      verify: "closed",
+      recipient: "pending",
+    },
   });
+
+  // =====================
+  const [provinces, setProvinces] = useState(dataLocation);
+  const [selectedProvince, setSelectedProvince] = useState<number | null>(null);
+  const [selectedDistrict, setSelectedDistrict] = useState<number | null>(null);
+  const [districts, setDistricts] = useState<any[]>([]);
+  const [wards, setWards] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (selectedProvince) {
+      const province = findProvinceByCode(selectedProvince);
+      if (province) {
+        setDistricts(province.districts);
+      }
+    } else {
+      setDistricts([]);
+    }
+    setSelectedDistrict(null);
+    setWards([]);
+  }, [selectedProvince]);
+
+  useEffect(() => {
+    if (selectedProvince && selectedDistrict) {
+      const province = findProvinceByCode(selectedProvince);
+      const district = province?.districts.find(
+        (d) => d.code === selectedDistrict
+      );
+      if (district) {
+        setWards(district.wards);
+      }
+    } else {
+      setWards([]);
+    }
+  }, [selectedProvince, selectedDistrict]);
+  // =====================
+
+  const queryClient = useQueryClient();
+
+  const { open, setOpen } = useRequestReliefContext();
+
+  const [showMap, setShowMap] = useState(true);
+  const [errors, setErrors] = useState<ValidationErrors>({});
+  const [imageFiles, setImageFiles] = useState<ImagePreview[]>([]);
+
+  const validateForm = () => {
+    const newErrors: ValidationErrors = {};
+
+    if (!formData.senderType)
+      newErrors.senderType = "Vui lòng chọn loại người gửi";
+    if (!formData.title) newErrors.title = "Vui lòng nhập tiêu đề";
+    if (!formData.description)
+      newErrors.description = "Vui lòng mô tả tình trạng";
+    if (formData.numberOfPeopleNeedingHelp < 1) {
+      newErrors.numberOfPeopleNeedingHelp = "Số người phải lớn hơn 0";
+    }
+    if (!formData.phone) newErrors.phone = "Vui lòng nhập số điện thoại";
+    if (!formData.wardCode) newErrors.wardCode = "Vui lòng chọn địa điểm";
+    if (!formData.contentNeedsRelief)
+      newErrors.contentNeedsRelief = "Vui lòng nhập nội dung cần cứu trợ";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
+    // Clear error when user types
+    setErrors((prev) => ({
+      ...prev,
+      [name]: undefined,
+    }));
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -49,15 +183,75 @@ export default function RescueRequestForm() {
   };
 
   const handleSelectChange = (value: string, name: string) => {
+    if (name === "wardCode") {
+      setErrors((prev) => ({
+        ...prev,
+        wardCode: undefined,
+      }));
+    }
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleNumberChange = (type: "increment" | "decrement") => {
+    setFormData((prev) => ({
+      ...prev,
+      numberOfPeopleNeedingHelp:
+        type === "increment"
+          ? prev.numberOfPeopleNeedingHelp + 1
+          : Math.max(0, prev.numberOfPeopleNeedingHelp - 1),
+    }));
+  };
+
+  const handleImageUploadChange = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (e.target.files) {
+      const newFiles = Array.from(e.target.files).map((file) => ({
+        url: URL.createObjectURL(file),
+        file,
+      }));
+      setImageFiles((prev) => [...prev, ...newFiles]);
+    }
+  };
+
+  const removeImage = (index: number) => {
+    setImageFiles((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const updateUserMutation = useMutation({
+    mutationFn: (body: RequestData) => RESCUE_REQUEST_APIS.save(body),
+    onSuccess: (data: any) => {
+      if (data.statusCode == 201) {
+        toast.success(data.data.message);
+        setOpen(false);
+        window.location.reload();
+      }
+    },
+  });
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData);
+    if (validateForm()) {
+      try {
+        const imageUrls = await handleImageUpload(
+          imageFiles.map((img) => img.file)
+        );
+        const submitData = {
+          ...formData,
+          images: imageUrls,
+        };
+
+        await updateUserMutation.mutateAsync(submitData as any);
+      } catch (error) {
+        console.error("Error submitting form:", error);
+        alert("Có lỗi xảy ra khi gửi form!");
+      }
+    } else {
+      toast.error("Vui lòng điền đầy đủ thông tin bắt buộc!");
+    }
   };
 
   return (
@@ -65,26 +259,6 @@ export default function RescueRequestForm() {
       <Card className={cn("mx-auto w-full border-none shadow-none")}>
         <CardContent className="p-0 border-none shadow-none">
           <form id="rescue-form-id" onSubmit={onSubmit} className="space-y-8">
-            {/* ID Section */}
-            <div className="space-y-4 rounded-lg border border-gray-300 bg-white p-6">
-              <div className="space-y-2">
-                <RequiredLabel>
-                  <Label htmlFor="id" className="text-base font-medium">
-                    ID đơn cứu trợ
-                  </Label>
-                </RequiredLabel>
-                <p className="text-sm text-gray-500">
-                  Chia sẻ kèm ID khi lan truyền để kiểm tra tại vnrelief.com
-                </p>
-                <Input
-                  name="id"
-                  value={formData.id}
-                  onChange={handleInputChange}
-                  className="mt-2"
-                />
-              </div>
-            </div>
-
             {/* Assistance Type */}
             <div className="space-y-4 rounded-lg border border-gray-300 bg-white p-6">
               <div className="space-y-2">
@@ -100,15 +274,15 @@ export default function RescueRequestForm() {
                   <div className="relative">
                     <input
                       type="radio"
-                      id="person-in-need"
-                      name="assistanceType"
-                      value="person-in-need"
-                      checked={formData.assistanceType === "person-in-need"}
+                      id="self-help"
+                      name="senderType"
+                      value="Tự gửi đơn cứu trợ"
+                      checked={formData.senderType === "Tự gửi đơn cứu trợ"}
                       onChange={handleInputChange}
                       className="peer sr-only"
                     />
                     <Label
-                      htmlFor="person-in-need"
+                      htmlFor="self-help"
                       className="flex h-full w-full cursor-pointer flex-col items-center justify-center gap-3 rounded-lg border-2 bg-white p-6 text-center shadow-sm transition-all hover:bg-gray-50 peer-checked:border-blue-600 peer-checked:ring-1 peer-checked:ring-blue-600"
                     >
                       <div className="rounded-full bg-blue-50 p-3">
@@ -128,15 +302,15 @@ export default function RescueRequestForm() {
                   <div className="relative">
                     <input
                       type="radio"
-                      id="assistance-info"
-                      name="assistanceType"
-                      value="assistance-info"
-                      checked={formData.assistanceType === "assistance-info"}
+                      id="help-others"
+                      name="senderType"
+                      value="Gửi giúp tin cứu trợ"
+                      checked={formData.senderType === "Gửi giúp tin cứu trợ"}
                       onChange={handleInputChange}
                       className="peer sr-only"
                     />
                     <Label
-                      htmlFor="assistance-info"
+                      htmlFor="help-others"
                       className="flex h-full w-full cursor-pointer flex-col items-center justify-center gap-3 rounded-lg border-2 bg-white p-6 text-center shadow-sm transition-all hover:bg-gray-50 peer-checked:border-green-600 peer-checked:ring-1 peer-checked:ring-green-600"
                     >
                       <div className="rounded-full bg-green-50 p-3">
@@ -153,151 +327,292 @@ export default function RescueRequestForm() {
                     </Label>
                   </div>
                 </div>
+                {errors.senderType && <FormError message={errors.senderType} />}
               </div>
             </div>
 
-            {/* Time, Status, People Section */}
+            {/* Title and Description */}
             <div className="space-y-6 rounded-lg border border-gray-300 bg-white p-6">
-              {/* Timestamp */}
               <div className="space-y-2">
-                <Label className="text-base font-medium">
-                  Thời gian gửi tin cần cứu trợ
-                </Label>
+                <RequiredLabel>
+                  <Label className="text-base font-medium">
+                    Tiêu đề cứu trợ
+                  </Label>
+                </RequiredLabel>
                 <p className="text-sm text-gray-500">
-                  Thời gian hệ thống ghi nhận yêu cầu của bạn
+                  Tiêu đề giúp các đội cứu trợ có thể hiểu khái quát được nội
+                  dung
                 </p>
-                <div className="relative mt-2">
-                  <Input
-                    name="submissionTime"
-                    value={formData.submissionTime}
-                    type="text"
-                    className="pl-10 bg-gray-50"
-                    readOnly
-                  />
-                  <CalendarIcon className="absolute left-3 top-2.5 h-5 w-5 text-gray-500" />
-                </div>
+                <Input
+                  name="title"
+                  value={formData.title}
+                  onChange={handleInputChange}
+                  className={cn(errors.title && "border-red-500")}
+                  placeholder="Ví dụ: Xin cứu giúp gia đình đang gặp nạn..."
+                />
+                {errors.title && <FormError message={errors.title} />}
               </div>
 
-              {/* Current Status */}
               <div className="space-y-2">
-                <Label className="text-base font-medium">
-                  Mô tả tình trạng hiện tại
-                </Label>
+                <RequiredLabel>
+                  <Label className="text-base font-medium">
+                    Mô tả tình trạng hiện tại
+                  </Label>
+                </RequiredLabel>
                 <p className="text-sm text-gray-500">
                   Mô tả chi tiết về tình trạng nơi thiên tai để đội cứu hộ nắm
                   bắt
                 </p>
                 <Textarea
-                  name="currentStatus"
-                  value={formData.currentStatus}
+                  name="description"
+                  value={formData.description}
                   onChange={handleInputChange}
+                  className={cn(errors.description && "border-red-500")}
                   placeholder="Ví dụ: Nhà có 1 người già, 2 người lớn, 2 trẻ nhỏ đang ở trên gác, nước đang dâng cao..."
-                  className="mt-2 resize-none"
                   rows={4}
                 />
+                {errors.description && (
+                  <FormError message={errors.description} />
+                )}
               </div>
 
-              {/* Number of People */}
               <div className="space-y-2">
-                <Label className="text-base font-medium">
-                  Số người cần hỗ trợ
-                </Label>
+                <RequiredLabel>
+                  <Label className="text-base font-medium">
+                    Nội dung cứu trợ
+                  </Label>
+                </RequiredLabel>
+                <p className="text-sm text-gray-500">
+                  Mô tả những thứ cần được cứu trợ
+                </p>
+                <Textarea
+                  name="contentNeedsRelief"
+                  value={formData.contentNeedsRelief}
+                  onChange={handleInputChange}
+                  className={cn(errors.contentNeedsRelief && "border-red-500")}
+                  placeholder="Ví dụ: Cần thực phẩm, nước uống, thuốc men..."
+                  rows={4}
+                />
+                {errors.contentNeedsRelief && (
+                  <FormError message={errors.contentNeedsRelief} />
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <RequiredLabel>
+                  <Label className="text-base font-medium">
+                    Số người cần hỗ trợ
+                  </Label>
+                </RequiredLabel>
                 <p className="text-sm text-gray-500">
                   Nhập số lượng người cần được hỗ trợ (ước lượng)
                 </p>
                 <div className="flex items-center w-fit h-11 border rounded-lg overflow-hidden border-gray-300">
                   <button
                     type="button"
-                    onClick={() => {}}
-                    className="h-full flex items-center justify-center bg-gray-100 border border-gray-300 text-center text-gray-900 text-sm p-4 hover:bg-gray-200"
+                    onClick={() => handleNumberChange("decrement")}
+                    className="h-full flex items-center justify-center bg-gray-100 text-center text-gray-900 text-sm p-4 hover:bg-gray-200"
                   >
                     <MinusIcon />
                   </button>
                   <input
                     type="number"
-                    defaultValue="1"
+                    value={formData.numberOfPeopleNeedingHelp}
+                    onChange={(e) => {
+                      const value = parseInt(e.target.value) || 0;
+                      setFormData((prev) => ({
+                        ...prev,
+                        numberOfPeopleNeedingHelp: Math.max(0, value),
+                      }));
+                    }}
                     min={0}
                     className="block h-full text-center bg-white border-x border-x-gray-300 w-[100px] px-3"
                   />
                   <button
                     type="button"
-                    onClick={() => {}}
-                    className="h-full flex items-center justify-center bg-gray-100 border border-gray-300 text-center text-gray-900 text-sm p-4 hover:bg-gray-200"
+                    onClick={() => handleNumberChange("increment")}
+                    className="h-full flex items-center justify-center bg-gray-100 text-center text-gray-900 text-sm p-4 hover:bg-gray-200"
                   >
                     <PlusIcon />
                   </button>
                 </div>
+                {errors.numberOfPeopleNeedingHelp && (
+                  <FormError message={errors.numberOfPeopleNeedingHelp} />
+                )}
               </div>
             </div>
 
-            {/* Contact and Location Section */}
+            {/* Contact Information */}
             <div className="space-y-6 rounded-lg border border-gray-300 bg-white p-6">
-              {/* Contact Information */}
               <div className="space-y-2">
-                <Label className="text-base font-medium">
-                  Số điện thoại liên hệ
-                </Label>
+                <RequiredLabel>
+                  <Label className="text-base font-medium">
+                    Số điện thoại liên hệ
+                  </Label>
+                </RequiredLabel>
                 <p className="text-sm text-gray-500">
                   Số điện thoại để đội cứu trợ có thể liên lạc với bạn
                 </p>
                 <Input
-                  name="contactNumber"
-                  value={formData.contactNumber}
+                  name="phone"
+                  value={formData.phone}
                   onChange={handleInputChange}
                   type="tel"
+                  className={cn(errors.phone && "border-red-500")}
                   placeholder="Nhập số điện thoại"
-                  className="mt-2"
+                />
+                {errors.phone && <FormError message={errors.phone} />}
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-base font-medium">
+                  Người ưu tiên liên hệ
+                </Label>
+                <p className="text-sm text-gray-500">Tên người cần cứu trợ</p>
+                <Input
+                  name="priorityContact"
+                  value={formData.priorityContact}
+                  onChange={handleInputChange}
+                  placeholder="Nhập tên người cần cứu trợ"
                 />
               </div>
 
-              {/* Location */}
               <div className="space-y-2">
                 <Label className="text-base font-medium">
-                  Địa điểm cần hỗ trợ
+                  Số điện thoại của người cần cứu trợ
                 </Label>
                 <p className="text-sm text-gray-500">
-                  Vui lòng cung cấp địa chỉ chính xác để đội cứu trợ có thể tìm
-                  đến
+                  Số điện thoại của người cần được hỗ trợ
                 </p>
-                <div className="relative mt-2">
-                  <Input
-                    name="location"
-                    value={formData.location}
-                    onChange={handleInputChange}
-                    className="pl-10"
-                    placeholder="Nhập địa chỉ hoặc chọn trên bản đồ"
-                  />
-                  <MapPin className="absolute left-3 top-2.5 h-5 w-5 text-gray-500" />
+                <Input
+                  name="priorityPhone"
+                  value={formData.priorityPhone}
+                  onChange={handleInputChange}
+                  type="tel"
+                  placeholder="Nhập số điện thoại của người cần cứu trợ"
+                />
+              </div>
+            </div>
+
+            {/* Location */}
+            <div className="space-y-6 rounded-lg border border-gray-300 bg-white p-6">
+              <div className="space-y-4">
+                <div>
+                  <Label className="text-base font-medium">
+                    Tỉnh/Thành phố
+                  </Label>
+                  <Select
+                    // value={formData.wardCode.split("|")[2] || ""}
+                    onValueChange={(value) => {
+                      setSelectedProvince(Number(value));
+                      handleSelectChange(`||${value}`, "wardCode");
+                    }}
+                  >
+                    <SelectTrigger
+                      className={cn(
+                        "mt-2",
+                        errors.wardCode && "border-red-500"
+                      )}
+                    >
+                      <SelectValue placeholder="Chọn tỉnh/thành phố" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {provinces.map((province) => (
+                        <SelectItem
+                          key={province.code}
+                          value={province.code.toString()}
+                        >
+                          {province.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
-                <div className="h-[300px] rounded-lg border bg-gray-100 mt-4">
-                  <div className="flex h-full items-center justify-center text-gray-500">
-                    Map Integration
-                  </div>
+
+                <div>
+                  <Label className="text-base font-medium">Quận/Huyện</Label>
+                  <Select
+                    disabled={!selectedProvince}
+                    onValueChange={(value) => {
+                      setSelectedDistrict(Number(value));
+                      handleSelectChange(
+                        `|${value}|${selectedProvince}`,
+                        "wardCode"
+                      );
+                    }}
+                  >
+                    <SelectTrigger
+                      className={cn(
+                        "mt-2",
+                        errors.wardCode && "border-red-500"
+                      )}
+                    >
+                      <SelectValue placeholder="Chọn quận/huyện" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {districts.map((district) => (
+                        <SelectItem
+                          key={district.code}
+                          value={district.code.toString()}
+                        >
+                          {district.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label className="text-base font-medium">Phường/Xã</Label>
+                  <Select
+                    disabled={!selectedDistrict}
+                    onValueChange={(value) => {
+                      handleSelectChange(
+                        `${value}|${selectedDistrict}|${selectedProvince}`,
+                        "wardCode"
+                      );
+                    }}
+                  >
+                    <SelectTrigger
+                      className={cn(
+                        "mt-2",
+                        errors.wardCode && "border-red-500"
+                      )}
+                    >
+                      <SelectValue placeholder="Chọn phường/xã" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {wards.map((ward) => (
+                        <SelectItem
+                          key={ward.code}
+                          value={ward.code.toString()}
+                        >
+                          {ward.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {errors.wardCode && <FormError message={errors.wardCode} />}
+
+                <div>
+                  <Label className="text-base font-medium">
+                    Địa chỉ cụ thể
+                  </Label>
+                  <Input
+                    name="address"
+                    value={formData.address}
+                    onChange={handleInputChange}
+                    placeholder="Nhập số nhà, tên đường..."
+                    className="mt-2"
+                  />
                 </div>
               </div>
             </div>
 
-            {/* Additional Info Section */}
+            {/* Additional Info and Images */}
             <div className="space-y-6 rounded-lg border border-gray-300 bg-white p-6">
-              {/* Additional Information */}
-              <div className="space-y-2">
-                <Label className="text-base font-medium">
-                  Thông tin bổ sung
-                </Label>
-                <p className="text-sm text-gray-500">
-                  Các thông tin khác cần chia sẻ với đội cứu trợ
-                </p>
-                <Textarea
-                  name="additionalDetails"
-                  value={formData.additionalDetails}
-                  onChange={handleInputChange}
-                  placeholder="Nhập thông tin bổ sung (nếu có)"
-                  className="mt-2 resize-none"
-                  rows={4}
-                />
-              </div>
-
-              {/* Photo Upload */}
               <div className="space-y-2">
                 <Label className="text-base font-medium">
                   Hình ảnh hiện trường
@@ -305,79 +620,35 @@ export default function RescueRequestForm() {
                 <p className="text-sm text-gray-500">
                   Tải lên hình ảnh để đội cứu trợ nắm rõ tình hình
                 </p>
-                <div className="grid gap-4 mt-2">
-                  <div className="relative aspect-video cursor-pointer rounded-lg border-2 border-dashed border-gray-200 hover:border-gray-300">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-2">
+                  {imageFiles.map((img, index) => (
+                    <div key={index} className="relative">
+                      <img
+                        src={img.url}
+                        alt={`Preview ${index}`}
+                        className="h-32 w-full object-cover rounded-lg"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeImage(index)}
+                        className="absolute top-1 right-1 p-1 bg-white rounded-full shadow-md hover:bg-gray-100"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ))}
+                  <div className="relative h-32 cursor-pointer rounded-lg border-2 border-dashed border-gray-200 hover:border-gray-300 transition-colors">
                     <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 text-gray-500">
                       <Camera className="h-8 w-8" />
-                      <span>Bấm để tải ảnh lên</span>
+                      <span className="text-sm">Thêm ảnh</span>
                     </div>
                     <input
                       type="file"
-                      className="absolute inset-0 opacity-0"
+                      className="absolute inset-0 opacity-0 cursor-pointer"
                       multiple
                       accept="image/*"
+                      onChange={handleImageUploadChange}
                     />
-                  </div>
-                </div>
-              </div>
-
-              {/* Region Selection */}
-              <div className="space-y-2">
-                <Label className="text-base font-medium">Khu vực</Label>
-                <p className="text-sm text-gray-500">
-                  Chọn khu vực địa lý để phân loại yêu cầu
-                </p>
-                <Select
-                  value={formData.region}
-                  onValueChange={(value) => handleSelectChange(value, "region")}
-                  // className="mt-2"
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Chọn khu vực" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="north">Miền Bắc</SelectItem>
-                    <SelectItem value="central">Miền Trung</SelectItem>
-                    <SelectItem value="south">Miền Nam</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            {/* Share Section */}
-            <div className="space-y-6 rounded-lg border border-gray-300 bg-white p-6">
-              {/* QR Code */}
-              <div className="space-y-2">
-                <Label className="text-base font-medium">Mã QR chia sẻ</Label>
-                <p className="text-sm text-gray-500">
-                  Quét mã QR để chia sẻ thông tin này
-                </p>
-                <div className="flex justify-center rounded-lg border bg-white p-4 mt-2">
-                  <QrCode className="h-32 w-32" />
-                </div>
-              </div>
-
-              {/* Share Template */}
-              <div className="space-y-2">
-                <p className="text-base font-medium">Mẫu chia sẻ</p>
-                <p className="text-sm text-gray-500">
-                  Copy nội dung bên dưới để chia sẻ
-                </p>
-                <div className="rounded-lg bg-gray-50 p-4 mt-2">
-                  <div className="space-y-2 text-sm">
-                    <div className="space-y-1 text-gray-600">
-                      <p>📍 ID: {formData.id}</p>
-                      <p>✅ Trạng thái: Chờ xác minh</p>
-                      <p>🗺️ Khu vực: {formData.region || "Chưa chọn"}</p>
-                      <p>
-                        📝 Chi tiết:{" "}
-                        {formData.additionalDetails || "Chưa cung cấp"}
-                      </p>
-                      <p>
-                        📞 Liên hệ: {formData.contactNumber || "Chưa cung cấp"}
-                      </p>
-                      <p>🕒 Cập nhật: {formData.submissionTime}</p>
-                    </div>
                   </div>
                 </div>
               </div>

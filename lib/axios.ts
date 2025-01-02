@@ -1,3 +1,4 @@
+import { getNaturalDisasterToLocal } from "@/utils/auth";
 import axios from "axios";
 import Cookies from "js-cookie";
 
@@ -10,20 +11,21 @@ const axiosInstance = axios.create({
   },
 });
 
+const naturalDisaster = getNaturalDisasterToLocal()
 // Request interceptor
 axiosInstance.interceptors.request.use(
-  (config) => {
-    // Lấy token từ cookie
-    const token = Cookies.get("token");
-
-    // Nếu có token, thêm vào header
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+  (request) => {
+    // if (accessToken) {
+    //   // request.headers.authorization = getAccessTokenToSession();
+    //   request.headers.authorization = `Bearer ${accessToken}`;
+    // }
+    if (naturalDisaster) {
+      request.headers.naturalDisaster = naturalDisaster
     }
-
-    return config;
+    return request;
   },
   (error) => {
+    console.log(error);
     return Promise.reject(error);
   }
 );
@@ -31,55 +33,27 @@ axiosInstance.interceptors.request.use(
 // Response interceptor
 axiosInstance.interceptors.response.use(
   (response) => {
-    // Xử lý response data nếu cần
-    return response;
+    // const { url } = response.config;
+    // if (url === "/auth/login") {
+    //   accessToken = response.data.accessToken;
+    //   saveAccessTokenToSession(accessToken);
+    // } else if (url === "/auth/logout") {
+    //   accessToken = "";
+    //   clearAccessTokenToSession();
+    // }
+    return response.data;
   },
-  async (error) => {
-    const originalRequest = error.config;
-
-    // Nếu lỗi 401 (Unauthorized) và chưa retry
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-
-      try {
-        // Thử refresh token
-        const refreshToken = Cookies.get("refreshToken");
-        if (refreshToken) {
-          const response = await axios.post(
-            `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`,
-            { refreshToken }
-          );
-
-          const { token } = response.data;
-
-          // Lưu token mới
-          Cookies.set("token", token);
-
-          // Cập nhật token trong header
-          originalRequest.headers.Authorization = `Bearer ${token}`;
-
-          // Thử lại request ban đầu
-          return axios(originalRequest);
-        }
-      } catch (refreshError) {
-        console.log(
-          "\n🔥 ~ file: axios.ts:65 ~ refreshError::\n",
-          refreshError
-        );
-        // Nếu refresh token failed, logout
-        handleLogout();
-      }
-    }
-
-    return Promise.reject(error);
+  (error) => {
+    // console.log("Error trong axios: ", error);
+    return Promise.reject(error.response.data);
   }
 );
 
 // Hàm xử lý login thành công
 export const handleLoginSuccess = (token: string, refreshToken: string) => {
   // Lưu token vào cookie
-  Cookies.set("token", token);
-  Cookies.set("refreshToken", refreshToken);
+  // Cookies.set("token", token);
+  // Cookies.set("refreshToken", refreshToken);
 
   // Cập nhật default headers
   axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;

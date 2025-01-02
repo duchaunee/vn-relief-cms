@@ -4,13 +4,15 @@ import { Roboto } from "next/font/google";
 import { Header } from "@/components/shared-layout/header";
 
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { Toaster } from "@/components/ui/toaster";
+// import { Toaster } from "@/components/ui/toaster";
 
 import { AppSidebar } from "@/components/app-sidebar/app-sidebar";
 
 import "../globals.css";
 import TanStackProvider from "@/providers/tan-stack-provider";
 // import AppContextProvider from "@/providers/app-context-provider/breadcrumb-context-provider";
+
+import { Toaster } from "react-hot-toast";
 
 const roboto = Roboto({
   weight: ["100", "300", "400", "500", "700", "900"],
@@ -50,6 +52,7 @@ export default function RootLayout({
         />
       </head>
       <body className={roboto.className}>
+        <Toaster />
         <TanStackProvider>
           <SidebarProvider>
             {/* <AppContextProvider> */}
@@ -57,7 +60,7 @@ export default function RootLayout({
             <SidebarInset>
               <Header />
               {children}
-              <Toaster />
+              {/* <Toaster /> */}
             </SidebarInset>
             {/* </AppContextProvider> */}
           </SidebarProvider>
