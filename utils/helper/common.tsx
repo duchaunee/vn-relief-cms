@@ -127,3 +127,7 @@ export const handleShare = async (title: string, text: string, url: string) => {
 
 export const formatDate = (date: string) =>
   format(new Date(date), "MM/dd/yyyy hh:mm:ss a");
+
+export const formatPhoneNumber = (phone: string) => {
+  return phone.startsWith("+") ? phone : `+84${phone.slice(1)}`;
+};

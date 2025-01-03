@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Bell,
   CalendarCheck,
@@ -31,9 +31,41 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { usePathname } from "next/navigation";
+import { handleLogout } from "@/lib/axios";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/configs/firebase";
+
+import Cookies from "js-cookie";
+import { USER_APIS } from "@/apis/user";
 
 const Header = () => {
   const [date, setDate] = useState<Date>();
+
+  //user
+  const [userFromMongodb, setUserFromMongodb] = useState<{} | null>(null);
+
+  useEffect(() => {
+    const handleSaveDateState = () => {
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          const userFromMongodb: any = await USER_APIS.getByUidFirebase(
+            user.uid
+          );
+          Cookies.set("user", JSON.stringify(userFromMongodb.data));
+          setUserFromMongodb(userFromMongodb.data);
+        } else {
+          setUserFromMongodb(null);
+          Cookies.remove("user");
+        }
+      });
+    };
+    handleSaveDateState(); //init
+
+    window.addEventListener("saveDataState", handleSaveDateState);
+
+    return () =>
+      window.removeEventListener("saveDataState", handleSaveDateState);
+  }, []);
 
   const pathName = usePathname();
 
@@ -147,27 +179,16 @@ const Header = () => {
                     Quay lại trang thông tin
                   </Link>
                 </DropdownMenuItem>
-                {/* <DropdownMenuItem className="p-0">
-                  <Link
-                    href="/contact-us"
-                    className={`flex items-center gap-1.5 rounded-lg px-3 py-2 ${
-                      pathName === "/contact-us" && "!bg-gray-400 !text-black"
-                    }`}
-                  >
-                    <Headphones className="size-[18px] shrink-0" />
-                    Help Center
-                  </Link>
-                </DropdownMenuItem> */}
                 <DropdownMenuItem className="p-0">
-                  <Link
-                    href="/dang-xuat"
+                  <button
+                    onClick={handleLogout}
                     className={`flex items-center gap-1.5 rounded-lg px-3 py-2 ${
                       pathName === "/dang-xuat" && "!bg-gray-400 !text-black"
                     }`}
                   >
                     <LogOut className="size-[18px] shrink-0" />
                     Đăng xuất
-                  </Link>
+                  </button>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

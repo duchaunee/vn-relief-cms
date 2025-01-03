@@ -119,9 +119,7 @@ const Left = () => {
             <div className="text-sm text-muted-foreground">
               Người gửi thông tin ?
             </div>
-            <div className="text-base">
-              {data?.informantId?.name} / {data?.senderType}
-            </div>
+            <div className="text-base">{data?.senderType}</div>
           </div>
           <div className="space-y-1 py-3 border-b border-b-gray-300">
             <div className="text-sm text-muted-foreground">

@@ -5,16 +5,14 @@ import { ReliefMap } from "./relief-map";
 import { LocationList } from "./location-list";
 import { Location } from "@/types/location";
 import { cn } from "@/lib/utils";
-import { useRequestReliefContext } from "@/providers/app-context-provider/request-relief-provider";
-import ModalContainer from "@/components/modal/modal-container";
-import RescueRequestForm from "@/components/modal/request-rescue-modal/rescue-form";
+import { GroupedData } from "@/types";
 
 interface DisasterReliefDashboardProps {
   titleList: {
     title: string;
     button: string;
   };
-  locations: Location[];
+  locations: GroupedData[];
 }
 
 export function DisasterReliefDashboard({
@@ -24,7 +22,6 @@ export function DisasterReliefDashboard({
   const [selectedLocation, setSelectedLocation] = useState<Location>();
   const [expand, setExpand] = useState(false);
 
-  const { open, setOpen } = useRequestReliefContext();
   return (
     <div className="w-full flex-1 flex">
       <div
@@ -56,20 +53,6 @@ export function DisasterReliefDashboard({
           onLocationSelect={setSelectedLocation}
         />
       </div>
-
-      <ModalContainer
-        open={open}
-        onOpenChange={(value: boolean) => setOpen(value)}
-        title="Gửi thông tin cứu trợ khẩn cấp"
-        description="Việc gửi đơn sẽ cần xác minh đề phòng trường hợp giả mạo"
-        button={{
-          primary: "Gửi đơn cứu trợ",
-          secondary: "Lưu bản nháp",
-        }}
-        formId="rescue-form-id"
-      >
-        <RescueRequestForm />
-      </ModalContainer>
     </div>
   );
 }

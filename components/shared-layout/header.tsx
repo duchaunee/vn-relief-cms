@@ -13,10 +13,75 @@ import { dataSidebar } from "@/constants/side-bar";
 import { NavUser } from "../nav-user";
 import Hotline from "../hotline";
 import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
+import { auth } from "@/configs/firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { USER_APIS } from "@/apis/user";
+import ButtonSignIn from "../button/sign-in";
+
+import Cookies from "js-cookie";
+import { handleLogout, isLogged } from "@/lib/axios";
+import { NATURAL_DISASTER_APIS } from "@/apis/natural-disaster";
 
 export const Header = () => {
   const isMobile = useIsMobile();
   const { state } = useSidebar();
+
+  const [userFromMongodb, setUserFromMongodb] = useState<{} | null | undefined>(
+    undefined
+  );
+  console.log(
+    "\n🔥 ~ file: header.tsx:33 ~ userFromMongodb::\n",
+    userFromMongodb
+  );
+  console.log("\n🔥 ~ file: header.tsx:115 ~ isLogged::\n", isLogged());
+
+  console.log(
+    "\n🔥 ~ file: header.tsx:122 ~ !!Cookies.get",
+    Cookies.get("user"),
+    !!Cookies.get("user")
+  );
+
+  useEffect(() => {
+    const handleSaveDateState = () => {
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          const userFromMongodb: any = (
+            await USER_APIS.getByUidFirebase(user.uid)
+          ).data;
+
+          if (userFromMongodb.accountStatus == "inactive") {
+            setUserFromMongodb(null);
+            Cookies.remove("user");
+            handleLogout();
+            return;
+          }
+
+          Cookies.set("user", JSON.stringify(userFromMongodb));
+          setUserFromMongodb(userFromMongodb);
+        } else {
+          setUserFromMongodb(null);
+          Cookies.remove("user");
+        }
+      });
+    };
+    handleSaveDateState(); //init
+
+    window.addEventListener("saveDataState", handleSaveDateState);
+
+    return () =>
+      window.removeEventListener("saveDataState", handleSaveDateState);
+  }, []);
+
+  useEffect(() => {
+    //get active natural disaster
+    const saveNaturalDisasterActive = async () => {
+      const getNaturalDisasterActive = (await NATURAL_DISASTER_APIS.getActive())
+        .data;
+      Cookies.set("natural-disaster", JSON.stringify(getNaturalDisasterActive));
+    };
+    saveNaturalDisasterActive();
+  }, []);
 
   return (
     <header className="sticky top-0 right-0 lg:mb-0 flex z-[30] h-14 shrink-0 items-center gap-2 px-4 bg-header transition-[width,height] ease-linear border-b border-b-gray-300">
@@ -44,9 +109,16 @@ export const Header = () => {
         {/* {isClient && !isMobile && <CommandMenu />} */}
         <Hotline />
         <Separator className="shrink-0 bg-gray-300 w-[1px] h-6" />
-        <Notification />
-        {/* <ButtonSignIn /> */}
-        <NavUser user={dataSidebar.user} />
+        {/* <Notification /> */}
+        {userFromMongodb !== undefined && ( // Chỉ render khi đã fetch xong
+          <>
+            {userFromMongodb && isLogged() ? (
+              <NavUser user={dataSidebar.user} />
+            ) : (
+              <ButtonSignIn />
+            )}
+          </>
+        )}
       </div>
     </header>
   );

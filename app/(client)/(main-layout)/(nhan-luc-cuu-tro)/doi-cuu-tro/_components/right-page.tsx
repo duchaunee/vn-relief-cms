@@ -2,14 +2,28 @@ import CopyTemplateText from "@/components/copy-template-text/copy-template-text
 import QRCodeWithLogo from "@/components/qr-code/qr-code-logo";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { templateTextRelief } from "@/constants/template-text-relief";
+import {
+  templateTextRelief,
+  templateTextRescueTeam,
+} from "@/constants/template-text-relief";
 import { useToast } from "@/hooks/use-toast";
+import { RequestData } from "@/types/models/rescue-request";
+import { findLocation, formatDate, handleShare } from "@/utils/helper/common";
+import { useQueryClient } from "@tanstack/react-query";
 import { CheckCircle, Copy, Share2 } from "lucide-react";
+import { useParams } from "next/navigation";
 import { useState } from "react";
 
 const RightPage = () => {
   const { toast } = useToast();
   const [copied, setCopied] = useState(false);
+
+  const queryClient = useQueryClient();
+  const { id } = useParams();
+
+  const data = queryClient.getQueryData<{
+    data: any;
+  }>(["rescue-teams-detail", id])?.data;
 
   const handleCopy = async (content: string) => {
     try {
@@ -24,6 +38,7 @@ const RightPage = () => {
       });
     }
   };
+
   return (
     <Card className="rounded-sm self-start">
       <CardContent className="p-6 space-y-4">
@@ -31,7 +46,7 @@ const RightPage = () => {
           <div className="text-sm text-muted-foreground">
             Thời gian cập nhật
           </div>
-          <div className="font-medium">10/30/2024 1:52:52 AM</div>
+          <div className="font-medium">{formatDate(data?.updatedAt!)}</div>
         </div>
 
         <div className="!mt-0 py-3 border-b border-b-gray-300">
@@ -40,7 +55,7 @@ const RightPage = () => {
             <Button
               variant="outline"
               onClick={() =>
-                handleCopy("https://vnrelief.com/cuu-tro-khan-cap/123")
+                handleCopy(`http://localhost:3000/doi-cuu-tro/${data?._id}`)
               }
               size="sm"
               className="gap-2 w-fit my-1 lg:my-0"
@@ -53,10 +68,21 @@ const RightPage = () => {
             </Button>
           </div>
           <div className="text-sm text-muted-foreground truncate">
-            https://vnrelief.com/cuu-tro-khan-cap/123
+            http://localhost:3000/doi-cuu-tro/{data?._id}
           </div>
           <div className="flex gap-2 mt-2">
-            <Button variant="outline" size="sm" className="w-full">
+            <Button
+              onClick={() => {
+                handleShare(
+                  "Chia sẻ liên kết để giúp những người gặp nạn",
+                  "text",
+                  `http://localhost:3000/doi-cuu-tro/${data?._id}`
+                );
+              }}
+              variant="outline"
+              size="sm"
+              className="w-full"
+            >
               <Share2 className="w-4 h-4 mr-2" />
               Chia sẻ
             </Button>
@@ -71,8 +97,14 @@ const RightPage = () => {
         </div>
 
         <CopyTemplateText
-          content={templateTextRelief({})}
-          title="Mẫu copy chia sẻ thông tin cứu trợ"
+          content={templateTextRescueTeam({
+            id: data?._id,
+            address: findLocation(data?.wardCode as string),
+            phone: data?.phone,
+            title: data?.teamName,
+            url: `http://localhost:3000/doi-cuu-tro/${data?._id}`,
+          })}
+          title="Mẫu copy chia sẻ thông tin đội cứu trợ"
         />
       </CardContent>
     </Card>

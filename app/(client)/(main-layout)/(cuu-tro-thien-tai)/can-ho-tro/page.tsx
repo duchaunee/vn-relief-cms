@@ -12,6 +12,7 @@ import RescueRequestForm from "@/components/modal/request-rescue-modal/rescue-fo
 import EmptyData from "@/constants/empty-data";
 import { CloudOff, SearchX } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
+import RescueRequestOtherForm from "@/components/modal/request-rescue-modal/rescue-other-form";
 
 const titleList = {
   title: "Danh sách các nơi đang cần hỗ trợ sau thiên tai",
@@ -20,12 +21,10 @@ const titleList = {
 
 export default function Page() {
   const query = useQuery({
-    queryKey: ["rescue-request"],
+    queryKey: ["rescue-request-other"],
     queryFn: RESCUE_REQUEST_APIS.getAll("other"),
   });
-  const rescueRequestData = query?.data?.data
-    ? transformData(query?.data?.data)
-    : [];
+  const rescueRequestData = transformData(query?.data?.data);
 
   if (query.isFetching)
     return (
@@ -42,12 +41,11 @@ export default function Page() {
     <RequestReliefContext>
       {rescueRequestData?.length == 0 ? (
         <EmptyData
-          onRemove={() => window.location.reload()}
           title="Chưa có thông tin đơn cứu trợ nào"
           description="Không tìm thấy thông tin đơn cứu trợ noà.
                       Vui lòng thử lại."
           icon={<CloudOff className="h-8 w-8 text-gray-400" />}
-          removeText="Thử lại"
+          removeText="Gửi đơn hỗ trợ"
         />
       ) : (
         <DisasterReliefDashboard
@@ -56,15 +54,15 @@ export default function Page() {
         />
       )}
       <ModalContainer
-        title="Gửi thông tin cứu trợ khẩn cấp"
+        title="Gửi thông tin xin hỗ trợ thiên tai"
         description="Việc gửi đơn sẽ cần xác minh đề phòng trường hợp giả mạo"
         buttons={{
-          primary: "Gửi đơn cứu trợ",
-          secondary: "Lưu bản nháp",
+          primary: "Gửi đơn hỗ trợ",
+          secondary: "Huỷ bỏ",
         }}
-        formId="rescue-form-id"
+        formId="rescue-form-other-id"
       >
-        <RescueRequestForm />
+        <RescueRequestOtherForm />
       </ModalContainer>
     </RequestReliefContext>
   );

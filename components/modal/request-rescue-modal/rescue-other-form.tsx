@@ -34,6 +34,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { RESCUE_REQUEST_APIS } from "@/apis/rescue-request";
 import toast from "react-hot-toast";
 import { RequestData } from "@/types/models/rescue-request";
+import { RESCUE_REQUEST_ITEMS_APIS } from "@/apis/rescue-request-item";
+import { RescueRequestItem } from "@/types/models/rescue-request-item";
+import _ from "lodash";
 
 const DRAFT_KEY = "rescue_request_draft";
 
@@ -48,12 +51,17 @@ interface ValidationErrors {
   numberOfPeopleNeedingHelp?: string;
   phone?: string;
   wardCode?: string;
-  contentNeedsRelief?: string;
+  [key: string]: string | undefined; // For dynamic relief item errors
 }
-
 interface ImagePreview {
   url: string;
   file: File;
+}
+
+interface ReliefItem {
+  name: string;
+  quantity: string;
+  unit: string;
 }
 
 const handleImageUpload = async (files: File[]) => {
@@ -70,9 +78,9 @@ const handleImageUpload = async (files: File[]) => {
   }
 };
 
-export default function RescueRequestForm() {
+export default function RescueRequestOtherForm() {
   const [formData, setFormData] = useState({
-    type: "emergency",
+    type: "other",
     informantId: null,
     wardCode: "",
     description: "",
@@ -152,9 +160,29 @@ export default function RescueRequestForm() {
     }
     if (!formData.phone) newErrors.phone = "Vui lòng nhập số điện thoại";
     if (!formData.wardCode) newErrors.wardCode = "Vui lòng chọn địa điểm";
-    if (!formData.contentNeedsRelief)
-      newErrors.contentNeedsRelief = "Vui lòng nhập nội dung cần cứu trợ";
+    // if (!formData.contentNeedsRelief)
+    //   newErrors.contentNeedsRelief = "Vui lòng nhập nội dung cần cứu trợ";
 
+    reliefItems.forEach((item, index) => {
+      if (!item.name.trim()) {
+        newErrors[`itemName${index}`] = "Vui lòng nhập tên hàng";
+      }
+
+      if (!item.quantity.trim()) {
+        newErrors[`itemQuantity${index}`] = "Vui lòng nhập số lượng";
+      } else if (isNaN(Number(item.quantity)) || Number(item.quantity) <= 0) {
+        newErrors[`itemQuantity${index}`] = "Số lượng phải là số dương";
+      }
+
+      if (!item.unit.trim()) {
+        newErrors[`itemUnit${index}`] = "Vui lòng nhập đơn vị";
+      }
+    });
+
+    console.log(
+      "\n🔥 ~ file: rescue-other-form.tsx:171 ~ newErrors::\n",
+      newErrors
+    );
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -212,15 +240,49 @@ export default function RescueRequestForm() {
   const removeImage = (index: number) => {
     setImageFiles((prev) => prev.filter((_, i) => i !== index));
   };
+  //================================
+  const [reliefItems, setReliefItems] = useState<RescueRequestItem[]>([
+    {
+      _id: "",
+      rescueRequestId: "",
+      name: "",
+      quantity: "",
+      remainingQuantity: "",
+      unit: "",
+      deletedAt: null,
+      createdAt: null,
+      updatedAt: null,
+      __v: 0,
+    },
+  ]);
+
+  //================================
+
+  const saveRescueRequestItems = async (
+    rescueRequestId: string,
+    items: RescueRequestItem[]
+  ) => {
+    try {
+      const formatItems = items.map((item) =>
+        _.omit(item, ["_id", "deletedAt", "createdAt", "updatedAt", "__v"])
+      );
+      return await RESCUE_REQUEST_ITEMS_APIS.save(rescueRequestId, formatItems);
+    } catch (error) {
+      console.error("Error uploading images:", error);
+      throw error;
+    }
+  };
 
   const updateRescueRequestMutation = useMutation({
     mutationFn: (body: RequestData) => RESCUE_REQUEST_APIS.save(body),
-    onSuccess: (data: any) => {
+    onSuccess: async (data: any) => {
       if (data.statusCode == 201) {
+        await saveRescueRequestItems(data.data.data._id, reliefItems);
+
         toast.success(data.data.message);
         setOpen(false);
-        // window.location.reload();
-        queryClient.setQueryData(["rescue-request"], (oldData: any) => ({
+
+        queryClient.setQueryData(["rescue-request-other"], (oldData: any) => ({
           data: [...oldData.data, data.data.data],
         }));
       }
@@ -234,15 +296,24 @@ export default function RescueRequestForm() {
         const imageUrls = await handleImageUpload(
           imageFiles.map((img) => img.file)
         );
-        const submitData = {
-          ...formData,
-          images: imageUrls,
-        };
 
-        await updateRescueRequestMutation.mutateAsync(submitData as any);
+        const submitData = {
+          mainFormData: {
+            ...formData,
+            images: imageUrls,
+          },
+          reliefItems: reliefItems,
+        };
+        console.log(
+          "\n🔥 ~ file: rescue-other-form.tsx:262 ~ submitData::\n",
+          submitData
+        );
+
+        await updateRescueRequestMutation.mutateAsync(
+          submitData.mainFormData as any
+        );
       } catch (error) {
         console.error("Error submitting form:", error);
-        // alert("Có lỗi xảy ra khi gửi form!");
       }
     } else {
       toast.error("Vui lòng điền đầy đủ thông tin bắt buộc!");
@@ -253,7 +324,11 @@ export default function RescueRequestForm() {
     <div className="min-h-screen w-full bg-gray-5">
       <Card className={cn("mx-auto w-full border-none shadow-none")}>
         <CardContent className="p-0 border-none shadow-none">
-          <form id="rescue-form-id" onSubmit={onSubmit} className="space-y-8">
+          <form
+            id="rescue-form-other-id"
+            onSubmit={onSubmit}
+            className="space-y-8"
+          >
             {/* Assistance Type */}
             <div className="space-y-4 rounded-lg border border-gray-300 bg-white p-6">
               <div className="space-y-2">
@@ -335,8 +410,8 @@ export default function RescueRequestForm() {
                   </Label>
                 </RequiredLabel>
                 <p className="text-sm text-gray-500">
-                  Tiêu đề giúp các đội cứu trợ có thể hiểu khái quát được nội
-                  dung
+                  Tiêu đề giúp các mạnh thường quân có thể hiểu khái quát được
+                  nội dung
                 </p>
                 <Input
                   name="title"
@@ -355,15 +430,15 @@ export default function RescueRequestForm() {
                   </Label>
                 </RequiredLabel>
                 <p className="text-sm text-gray-500">
-                  Mô tả chi tiết về tình trạng nơi thiên tai để đội cứu hộ nắm
-                  bắt
+                  Mô tả chi tiết về tình trạng của bạn để các mạnh thường quân
+                  nắm bắt
                 </p>
                 <Textarea
                   name="description"
                   value={formData.description}
                   onChange={handleInputChange}
                   className={cn(errors.description && "border-red-500")}
-                  placeholder="Ví dụ: Nhà có 1 người già, 2 người lớn, 2 trẻ nhỏ đang ở trên gác, nước đang dâng cao..."
+                  placeholder="Ví dụ: Nhà đang thiếu thức ăn trầm trọng, gia đình đã nhịn đói nhiều ngày, cần được..."
                   rows={4}
                 />
                 {errors.description && (
@@ -374,23 +449,134 @@ export default function RescueRequestForm() {
               <div className="space-y-2">
                 <RequiredLabel>
                   <Label className="text-base font-medium">
-                    Nội dung cứu trợ
+                    Nội dung hỗ trợ
                   </Label>
                 </RequiredLabel>
                 <p className="text-sm text-gray-500">
-                  Mô tả những thứ cần được cứu trợ
+                  Nhập các mặt hàng cần hỗ trợ, số lượng và đơn vị
                 </p>
-                <Textarea
-                  name="contentNeedsRelief"
-                  value={formData.contentNeedsRelief}
-                  onChange={handleInputChange}
-                  className={cn(errors.contentNeedsRelief && "border-red-500")}
-                  placeholder="Ví dụ: Cần thực phẩm, nước uống, thuốc men..."
-                  rows={4}
-                />
-                {errors.contentNeedsRelief && (
-                  <FormError message={errors.contentNeedsRelief} />
-                )}
+
+                <div className="space-y-4">
+                  {reliefItems.map((item, index) => (
+                    <div key={index} className="flex gap-4">
+                      <div className="w-fit">
+                        <Input
+                          placeholder="Tên hàng"
+                          value={item.name}
+                          onChange={(e) => {
+                            const newItems = [...reliefItems];
+                            newItems[index].name = e.target.value;
+                            setReliefItems(newItems);
+                            setErrors((prev) => ({
+                              ...prev,
+                              [`itemName${index}`]: undefined,
+                            }));
+                          }}
+                          className={cn(
+                            errors[`itemName${index}`] && "border-red-500"
+                          )}
+                        />
+                        {errors[`itemName${index}`] && (
+                          <span className="text-sm text-red-500 mt-1">
+                            {errors[`itemName${index}`]}
+                          </span>
+                        )}
+                      </div>
+
+                      <div>
+                        <Input
+                          placeholder="Số lượng"
+                          value={item.quantity}
+                          onChange={(e) => {
+                            const newItems = [...reliefItems];
+                            newItems[index].quantity = e.target.value;
+                            setReliefItems(newItems);
+                            setErrors((prev) => ({
+                              ...prev,
+                              [`itemQuantity${index}`]: undefined,
+                            }));
+                          }}
+                          className={cn(
+                            errors[`itemQuantity${index}`] && "border-red-500"
+                          )}
+                        />
+                        {errors[`itemQuantity${index}`] && (
+                          <span className="text-sm text-red-500 mt-1">
+                            {errors[`itemQuantity${index}`]}
+                          </span>
+                        )}
+                      </div>
+
+                      <div>
+                        <Input
+                          placeholder="Đơn vị"
+                          value={item.unit}
+                          onChange={(e) => {
+                            const newItems = [...reliefItems];
+                            newItems[index].unit = e.target.value;
+                            setReliefItems(newItems);
+                            setErrors((prev) => ({
+                              ...prev,
+                              [`itemUnit${index}`]: undefined,
+                            }));
+                          }}
+                          className={cn(
+                            errors[`itemUnit${index}`] && "border-red-500"
+                          )}
+                        />
+                        {errors[`itemUnit${index}`] && (
+                          <span className="text-sm text-red-500 mt-1">
+                            {errors[`itemUnit${index}`]}
+                          </span>
+                        )}
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const newItems = reliefItems.filter(
+                            (_, i) => i !== index
+                          );
+                          setReliefItems(newItems);
+                          // Clear errors for removed item
+                          const newErrors = { ...errors };
+                          delete newErrors[`itemName${index}`];
+                          delete newErrors[`itemQuantity${index}`];
+                          delete newErrors[`itemUnit${index}`];
+                          setErrors(newErrors);
+                        }}
+                        className="h-10 flex items-center justify-center bg-gray-100 text-center text-gray-900 text-sm p-4 hover:bg-gray-200 rounded-lg"
+                      >
+                        <MinusIcon />
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setReliefItems([
+                            ...reliefItems,
+                            { name: "", quantity: "", unit: "" },
+                          ])
+                        }
+                        className="h-10 flex items-center justify-center bg-gray-100 text-center text-gray-900 text-sm p-4 hover:bg-gray-200 rounded-lg"
+                      >
+                        <PlusIcon />
+                      </button>
+                    </div>
+                  ))}
+
+                  {reliefItems.length === 0 && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setReliefItems([{ name: "", quantity: "", unit: "" }])
+                      }
+                      className="h-10 flex items-center justify-center bg-gray-100 text-center text-gray-900 text-sm px-4 hover:bg-gray-200 rounded-lg"
+                    >
+                      <PlusIcon className="mr-2" /> Thêm hàng
+                    </button>
+                  )}
+                </div>
               </div>
 
               <div className="space-y-2">

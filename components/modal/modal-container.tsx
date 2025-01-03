@@ -14,6 +14,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useRequestReliefContext } from "@/providers/app-context-provider/request-relief-provider";
+import { LoadingButton } from "../button/loading-button";
 interface ModalProps {
   // open: boolean;
   // onOpenChange: (open: boolean) => void;
@@ -120,13 +121,14 @@ const ModalContainer = ({
             >
               {buttons?.secondary}
             </Button>
-            <Button
+            <LoadingButton
               type="submit"
               form={formId}
+              // loading={true}
               className="px-6 py-4 bg-red-500 hover:bg-red-600"
             >
               {buttons?.primary}
-            </Button>
+            </LoadingButton>
           </div>
         </div>
       </DialogContent>

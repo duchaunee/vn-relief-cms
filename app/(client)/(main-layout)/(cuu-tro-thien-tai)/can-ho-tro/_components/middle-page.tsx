@@ -1,9 +1,21 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import EmptyData from "@/constants/empty-data";
 import { cn } from "@/lib/utils";
-import { ArrowRight, ImagePlus } from "lucide-react";
+import { RequestData } from "@/types/models/rescue-request";
+import { useQueryClient } from "@tanstack/react-query";
+import { ArrowRight, CloudOff, ImagePlus } from "lucide-react";
+import Image from "next/image";
+import { useParams } from "next/navigation";
 
 const Middle = () => {
+  const queryClient = useQueryClient();
+  const { id } = useParams();
+
+  const data = queryClient.getQueryData<{
+    data: RequestData;
+  }>(["rescue-request-detail", id])?.data;
+
   return (
     <div className="flex-1 flex flex-col gap-4">
       <Card className="w-full rounded-sm">
@@ -33,14 +45,27 @@ const Middle = () => {
           </h2>
         </CardHeader>
         <CardContent>
-          <button className="border-2 border-dashed border-gray-300 rounded-lg h-[150px] aspect-square flex items-center justify-center lg:hover:border-gray-500">
-            <div className="flex flex-col items-center gap-2 p-2">
-              <ImagePlus className="w-5 h-5 text-muted-foreground" />
-              <span className="text-sm text-muted-foreground font-medium">
-                Thêm ảnh
-              </span>
+          {data?.images.length > 0 ? (
+            <div className="flex gap-2">
+              {data?.images.map((image) => (
+                <a
+                  href={image}
+                  target="_blank"
+                  className="border-2 border-dashed border-gray-300 rounded-lg w-[150px] h-[150px] aspect-square flex items-center justify-center lg:hover:border-gray-500 overflow-hidden"
+                >
+                  <Image
+                    src={image}
+                    alt=""
+                    width={150}
+                    height={150}
+                    className="text-muted-foreground object-contain"
+                  ></Image>
+                </a>
+              ))}
             </div>
-          </button>
+          ) : (
+            "Không có hình ảnh"
+          )}
         </CardContent>
       </Card>
     </div>
