@@ -204,7 +204,9 @@ export default function Register() {
     e.preventDefault();
 
     const isFormValid = validateForm();
-    const isTeamFormNeeded = formData.team === "new";
+    const isTeamFormNeeded =
+      formData.team === "new" &&
+      formData.roles == userRoleData.find((role: any) => role.code == 1)._id;
     const isTeamFormValid = isTeamFormNeeded ? validateTeamForm() : true;
 
     if (isFormValid && isTeamFormValid) {
@@ -669,112 +671,126 @@ export default function Register() {
             )}
         </div>
 
-        {formData.team === "new" && (
-          <div className="mt-6 space-y-6 p-6 border border-gray-200 rounded-lg">
-            <h2 className="text-lg font-semibold">Thông tin đội cứu trợ mới</h2>
+        {formData.team === "new" &&
+          formData.roles ==
+            userRoleData.find((role: any) => role.code == 1)._id && (
+            <div className="mt-6 space-y-6 p-6 border border-gray-200 rounded-lg">
+              <h2 className="text-lg font-semibold">
+                Thông tin đội cứu trợ mới
+              </h2>
 
-            {/* Tên đội cứu trợ */}
-            <div className="space-y-2">
-              <Label>Tên đội cứu trợ</Label>
-              <Input
-                value={rescueTeam.teamName}
-                onChange={(e) => {
-                  setRescueTeam((prev) => ({
-                    ...prev,
-                    teamName: e.target.value,
-                  }));
-                  setTeamErrors((prev) => ({ ...prev, teamName: undefined }));
-                }}
-                className={cn(teamErrors.teamName && "border-red-500")}
-                placeholder="Nhập tên đội cứu trợ"
-              />
-              {teamErrors.teamName && (
-                <span className="text-sm text-red-500">
-                  {teamErrors.teamName}
-                </span>
-              )}
-            </div>
+              {/* Tên đội cứu trợ */}
+              <div className="space-y-2">
+                <Label>Tên đội cứu trợ</Label>
+                <Input
+                  value={rescueTeam.teamName}
+                  onChange={(e) => {
+                    setRescueTeam((prev) => ({
+                      ...prev,
+                      teamName: e.target.value,
+                    }));
+                    setTeamErrors((prev) => ({ ...prev, teamName: undefined }));
+                  }}
+                  className={cn(teamErrors.teamName && "border-red-500")}
+                  placeholder="Nhập tên đội cứu trợ"
+                />
+                {teamErrors.teamName && (
+                  <span className="text-sm text-red-500">
+                    {teamErrors.teamName}
+                  </span>
+                )}
+              </div>
 
-            {/* Loại hoạt động */}
-            <div className="space-y-2">
-              <Label>Loại hoạt động</Label>
-              <Select
-                value={rescueTeam.operationType}
-                onValueChange={(value) => {
-                  setRescueTeam((prev) => ({ ...prev, operationType: value }));
-                  setTeamErrors((prev) => ({
-                    ...prev,
-                    operationType: undefined,
-                  }));
-                }}
-              >
-                <SelectTrigger
-                  className={cn(teamErrors.operationType && "border-red-500")}
+              {/* Loại hoạt động */}
+              <div className="space-y-2">
+                <Label>Loại hoạt động</Label>
+                <Select
+                  value={rescueTeam.operationType}
+                  onValueChange={(value) => {
+                    setRescueTeam((prev) => ({
+                      ...prev,
+                      operationType: value,
+                    }));
+                    setTeamErrors((prev) => ({
+                      ...prev,
+                      operationType: undefined,
+                    }));
+                  }}
                 >
-                  <SelectValue placeholder="Chọn loại hoạt động" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Cứu hộ và di dời">
-                    Cứu hộ và di dời
-                  </SelectItem>
-                  <SelectItem value="Y tế khẩn cấp">Y tế khẩn cấp</SelectItem>
-                  <SelectItem value="Cung cấp lương thực">
-                    Cung cấp lương thực
-                  </SelectItem>
-                  <SelectItem value="Khác">Khác</SelectItem>
-                </SelectContent>
-              </Select>
-              {teamErrors.operationType && (
-                <span className="text-sm text-red-500">
-                  {teamErrors.operationType}
-                </span>
-              )}
-            </div>
+                  <SelectTrigger
+                    className={cn(teamErrors.operationType && "border-red-500")}
+                  >
+                    <SelectValue placeholder="Chọn loại hoạt động" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Cứu hộ và di dời">
+                      Cứu hộ và di dời
+                    </SelectItem>
+                    <SelectItem value="Y tế khẩn cấp">Y tế khẩn cấp</SelectItem>
+                    <SelectItem value="Cung cấp lương thực">
+                      Cung cấp lương thực
+                    </SelectItem>
+                    <SelectItem value="Khác">Khác</SelectItem>
+                  </SelectContent>
+                </Select>
+                {teamErrors.operationType && (
+                  <span className="text-sm text-red-500">
+                    {teamErrors.operationType}
+                  </span>
+                )}
+              </div>
 
-            {/* Số điện thoại liên hệ */}
-            <div className="space-y-2">
-              <Label>Số điện thoại liên hệ</Label>
-              <Input
-                value={rescueTeam.phone}
-                onChange={(e) => {
-                  setRescueTeam((prev) => ({ ...prev, phone: e.target.value }));
-                  setTeamErrors((prev) => ({ ...prev, phone: undefined }));
-                }}
-                className={cn(teamErrors.phone && "border-red-500")}
-                placeholder="Nhập số điện thoại liên hệ"
-              />
-              {teamErrors.phone && (
-                <span className="text-sm text-red-500">{teamErrors.phone}</span>
-              )}
-            </div>
+              {/* Số điện thoại liên hệ */}
+              <div className="space-y-2">
+                <Label>Số điện thoại liên hệ</Label>
+                <Input
+                  value={rescueTeam.phone}
+                  onChange={(e) => {
+                    setRescueTeam((prev) => ({
+                      ...prev,
+                      phone: e.target.value,
+                    }));
+                    setTeamErrors((prev) => ({ ...prev, phone: undefined }));
+                  }}
+                  className={cn(teamErrors.phone && "border-red-500")}
+                  placeholder="Nhập số điện thoại liên hệ"
+                />
+                {teamErrors.phone && (
+                  <span className="text-sm text-red-500">
+                    {teamErrors.phone}
+                  </span>
+                )}
+              </div>
 
-            {/* Khả năng hỗ trợ */}
-            <div className="space-y-2">
-              <Label>Khả năng hỗ trợ</Label>
-              <Textarea
-                value={rescueTeam.supportCapability}
-                onChange={(e) => {
-                  setRescueTeam((prev) => ({
-                    ...prev,
-                    supportCapability: e.target.value,
-                  }));
-                  setTeamErrors((prev) => ({
-                    ...prev,
-                    supportCapability: undefined,
-                  }));
-                }}
-                className={cn(teamErrors.supportCapability && "border-red-500")}
-                placeholder="Mô tả khả năng hỗ trợ của đội"
-                rows={4}
-              />
-              {teamErrors.supportCapability && (
-                <span className="text-sm text-red-500">
-                  {teamErrors.supportCapability}
-                </span>
-              )}
+              {/* Khả năng hỗ trợ */}
+              <div className="space-y-2">
+                <Label>Khả năng hỗ trợ</Label>
+                <Textarea
+                  value={rescueTeam.supportCapability}
+                  onChange={(e) => {
+                    setRescueTeam((prev) => ({
+                      ...prev,
+                      supportCapability: e.target.value,
+                    }));
+                    setTeamErrors((prev) => ({
+                      ...prev,
+                      supportCapability: undefined,
+                    }));
+                  }}
+                  className={cn(
+                    teamErrors.supportCapability && "border-red-500"
+                  )}
+                  placeholder="Mô tả khả năng hỗ trợ của đội"
+                  rows={4}
+                />
+                {teamErrors.supportCapability && (
+                  <span className="text-sm text-red-500">
+                    {teamErrors.supportCapability}
+                  </span>
+                )}
+              </div>
             </div>
-          </div>
-        )}
+          )}
         {showOTPForm && (
           <div className="mt-6">
             <h2 className="text-lg font-semibold">Xác thực OTP</h2>

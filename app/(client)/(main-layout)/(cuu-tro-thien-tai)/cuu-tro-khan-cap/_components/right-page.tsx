@@ -52,7 +52,9 @@ const RightPage = () => {
             <Button
               variant="outline"
               onClick={() =>
-                handleCopy(`http://localhost:3000/can-ho-tro/${data?._id}`)
+                handleCopy(
+                  `http://localhost:3000/cuu-tro-khan-cap/${data?._id}`
+                )
               }
               size="sm"
               className="gap-2 w-fit my-1 lg:my-0"
@@ -65,7 +67,7 @@ const RightPage = () => {
             </Button>
           </div>
           <div className="text-sm text-muted-foreground truncate">
-            http://localhost:3000/can-ho-tro/{data?._id}
+            http://localhost:3000/cuu-tro-khan-cap/{data?._id}
           </div>
           <div className="flex gap-2 mt-2">
             <Button
@@ -73,7 +75,7 @@ const RightPage = () => {
                 handleShare(
                   "Chia sẻ liên kết để giúp những người gặp nạn",
                   "text",
-                  `http://localhost:3000/can-ho-tro/${data?._id}`
+                  `http://localhost:3000/cuu-tro-khan-cap/${data?._id}`
                 );
               }}
               variant="outline"
@@ -101,7 +103,7 @@ const RightPage = () => {
             title: data?.title,
             description: data?.description,
             contentNeedsRelief: data?.contentNeedsRelief,
-            url: `http://localhost:3000/can-ho-tro/${data?._id}`,
+            url: `http://localhost:3000/cuu-tro-khan-cap/${data?._id}`,
           })}
           title="Mẫu copy chia sẻ thông tin cứu trợ"
         />

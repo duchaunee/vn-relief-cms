@@ -131,3 +131,47 @@ export const formatDate = (date: string) =>
 export const formatPhoneNumber = (phone: string) => {
   return phone.startsWith("+") ? phone : `+84${phone.slice(1)}`;
 };
+
+export const formatStatusMessagesReceivedRescueRequest = (data) => {
+  const messages = [];
+
+  // Collect all messages with timestamps
+  if (data.transportSupplies) {
+    data.transportSupplies.forEach((supply) => {
+      messages.push({
+        type: "transport",
+        timestamp: new Date(supply.createdAt),
+        userName: supply.vehicleId.ownerId.name,
+        items: supply.amount
+          .map((item) => `${item.quantity} ${item.item.unit} ${item.item.name}`)
+          .join(", "),
+        createdAt: supply.createdAt,
+      });
+    });
+  }
+
+  if (data.userContributions) {
+    data.userContributions.forEach((contribution) => {
+      messages.push({
+        type: "contribution",
+        timestamp: new Date(contribution.createdAt),
+        userName: contribution.userId.name,
+        items: contribution.amount
+          .map((item) => `${item.quantity} ${item.item.unit} ${item.item.name}`)
+          .join(", "),
+        createdAt: contribution.createdAt,
+      });
+    });
+  }
+
+  // Sort by timestamp descending (newest first)
+  messages.sort((a, b) => b.timestamp - a.timestamp);
+
+  // Format messages after sorting
+  return messages.map((msg) => ({
+    type: msg.type,
+    message: `Người dùng ${msg.userName} vừa ${
+      msg.type === "transport" ? "đăng ký vận chuyển" : "đăng ký hỗ trợ"
+    } ${msg.items} lúc ${formatDate(msg.createdAt)}`,
+  }));
+};

@@ -8,6 +8,7 @@ import { useParams } from "next/navigation";
 export default function page() {
   const { id } = useParams();
 
+  //detail
   const query = useQuery({
     queryKey: ["rescue-request-detail", id],
     queryFn: RESCUE_REQUEST_APIS.getById(id as string),

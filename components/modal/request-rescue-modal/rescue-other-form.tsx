@@ -449,7 +449,7 @@ export default function RescueRequestOtherForm() {
               <div className="space-y-2">
                 <RequiredLabel>
                   <Label className="text-base font-medium">
-                    Nội dung hỗ trợ
+                    Nội dung hỗ trợ (ước lượng)
                   </Label>
                 </RequiredLabel>
                 <p className="text-sm text-gray-500">
