@@ -331,7 +331,6 @@ export default function Register() {
           user: formData,
           rescueTeam: isTeamFormNeeded ? rescueTeam : undefined,
         };
-        console.log("\n🔥 ~ file: page.tsx:287 ~ submitData::\n", submitData);
         toast.success(
           `Xác thực OTP thành công!  ${
             [2, 3, 4].includes(
@@ -344,7 +343,12 @@ export default function Register() {
 
         await handleRegister(submitData);
         window.dispatchEvent(new CustomEvent("saveDataState"));
-        window.location.replace("/");
+
+        //Nếu k phải đăng ký TNV thì về redirect về /
+        //còn nếu là TNV thì nó có stauts là inactive, tự nó logout (ở header có xử lý), k cần redirect
+        ![2, 3, 4].includes(
+          userRoleData.find((role) => role._id == formData.roles).code
+        ) && window.location.replace("/");
 
         // Further processing or redirection logic here
       } catch (error) {

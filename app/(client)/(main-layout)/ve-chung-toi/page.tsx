@@ -64,10 +64,10 @@ const AboutUs = () => {
             <div className="space-y-4">
               <p className="text-gray-600">
                 Thông qua đường dây nóng 18006132 và quét thông tin kiều của tờ
-                mạng xã hội, ERIN tiếp nhận yêu cầu hỗ trợ và kết nối với các
-                đơn vị cứu trợ phù hợp. Đội ngũ tình nguyện viên trực tuyến của
-                ERIN xác minh thông tin và chuyển đến cơ quan chức năng tại địa
-                phương để thực hiện cứu hộ kịp thời.
+                mạng xã hội, VNRelief tiếp nhận yêu cầu hỗ trợ và kết nối với
+                các đơn vị cứu trợ phù hợp. Đội ngũ tình nguyện viên trực tuyến
+                của VNRelief xác minh thông tin và chuyển đến cơ quan chức năng
+                tại địa phương để thực hiện cứu hộ kịp thời.
               </p>
             </div>
 

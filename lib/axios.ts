@@ -1,5 +1,5 @@
 import { auth } from "@/configs/firebase";
-import { getNaturalDisasterToLocal } from "@/utils/auth";
+import { getNaturalDisasterFromCookies } from "@/utils/auth";
 import axios from "axios";
 import { signOut } from "firebase/auth";
 import Cookies from "js-cookie";
@@ -15,16 +15,17 @@ const axiosInstance = axios.create({
   },
 });
 
-const naturalDisaster = getNaturalDisasterToLocal();
 // Request interceptor
 axiosInstance.interceptors.request.use(
   (request) => {
-    // if (accessToken) {
-    //   // request.headers.authorization = getAccessTokenToSession();
-    //   request.headers.authorization = `Bearer ${accessToken}`;
-    // }
+    const naturalDisaster: any = getNaturalDisasterFromCookies();
+    console.log(
+      "\n🔥 ~ file: axios.ts:19 ~ naturalDisaster::\n",
+      naturalDisaster
+    );
+
     if (naturalDisaster) {
-      request.headers.naturalDisaster = naturalDisaster;
+      request.headers.naturaldisasterid = naturalDisaster._id;
     }
     return request;
   },
@@ -49,27 +50,22 @@ axiosInstance.interceptors.response.use(
   },
   (error) => {
     // console.log("Error trong axios: ", error);
-    return Promise.reject(error.response.data);
+    // return Promise.reject(error.response.data);
   }
 );
 
 // Hàm xử lý login thành công
-export const handleLoginSuccess = (token: string, refreshToken: string) => {
-  // Lưu token vào cookie
-  // Cookies.set("token", token);
-  // Cookies.set("refreshToken", refreshToken);
-
-  // Cập nhật default headers
-  axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-};
+// export const handleLoginSuccess = (token: string, refreshToken: string) => {
+//   axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+// };
 
 // Hàm xử lý logout
 export const handleLogout = async () => {
   try {
     await signOut(auth);
     window.dispatchEvent(new CustomEvent("saveDataState"));
-    window.location.reload(); //reload để chạy lại middware --> redicrect
-    toast.success("Đăng xuất thành công");
+    window.location.replace("/dang-nhap"); //reload để chạy lại middware --> redicrect
+    // toast.success("Đăng xuất thành công");
   } catch (error) {
     console.error("Lỗi khi đăng xuất:", error);
   }
@@ -106,42 +102,3 @@ export const getCurrentUser = () =>
 // ==========================
 // Export instance để sử dụng trong app
 export default axiosInstance;
-
-// Ví dụ sử dụng:
-/*
-import api from '@/lib/axios';
-
-// Login
-const login = async (credentials) => {
-  try {
-    const response = await api.post('/auth/login', credentials);
-    const { token, refreshToken } = response.data;
-    handleLoginSuccess(token, refreshToken);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
-// API calls
-const getData = async () => {
-  try {
-    const response = await api.get('/api/data');
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
-// Logout
-const logout = async () => {
-  try {
-    await api.post('/auth/logout');
-    handleLogout();
-  } catch (error) {
-    // Still remove tokens even if API call fails
-    handleLogout();
-    throw error;
-  }
-};
-*/

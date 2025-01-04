@@ -22,6 +22,7 @@ import ButtonSignIn from "../button/sign-in";
 import Cookies from "js-cookie";
 import { handleLogout, isLogged } from "@/lib/axios";
 import { NATURAL_DISASTER_APIS } from "@/apis/natural-disaster";
+import { saveNaturalDisasterToCookies } from "@/utils/auth";
 
 export const Header = () => {
   const isMobile = useIsMobile();
@@ -30,35 +31,26 @@ export const Header = () => {
   const [userFromMongodb, setUserFromMongodb] = useState<{} | null | undefined>(
     undefined
   );
-  console.log(
-    "\n🔥 ~ file: header.tsx:33 ~ userFromMongodb::\n",
-    userFromMongodb
-  );
-  console.log("\n🔥 ~ file: header.tsx:115 ~ isLogged::\n", isLogged());
-
-  console.log(
-    "\n🔥 ~ file: header.tsx:122 ~ !!Cookies.get",
-    Cookies.get("user"),
-    !!Cookies.get("user")
-  );
 
   useEffect(() => {
     const handleSaveDateState = () => {
       onAuthStateChanged(auth, async (user) => {
         if (user) {
-          const userFromMongodb: any = (
-            await USER_APIS.getByUidFirebase(user.uid)
-          ).data;
+          const userFromMongodb: any = await USER_APIS.getByUidFirebase(
+            user.uid
+          );
 
-          if (userFromMongodb.accountStatus == "inactive") {
-            setUserFromMongodb(null);
-            Cookies.remove("user");
-            handleLogout();
-            return;
+          if (userFromMongodb && userFromMongodb?.data) {
+            if (userFromMongodb.data.accountStatus == "inactive") {
+              setUserFromMongodb(null);
+              Cookies.remove("user");
+              handleLogout();
+              return;
+            }
+
+            Cookies.set("user", JSON.stringify(userFromMongodb.data));
+            setUserFromMongodb(userFromMongodb.data);
           }
-
-          Cookies.set("user", JSON.stringify(userFromMongodb));
-          setUserFromMongodb(userFromMongodb);
         } else {
           setUserFromMongodb(null);
           Cookies.remove("user");
@@ -76,9 +68,13 @@ export const Header = () => {
   useEffect(() => {
     //get active natural disaster
     const saveNaturalDisasterActive = async () => {
-      const getNaturalDisasterActive = (await NATURAL_DISASTER_APIS.getActive())
-        .data;
-      Cookies.set("natural-disaster", JSON.stringify(getNaturalDisasterActive));
+      console.log("hahah");
+      const getNaturalDisasterActive = await NATURAL_DISASTER_APIS.getActive();
+      if (getNaturalDisasterActive && getNaturalDisasterActive.data) {
+        saveNaturalDisasterToCookies(
+          JSON.stringify(getNaturalDisasterActive.data)
+        );
+      }
     };
     saveNaturalDisasterActive();
   }, []);

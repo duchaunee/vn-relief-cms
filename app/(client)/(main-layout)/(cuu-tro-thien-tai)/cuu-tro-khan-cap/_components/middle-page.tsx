@@ -60,7 +60,7 @@ const Middle = () => {
                     alt=""
                     width={150}
                     height={150}
-                    className="text-muted-foreground object-contain"
+                    className="text-muted-foreground object-cover"
                   ></Image>
                 </a>
               ))}

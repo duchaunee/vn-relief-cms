@@ -216,6 +216,7 @@ export default function RescueRequestForm() {
   const updateRescueRequestMutation = useMutation({
     mutationFn: (body: RequestData) => RESCUE_REQUEST_APIS.save(body),
     onSuccess: (data: any) => {
+      console.log("\n🔥 ~ file: rescue-form.tsx:219 ~ data::\n", data);
       if (data.statusCode == 201) {
         toast.success(data.data.message);
         setOpen(false);

@@ -23,7 +23,6 @@ export default function Page() {
     queryKey: ["rescue-request"],
     queryFn: RESCUE_REQUEST_APIS.getAll("emergency"),
   });
-  console.log("\n🔥 ~ file: page.tsx:26 ~ query::\n", query);
   const rescueRequestData = transformData(query?.data?.data);
 
   if (query.isLoading || query.isFetching)

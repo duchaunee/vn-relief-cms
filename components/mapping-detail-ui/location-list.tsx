@@ -88,8 +88,7 @@ const LocationItem = ({
                 // onClick={() => onLocationSelect(request)}
               >
                 <Image
-                  // src={request.images[0]!}
-                  src="https://firebasestorage.googleapis.com/v0/b/shoes-shopping-web.appspot.com/o/social-media%2F1718324038019anhcute.jpg?alt=media&token=2e7fdc46-9367-41b8-8ebd-730d02b9602a"
+                  src={request.images[0]! || "/logo/logo-vnrelief.png"}
                   width={70}
                   height={70}
                   alt={request.images[0]}
