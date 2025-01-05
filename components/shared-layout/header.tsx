@@ -23,6 +23,7 @@ import Cookies from "js-cookie";
 import { handleLogout, isLogged } from "@/lib/axios";
 import { NATURAL_DISASTER_APIS } from "@/apis/natural-disaster";
 import { saveNaturalDisasterToCookies } from "@/utils/auth";
+import { USER_ROLES_APIS } from "@/apis/user-role";
 
 export const Header = () => {
   const isMobile = useIsMobile();
@@ -35,12 +36,20 @@ export const Header = () => {
   useEffect(() => {
     const handleSaveDateState = () => {
       onAuthStateChanged(auth, async (user) => {
+        console.log("\n🔥 ~ file: header.tsx:39 ~ user::\n", user);
         if (user) {
+          //nếu firebase đã đăng nhập
           const userFromMongodb: any = await USER_APIS.getByUidFirebase(
             user.uid
           );
+          console.log(
+            "\n🔥 ~ file: header.tsx:85 ~ userFromMongodb::\n",
+            userFromMongodb
+          );
 
+          //get user from firebase uid
           if (userFromMongodb && userFromMongodb?.data) {
+            //nếu tài khoản bị khoá --> cút
             if (userFromMongodb.data.accountStatus == "inactive") {
               setUserFromMongodb(null);
               Cookies.remove("user");
@@ -48,8 +57,30 @@ export const Header = () => {
               return;
             }
 
+            //kiểm tra xem user có những role nào đã accept
+            const userRolesData = await USER_ROLES_APIS.getAll(
+              userFromMongodb.data._id
+            );
+            console.log(
+              "\n🔥 ~ file: header.tsx:81 ~ userRolesData::\n",
+              userRolesData
+            );
+
+            //nếu các role của user đều đang pending HOẶC user k có role nào --> cút
+            if (userRolesData.data.length == 0) {
+              handleLogout();
+              setUserFromMongodb(null);
+              Cookies.remove("user");
+              return;
+            }
+
             Cookies.set("user", JSON.stringify(userFromMongodb.data));
             setUserFromMongodb(userFromMongodb.data);
+          } else {
+            handleLogout();
+            setUserFromMongodb(null);
+            Cookies.remove("user");
+            return;
           }
         } else {
           setUserFromMongodb(null);

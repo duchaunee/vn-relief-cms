@@ -14,6 +14,7 @@ import {
 import toast from "react-hot-toast";
 import { USER_APIS } from "@/apis/user";
 import { Label } from "./ui/label";
+import { USER_ROLES_APIS } from "@/apis/user-role";
 
 const LoginForm = () => {
   const [phone, setPhone] = useState("");
@@ -88,13 +89,25 @@ const LoginForm = () => {
       // Check phone registration first
       const response: any = await USER_APIS.getByPhoneNumber(phoneNumber);
       if (response.statusCode && !response.data.exist) {
+        //kiểm tra xem đã đăng ký account chưa
         toast.error("Số điện thoại chưa được đăng ký!");
         return;
       } else if (
+        //kiểm tra xem tài khoản có bị khoá không
         response.statusCode &&
         response.data.accountStatus == "inactive"
       ) {
-        toast.error("Tài khoản của bạn chưa được kích hoạt");
+        toast.error("Tài khoản của bạn đã bị khoá, vui lòng liên hệ Admin !");
+        return;
+      }
+
+      //kiểm tra xem tài khoản đã được kích hoạt chưa (ví dụ TNV thì cần kích hoạt) --> get all role đang active ra, nếu rỗng --> chưa kích hoạt
+      //kiểm tra xem user có những role nào đã accept
+      const userRolesData = await USER_ROLES_APIS.getAll(response.data._id);
+      if (userRolesData.data.length == 0) {
+        toast.error(
+          "Tài khoản của bạn chưa được kích hoạt, vui lòng liên hệ Admin !"
+        );
         return;
       }
 

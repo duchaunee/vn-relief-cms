@@ -31,6 +31,7 @@ import { RESCUE_TEAMS_APIS } from "@/apis/rescue-team";
 
 import Cookies from "js-cookie";
 import { TEAM_RESCUE_USER_APIS } from "@/apis/team-rescue-user";
+import { USER_ROLES_APIS } from "@/apis/user-role";
 
 // const reliefTeams = [
 //   "Đội xuồng hơi cứu hộ cứu nạn Đà Nẵng",
@@ -260,6 +261,7 @@ export default function Register() {
     // const user = USER_APIS.save();
     onAuthStateChanged(auth, async (user) => {
       if (user) {
+        let createUserData;
         if (formData.team == "new") {
           //chọn thêm mới đội cứu trợ
           //"nếu tạo mới dội cứu trợ" thì tạo đội cứu trợ --> chèn rescueTeamId vào user tạo sau
@@ -273,12 +275,12 @@ export default function Register() {
             status: "pending",
             activityStatus: "pending",
           });
-          await USER_APIS.save({
+          createUserData = await USER_APIS.save({
             rescueTeamId: createRescueTeam?.data?.data._id,
             uid_firebase: user.uid,
             name: userForm.name,
             phone: formatPhoneNumber(userForm.phone),
-            roles: [userForm.roles],
+            // roles: [userForm.roles],
             fbLink: userForm.facebook,
             wardCode: userForm.wardCode,
             accountStatus: "active",
@@ -287,12 +289,12 @@ export default function Register() {
         } else if (typeof formData.team == "string") {
           //chọn 1 đội cứu trợ có sẵn
           //"nếu tạo mới dội cứu trợ" thì tạo user --> join request
-          const createUser = await USER_APIS.save({
+          createUserData = await USER_APIS.save({
             rescueTeamId: null,
             uid_firebase: user.uid,
             name: userForm.name,
             phone: formatPhoneNumber(userForm.phone),
-            roles: [userForm.roles],
+            // roles: [userForm.roles],
             fbLink: userForm.facebook,
             wardCode: userForm.wardCode,
             accountStatus: "active",
@@ -300,25 +302,36 @@ export default function Register() {
           });
 
           await TEAM_RESCUE_USER_APIS.save(userForm.team, {
-            userId: createUser?.data?.data._id,
+            userId: createUserData?.data?.data._id,
           });
         } else if (formData.team == null) {
           //chọn role khác
-          await USER_APIS.save({
+          createUserData = await USER_APIS.save({
             rescueTeamId: null, //đợi TVĐCT duyệt thì mới thêm
             uid_firebase: user.uid,
             name: userForm.name,
             phone: formatPhoneNumber(userForm.phone),
-            roles: [userForm.roles],
+            // roles: [userForm.roles],
             fbLink: userForm.facebook,
             wardCode: userForm.wardCode,
-            accountStatus:
-              userRoleData.find((role) => role._id == userForm.roles).code == 5
-                ? "active"
-                : "inactive", //nếu là người dùng thường thì được active luôn
+            accountStatus: "active", //nếu bị admin khoá thì là inactive
             avatar: "",
           });
         }
+
+        const createUserRoles = await USER_ROLES_APIS.save(
+          createUserData?.data?.data._id,
+          [
+            {
+              roleId: formData.roles,
+              status: [2, 3, 4].includes(
+                userRoleData.find((role) => role._id == userForm.roles).code
+              )
+                ? "pending" //nếu là TNV thì phải pending
+                : "accept",
+            },
+          ]
+        );
       }
     });
   };
