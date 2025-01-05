@@ -1,21 +1,21 @@
 "use client";
 
-import RequestReliefContext, {
-  useRequestReliefContext,
-} from "@/providers/app-context-provider/request-relief-provider";
+import RequestReliefContext from "@/providers/app-context-provider/request-relief-provider";
 import { useQuery } from "@tanstack/react-query";
-import { RESCUE_REQUEST_APIS } from "@/apis/rescue-request";
+import { ROLES_APIS } from "@/apis/roles";
 import { transformData } from "@/utils/helper/common";
 import ModalContainer from "@/components/modal/modal-container";
-import RescueRequestForm from "@/components/modal/request-rescue-modal/rescue-form";
 import EmptyData from "@/constants/empty-data";
-import { CloudOff, SearchX } from "lucide-react";
+import { CloudOff } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
-import RescueRequestOtherForm from "@/components/modal/request-rescue-modal/rescue-other-form";
 import { RESCUE_TEAMS_APIS } from "@/apis/rescue-team";
 import { DisasterReliefDashboard } from "./_components/mapping-detail-ui/disaster-relief-dashboard";
-import RescueTeamForm from "@/components/modal/request-rescue-modal/rescue-team-form";
 import VolunteerForm from "@/components/modal/request-rescue-modal/volunteer-form";
+import { getCurrentUser } from "@/lib/axios";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
+import { USER_APIS } from "@/apis/user";
 
 const titleList = {
   title: "Danh sách các tình nguyện viên",
@@ -25,8 +25,9 @@ const titleList = {
 export default function Page() {
   const query = useQuery({
     queryKey: ["volunteer"],
-    queryFn: RESCUE_TEAMS_APIS.getAll("volunteer"),
+    queryFn: USER_APIS.getAll("volunteer"),
   });
+
   const rescueRequestData = transformData(query?.data?.data);
 
   if (query.isFetching)
@@ -49,6 +50,7 @@ export default function Page() {
                       Vui lòng thử lại."
           icon={<CloudOff className="h-8 w-8 text-gray-400" />}
           removeText="Đăng ký tình nguyện viên"
+          // onRemove={handleSignVolunteer}
         />
       ) : (
         <DisasterReliefDashboard
@@ -56,7 +58,8 @@ export default function Page() {
           locations={rescueRequestData}
         />
       )}
-      <ModalContainer
+
+      {/* <ModalContainer
         title="Đơn đăng ký tình nguyện viên"
         description="Việc gửi đơn sẽ cần xác minh đề phòng trường hợp giả mạo"
         buttons={{
@@ -64,9 +67,9 @@ export default function Page() {
           secondary: "Huỷ bỏ",
         }}
         formId="volunteer-form-id"
-      >
-        <VolunteerForm />
-      </ModalContainer>
+      > */}
+      <VolunteerForm />
+      {/* </ModalContainer> */}
     </RequestReliefContext>
   );
 }

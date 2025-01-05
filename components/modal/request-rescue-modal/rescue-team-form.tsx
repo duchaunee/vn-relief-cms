@@ -120,7 +120,10 @@ const RescueTeamForm = () => {
 
     if (validateForm()) {
       // console.log("Form data:", formData); // Data sẽ submit
-      await createRescueTeamMutation.mutateAsync(formData);
+      await createRescueTeamMutation.mutateAsync({
+        ...formData,
+        activityStatus: "pending",
+      });
       return true;
     }
 

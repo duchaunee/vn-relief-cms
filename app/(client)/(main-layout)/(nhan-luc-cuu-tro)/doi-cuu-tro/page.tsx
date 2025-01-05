@@ -15,6 +15,8 @@ import RescueRequestOtherForm from "@/components/modal/request-rescue-modal/resc
 import { RESCUE_TEAMS_APIS } from "@/apis/rescue-team";
 import { DisasterReliefDashboard } from "./_components/mapping-detail-ui/disaster-relief-dashboard";
 import RescueTeamForm from "@/components/modal/request-rescue-modal/rescue-team-form";
+import { getCurrentUser } from "@/lib/axios";
+import { useRouter } from "next/navigation";
 
 const titleList = {
   title: "Danh sách các đội cứu trợ",
@@ -26,12 +28,15 @@ export default function Page() {
     queryKey: ["rescue-team"],
     queryFn: RESCUE_TEAMS_APIS.getAll("active"),
   });
-  console.log("\n🔥 ~ file: page.tsx:28 ~ query::\n", query);
   const rescueRequestData = transformData(query?.data?.data);
-  console.log(
-    "\n🔥 ~ file: page.tsx:29 ~ rescueRequestData::\n",
-    rescueRequestData
-  );
+
+  const user = getCurrentUser();
+  const router = useRouter();
+
+  const handleSignRescueTeam = async () => {
+    if (!user) return router.push("/dang-ky");
+    // setOpe
+  };
 
   if (query.isFetching)
     return (
@@ -52,7 +57,8 @@ export default function Page() {
           description="Không tìm thấy thông tin đội cứu trợ nào.
                       Vui lòng thử lại."
           icon={<CloudOff className="h-8 w-8 text-gray-400" />}
-          removeText="Đăng ký đội cứu trợ"
+          removeText="Đăng ký thành viên đội cứu trợ"
+          // onRemove={handleSignRescueTeam}
         />
       ) : (
         <DisasterReliefDashboard

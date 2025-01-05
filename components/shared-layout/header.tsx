@@ -68,7 +68,6 @@ export const Header = () => {
   useEffect(() => {
     //get active natural disaster
     const saveNaturalDisasterActive = async () => {
-      console.log("hahah");
       const getNaturalDisasterActive = await NATURAL_DISASTER_APIS.getActive();
       if (getNaturalDisasterActive && getNaturalDisasterActive.data) {
         saveNaturalDisasterToCookies(
