@@ -149,7 +149,7 @@ export default function Page() {
                       <p className="text-base font-medium">
                         {item.reporter.name}
                       </p>
-                      <RoleBadge roleCode={item.reporter.role} />
+                      {/* <RoleBadge roleCode={item.reporter.role} /> */}
                     </div>
                     <p className="text-xs text-gray-500">
                       {formatDate(item.reporter.timestamp)}
@@ -214,7 +214,7 @@ export default function Page() {
                 <p className="text-base font-medium">
                   {selectedNews.reporter.name}
                 </p>
-                <RoleBadge roleCode={selectedNews.reporter.role} />
+                {/* <RoleBadge roleCode={selectedNews.reporter.role} /> */}
               </div>
               <p className="text-xs text-gray-500">
                 {formatDate(selectedNews.reporter.timestamp)}

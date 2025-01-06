@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useMemo, useState } from "react";
+import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { Phone, Share2, LinkIcon, SearchX } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -25,6 +25,14 @@ import { StatusType } from "@/types/status";
 import Link from "next/link";
 import { debounce } from "lodash";
 import EmptyData from "@/constants/empty-data";
+import RoleBadge from "@/components/badge-custom/badge-role";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface LocationListProps {
   expand: boolean;
@@ -45,57 +53,58 @@ const LocationItem = ({
 }: Omit<LocationListProps, "expand" | "titleList" | "locations"> & {
   location: any;
 }) => {
+  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+  const [selectedRequest, setSelectedRequest] = React.useState<any>(null);
+
+  // Xử lý khi click vào item
+  const handleItemClick = (request: any, e: React.MouseEvent) => {
+    e.preventDefault(); // Ngăn chặn Link navigate
+    setSelectedRequest(request);
+    setIsDialogOpen(true);
+  };
+
   return (
-    <div key={location.address} className="bg-gray-50">
-      <div className="px-5 py-3 flex items-center gap-2 border-b border-gray-300 shadow-sm bg-gray-100">
-        <span className="font-semibold text-gray-700">
-          {
-            findDistrictByCode(
-              Number(location.address.split("|")[1]),
-              Number(location.address.split("|")[0])
-            )?.name
-          }
-          , {findProvinceByCode(Number(location.address.split("|")[1]))?.name}
-        </span>
-        <Badge
-          variant="secondary"
-          className="bg-slate-200 text-slate-600 px-2 rounded-sm"
-        >
-          {location.count}
-        </Badge>
-      </div>
-      <div className="">
-        {location.groupRequest.map((request: any) => {
-          console.log(
-            "\n🔥 ~ file: location-list.tsx:69 ~ request::\n",
-            request
-          );
-          return (
-            <Link
-              //open dialog
-              href={window.location.pathname + "/" + request._id}
+    <>
+      <div key={location.address} className="bg-gray-50">
+        <div className="px-5 py-3 flex items-center gap-2 border-b border-gray-300 shadow-sm bg-gray-100">
+          <span className="font-semibold text-gray-700">
+            {
+              findDistrictByCode(
+                Number(location.address.split("|")[1]),
+                Number(location.address.split("|")[0])
+              )?.name
+            }
+            , {findProvinceByCode(Number(location.address.split("|")[1]))?.name}
+          </span>
+          <Badge
+            variant="secondary"
+            className="bg-slate-200 text-slate-600 px-2 rounded-sm"
+          >
+            {location.count}
+          </Badge>
+        </div>
+        <div>
+          {location.groupRequest.map((request: any) => (
+            <div
               key={request._id}
+              onClick={(e) => handleItemClick(request, e)}
               className={cn(
                 "block px-5 py-3 transition-colors bg-white",
                 "border-b border-gray-300",
                 "hover:bg-gray-50 cursor-pointer"
-                // selectedLocation?.id === location.id ? "bg-blue-50" : ""
               )}
             >
-              <div
-                className="flex gap-4"
-                // onClick={() => onLocationSelect(request)}
-              >
-                {/* <Image
-                  // src={request.images[0]!}
-                  src="https://firebasestorage.googleapis.com/v0/b/shoes-shopping-web.appspot.com/o/social-media%2F1718324038019anhcute.jpg?alt=media&token=2e7fdc46-9367-41b8-8ebd-730d02b9602a"
-                  width={70}
-                  height={70}
-                  alt={request.images[0]}
-                  className="h-[70px] rounded-md aspect-square object-cover"
-                /> */}
+              <div className="flex gap-4">
                 <div className="flex-1">
-                  <h3 className="font-semibold text-red-500">{request.name}</h3>
+                  <div className="flex gap-2 mb-1">
+                    <h3 className="font-semibold text-red-500">
+                      {request.name}
+                    </h3>
+                    {request?.roles?.length > 0 &&
+                      request.roles.map((role) => (
+                        <RoleBadge roleCode={role.roleCode} key={role.roleId} />
+                      ))}
+                  </div>
                   <p className="text-sm text-gray-600">
                     Số điện thoại: {request.phone}
                   </p>
@@ -105,11 +114,68 @@ const LocationItem = ({
                 </div>
               </div>
               <div className="mt-2 flex"></div>
-            </Link>
-          );
-        })}
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="max-w-xl">
+          <DialogHeader>
+            <DialogTitle>Thông tin chi tiết tình nguyện viên</DialogTitle>
+          </DialogHeader>
+
+          {selectedRequest && (
+            <div className="space-y-2">
+              <div>
+                <div className="space-y-2">
+                  <p>
+                    <span className="font-medium ">Tên:</span>{" "}
+                    {selectedRequest.name}
+                  </p>
+                  <p>
+                    <span className="font-medium">Số điện thoại:</span>{" "}
+                    <a
+                      href={`tel:${selectedRequest.phone}`}
+                      className="text-blue-600 underline"
+                    >
+                      {selectedRequest.phone}
+                    </a>
+                  </p>
+                  <p>
+                    <span className="font-medium">Đường dẫn facebook:</span>{" "}
+                    <a
+                      href={`${selectedRequest.fbLink}`}
+                      target="_blank"
+                      className="text-blue-600 underline"
+                    >
+                      {selectedRequest.fbLink}
+                    </a>
+                  </p>
+                  <p>
+                    <span className="font-medium">Địa chỉ:</span>{" "}
+                    {findLocation(selectedRequest.wardCode)}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <h3 className="font-medium text-gray-900">Vai trò:</h3>
+                {selectedRequest.roles?.length > 0 && (
+                  <div>
+                    <div className="flex gap-2">
+                      {selectedRequest.roles.map((role) => (
+                        <RoleBadge roleCode={role.roleCode} key={role.roleId} />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 
