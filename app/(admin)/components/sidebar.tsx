@@ -108,7 +108,7 @@ const Sidebar = () => {
           className="sidemenu grow overflow-y-auto overflow-x-hidden px-2.5 pb-10 pt-2.5 transition-all"
           key={pathName}
         >
-          {isAuthenticatedByRole("admin") && (
+          {isAuthenticatedByRole("admin") ? (
             <>
               <NavLink
                 href="/quan-ly/tai-khoan"
@@ -131,96 +131,100 @@ const Sidebar = () => {
                 <span>Quản lý đợt thiên tai</span>
               </NavLink>
             </>
+          ) : (
+            <>
+              <AccordionItem value="item-2" className="p-0 shadow-none">
+                <AccordionTrigger
+                  defaultValue={
+                    ["/blog-list", "/blog-details", "/add-blog"].includes(
+                      pathName
+                    )
+                      ? "item-2"
+                      : ""
+                  }
+                  className="nav-link"
+                >
+                  <SquareKanban className="size-[18px] shrink-0 -rotate-90" />
+                  <span>Quản lý đơn cứu trợ</span>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <ul className="submenu space-y-2 pl-12 pr-5">
+                    <li>
+                      <NavLink
+                        href="/cuu-tro-khan-cap"
+                        target="_blank"
+                        isAccordion={true}
+                        isProfessionalPlanRoute={true}
+                      >
+                        Đơn cứu trợ khẩn cấp
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        href="/blog-details"
+                        target="_blank"
+                        isAccordion={true}
+                        isProfessionalPlanRoute={true}
+                      >
+                        Đơn xin hỗ trợ
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        href="/add-blog"
+                        target="_blank"
+                        isAccordion={true}
+                        isProfessionalPlanRoute={true}
+                      >
+                        Add New Blog
+                      </NavLink>
+                    </li>
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-3" className="p-0 shadow-none">
+                <AccordionTrigger className="nav-link">
+                  <ScrollText className="size-[18px] shrink-0" />
+                  <span>Quản lý đội cứu trợ</span>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <ul className="submenu space-y-2 pl-12 pr-5">
+                    <li>
+                      <NavLink
+                        href="/invoice"
+                        target="_blank"
+                        isAccordion={true}
+                        isProfessionalPlanRoute={true}
+                      >
+                        Invoice
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        href="/invoice-details"
+                        target="_blank"
+                        isAccordion={true}
+                        isProfessionalPlanRoute={true}
+                      >
+                        Invoice details
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        href="/create-invoice"
+                        target="_blank"
+                        isAccordion={true}
+                        isProfessionalPlanRoute={true}
+                      >
+                        Create Invoice
+                      </NavLink>
+                    </li>
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+            </>
           )}
-
-          <AccordionItem value="item-2" className="p-0 shadow-none">
-            <AccordionTrigger
-              defaultValue={
-                ["/blog-list", "/blog-details", "/add-blog"].includes(pathName)
-                  ? "item-2"
-                  : ""
-              }
-              className="nav-link"
-            >
-              <SquareKanban className="size-[18px] shrink-0 -rotate-90" />
-              <span>Quản lý đơn cứu trợ</span>
-            </AccordionTrigger>
-            <AccordionContent>
-              <ul className="submenu space-y-2 pl-12 pr-5">
-                <li>
-                  <NavLink
-                    href="/cuu-tro-khan-cap"
-                    target="_blank"
-                    isAccordion={true}
-                    isProfessionalPlanRoute={true}
-                  >
-                    Đơn cứu trợ khẩn cấp
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    href="/blog-details"
-                    target="_blank"
-                    isAccordion={true}
-                    isProfessionalPlanRoute={true}
-                  >
-                    Đơn xin hỗ trợ
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    href="/add-blog"
-                    target="_blank"
-                    isAccordion={true}
-                    isProfessionalPlanRoute={true}
-                  >
-                    Add New Blog
-                  </NavLink>
-                </li>
-              </ul>
-            </AccordionContent>
-          </AccordionItem>
-
-          <AccordionItem value="item-3" className="p-0 shadow-none">
-            <AccordionTrigger className="nav-link">
-              <ScrollText className="size-[18px] shrink-0" />
-              <span>Quản lý đội cứu trợ</span>
-            </AccordionTrigger>
-            <AccordionContent>
-              <ul className="submenu space-y-2 pl-12 pr-5">
-                <li>
-                  <NavLink
-                    href="/invoice"
-                    target="_blank"
-                    isAccordion={true}
-                    isProfessionalPlanRoute={true}
-                  >
-                    Invoice
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    href="/invoice-details"
-                    target="_blank"
-                    isAccordion={true}
-                    isProfessionalPlanRoute={true}
-                  >
-                    Invoice details
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    href="/create-invoice"
-                    target="_blank"
-                    isAccordion={true}
-                    isProfessionalPlanRoute={true}
-                  >
-                    Create Invoice
-                  </NavLink>
-                </li>
-              </ul>
-            </AccordionContent>
-          </AccordionItem>
         </Accordion>
       </Card>
     </>
