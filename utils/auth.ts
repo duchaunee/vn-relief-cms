@@ -7,4 +7,6 @@ export const clearNaturalDisasterFromCookies = () => {
   Cookies.remove("natural-disaster");
 };
 export const getNaturalDisasterFromCookies = () =>
-  JSON.parse(Cookies.get("natural-disaster")) || "";
+  Cookies.get("natural-disaster")
+    ? JSON.parse(Cookies.get("natural-disaster"))
+    : {};
