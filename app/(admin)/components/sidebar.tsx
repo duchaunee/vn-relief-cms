@@ -35,10 +35,12 @@ import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
 import NavLink from "@/admin/components/nav-link";
 import RoleBadge from "@/components/badge-custom/badge-role";
+import { getCurrentUser, isAuthenticatedByRole } from "@/lib/axios";
 
 const Sidebar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const pathName = usePathname();
+  const user = getCurrentUser();
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -51,65 +53,6 @@ const Sidebar = () => {
   const toggleSidebarResponsive = () => {
     document.getElementById("sidebar")?.classList.remove("open");
     document.getElementById("overlay")?.classList.toggle("open");
-  };
-
-  const isOpen = () => {
-    if (["/blog-list", "/blog-details", "/add-blog"].includes(pathName)) {
-      return "item-2";
-    } else if (
-      [
-        "/",
-        "/crypto-dashboard",
-        "/product-card",
-        "/add-product",
-        "/product-details",
-        "/product-checkout",
-      ].includes(pathName)
-    ) {
-      return "item-1";
-    } else if (
-      ["/invoice", "/invoice-details", "/create-invoice"].includes(pathName)
-    ) {
-      return "item-3";
-    } else if (
-      [
-        "/accordion-page",
-        "/alert",
-        "/alert-dialog",
-        "/avatar",
-        "/breadcrumbs",
-        "/buttons",
-        "/card-page",
-        "/carousel",
-        "/dropdown",
-        "/empty-stats",
-        "/hover-card",
-        "/modal",
-        "/popover",
-        "/scroll-area",
-        "/sonner",
-        "/tabs",
-        "/tag",
-        "/toasts",
-        "/toggle-group",
-        "/tooltip",
-      ].includes(pathName)
-    ) {
-      return "item-4";
-    } else if (
-      [
-        "/checkbox",
-        "/combobox",
-        "/command",
-        "/form",
-        "/inputs",
-        "/input-otp",
-      ].includes(pathName)
-    ) {
-      return "item-5";
-    } else {
-      return "";
-    }
   };
 
   useEffect(() => {
@@ -161,31 +104,34 @@ const Sidebar = () => {
         </div>
         <Accordion
           type="multiple"
-          defaultValue={isOpen()}
           collapsible
           className="sidemenu grow overflow-y-auto overflow-x-hidden px-2.5 pb-10 pt-2.5 transition-all"
           key={pathName}
         >
-          <NavLink
-            href="/quan-ly/tai-khoan"
-            className={`nav-link ${pathName === "/chat" && "!text-black"}`}
-            isProfessionalPlanRoute={true}
-          >
-            <MessageSquareText className="size-[18px] shrink-0" />
-            <span>Quản lý tài khoản</span>
-          </NavLink>
+          {isAuthenticatedByRole("admin") && (
+            <>
+              <NavLink
+                href="/quan-ly/tai-khoan"
+                className={`nav-link ${pathName === "/chat" && "!text-black"}`}
+                isProfessionalPlanRoute={true}
+              >
+                <MessageSquareText className="size-[18px] shrink-0" />
+                <span>Quản lý tài khoản</span>
+              </NavLink>
 
-          <NavLink
-            href="/scrumboard"
-            target="_blank"
-            isProfessionalPlanRoute={true}
-            className={`nav-link ${
-              pathName === "/scrumboard" && "!text-black"
-            }`}
-          >
-            <SquareKanban className="size-[18px] shrink-0" />
-            <span>Quản lý đợt thiên tai</span>
-          </NavLink>
+              <NavLink
+                href="/scrumboard"
+                target="_blank"
+                isProfessionalPlanRoute={true}
+                className={`nav-link ${
+                  pathName === "/scrumboard" && "!text-black"
+                }`}
+              >
+                <SquareKanban className="size-[18px] shrink-0" />
+                <span>Quản lý đợt thiên tai</span>
+              </NavLink>
+            </>
+          )}
 
           <AccordionItem value="item-2" className="p-0 shadow-none">
             <AccordionTrigger
@@ -238,7 +184,7 @@ const Sidebar = () => {
           <AccordionItem value="item-3" className="p-0 shadow-none">
             <AccordionTrigger className="nav-link">
               <ScrollText className="size-[18px] shrink-0" />
-              <span>Quản lý các nơi cần hỗ trợ</span>
+              <span>Quản lý đội cứu trợ</span>
             </AccordionTrigger>
             <AccordionContent>
               <ul className="submenu space-y-2 pl-12 pr-5">

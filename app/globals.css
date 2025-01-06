@@ -131,7 +131,7 @@
 
 @layer components {
   #admin .sidebar .nav-link {
-      @apply flex items-center gap-2.5 px-5 py-2.5 text-sm font-medium leading-tight text-grayAdmin transition hover:text-blackAdmin;
+      @apply flex items-center gap-5 px-5 py-2.5 text-sm font-medium leading-tight text-grayAdmin transition hover:text-blackAdmin;
   }
   #admin .nav-item.sub-menu-active {
       @apply bg-light-theme !text-primaryAdmin;
