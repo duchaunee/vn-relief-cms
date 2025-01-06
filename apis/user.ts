@@ -7,8 +7,8 @@ export const USER_APIS = {
   getAll: (status: string) => async () =>
     axiosInstance.get(baseURL(`/?status=${status}`)),
 
-  getByRole: (role: string) => async () =>
-    axiosInstance.get(baseURL(`/?role=${role}`)),
+  getByRole: (role: (0 | 1 | 2 | 3 | 4 | 5)[]) => async () =>
+    axiosInstance.get(baseURL(`/roles?roles=${role}`)),
 
   getByPhoneNumber: async (phone: string) =>
     axiosInstance.get(baseURL("/phone/" + phone)),

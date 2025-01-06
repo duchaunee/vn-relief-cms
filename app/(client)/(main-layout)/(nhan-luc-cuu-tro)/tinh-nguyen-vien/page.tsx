@@ -11,7 +11,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { RESCUE_TEAMS_APIS } from "@/apis/rescue-team";
 import { DisasterReliefDashboard } from "./_components/mapping-detail-ui/disaster-relief-dashboard";
 import VolunteerForm from "@/components/modal/request-rescue-modal/volunteer-form";
-import { getCurrentUser } from "@/lib/axios";
+import { getCurrentUser, isAuthenticatedByRole } from "@/lib/axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
@@ -23,9 +23,11 @@ const titleList = {
 };
 
 export default function Page() {
+  const user = getCurrentUser();
+
   const query = useQuery({
     queryKey: ["volunteer"],
-    queryFn: USER_APIS.getAll("volunteer"),
+    queryFn: USER_APIS.getByRole([2, 3, 4]),
   });
 
   const rescueRequestData = transformData(query?.data?.data);
@@ -49,7 +51,11 @@ export default function Page() {
           description="Không tìm thấy thông tin tình nguyện viên nào.
                       Vui lòng thử lại."
           icon={<CloudOff className="h-8 w-8 text-gray-400" />}
-          removeText="Đăng ký tình nguyện viên"
+          removeText={`${
+            !isAuthenticatedByRole("volunteer")
+              ? "Đăng ký tình nguyện viên"
+              : ""
+          }`}
           // onRemove={handleSignVolunteer}
         />
       ) : (

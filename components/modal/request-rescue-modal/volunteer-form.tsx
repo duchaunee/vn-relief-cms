@@ -14,6 +14,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ROLES_APIS } from "@/apis/roles";
 import toast from "react-hot-toast";
 import { useRequestReliefContext } from "@/providers/app-context-provider/request-relief-provider";
+import { USER_ROLES_APIS } from "@/apis/user-role";
 
 const VolunteerForm = () => {
   const { open, setOpen } = useRequestReliefContext();
@@ -33,7 +34,7 @@ const VolunteerForm = () => {
     // setShowDialog(true);
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (!selectedRole) {
       toast.error("Vui lòng chọn vai trò tình nguyện viên");
       return;
@@ -45,12 +46,16 @@ const VolunteerForm = () => {
     );
     console.log("Selected role:", selectedRoleData);
 
-    // Close dialog
-    // setShowDialog(false);
-    setSelectedRole("");
+    await USER_ROLES_APIS.save(user._id, [
+      {
+        roleId: selectedRoleData._id,
+        status: "pending",
+      },
+    ]);
 
     // TODO: Implement API call to register volunteer role
     toast.success("Đăng ký tình nguyện viên thành công!");
+    setOpen(false);
   };
 
   // Lọc ra chỉ các role tình nguyện viên (code 2, 3, 4)

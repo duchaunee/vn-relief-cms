@@ -72,6 +72,7 @@ const LocationItem = ({
           );
           return (
             <Link
+              //open dialog
               href={window.location.pathname + "/" + request._id}
               key={request._id}
               className={cn(
@@ -94,85 +95,16 @@ const LocationItem = ({
                   className="h-[70px] rounded-md aspect-square object-cover"
                 /> */}
                 <div className="flex-1">
-                  <h3 className="font-semibold text-red-500">
-                    {request.teamName}
-                  </h3>
+                  <h3 className="font-semibold text-red-500">{request.name}</h3>
                   <p className="text-sm text-gray-600">
-                    {request.supportCapability}
+                    Số điện thoại: {request.phone}
                   </p>
                   <p className="mt-2 text-sm text-gray-400">
                     {findLocation(request.wardCode)}
                   </p>
                 </div>
               </div>
-              <div className="mt-2 flex">
-                {/* <div className="flex-1 flex flex-wrap gap-[6px] mt-auto lg:h-7">
-                  {request.status["verify"] == "pending" ? (
-                    <StatusBadge status={"verify-pending"} />
-                  ) : (
-                    Object.entries(request.status).map(([key, value]) => {
-                      const STATUS = `${key}-${value}` as StatusType;
-                      return <StatusBadge key={key} status={STATUS} />;
-                    })
-                  )}
-                </div> */}
-                {/* <div className="flex gap-2 ml-auto">
-                  <TooltipContainer
-                    trigger={
-                      <Button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          e.preventDefault();
-                          window.location.href = `tel:${request.priorityPhone}`;
-                        }}
-                        className="bg-transparent hover:bg-gray-300 text-black p-1 h-8 w-8"
-                      >
-                        <Phone className="h-3 w-3" />
-                      </Button>
-                    }
-                    content="Gọi điện"
-                  />
-                  <TooltipContainer
-                    trigger={
-                      <Button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          e.preventDefault();
-                          copyTextToClipboard(
-                            window.location.origin +
-                              window.location.pathname +
-                              "/" +
-                              request._id
-                          );
-                        }}
-                        className="bg-transparent hover:bg-gray-300 text-black p-1 h-8 w-8"
-                      >
-                        <LinkIcon className="h-3 w-3" />
-                      </Button>
-                    }
-                    content="Sao chép liên kết"
-                  />
-                  <TooltipContainer
-                    trigger={
-                      <Button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          e.preventDefault();
-                          handleShare(
-                            "Chia sẻ liên kết để giúp những người gặp nạn",
-                            "text",
-                            window.location.pathname + "/" + request._id
-                          );
-                        }}
-                        className="bg-transparent hover:bg-gray-300 text-black p-1 h-8 w-8"
-                      >
-                        <Share2 className="h-3 w-3" />
-                      </Button>
-                    }
-                    content="Chia sẻ"
-                  />
-                </div> */}
-              </div>
+              <div className="mt-2 flex"></div>
             </Link>
           );
         })}
