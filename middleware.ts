@@ -27,28 +27,9 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-  // Chỉ check redirect cho URL gốc /quan-ly
-  if (pathname === "/quan-ly") {
-    if (roleNumbers.some((code) => [2, 3, 4].includes(code))) {
-      return NextResponse.redirect(
-        new URL("/quan-ly/tinh-nguyen-vien", request.url)
-      );
-    } else if (roleNumbers.includes(0)) {
-      return NextResponse.redirect(new URL("/quan-ly/admin", request.url));
-    } else {
-      return NextResponse.redirect(new URL("/", request.url));
-    }
-  }
-
-  // Check quyền truy cập các trang quản lý
-  if (pathname.startsWith("/quan-ly/tinh-nguyen-vien")) {
-    if (!roleNumbers.some((code) => [2, 3, 4].includes(code))) {
-      return NextResponse.redirect(new URL("/", request.url));
-    }
-  }
-
-  if (pathname.startsWith("/quan-ly/admin")) {
-    if (!roleNumbers.includes(0)) {
+  // Check quyền truy cập trang quản lý
+  if (isManagementPage) {
+    if (!roleNumbers.some((code) => [0, 2, 3, 4].includes(code))) {
       return NextResponse.redirect(new URL("/", request.url));
     }
   }
