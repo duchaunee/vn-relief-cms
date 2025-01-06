@@ -14,8 +14,8 @@ export const TEAM_RESCUE_USER_APIS = {
   // getByUidFirebase: async (uid: string) =>
   //   axiosInstance.get(baseURL("/firebase/" + uid)),
 
-  save: async (rescueRequestId: any, body: any) =>
-    axiosInstance.post(baseURL("/" + rescueRequestId + "/join-requests"), body),
+  save: async (rescueTeamId: any, body: any) =>
+    axiosInstance.post(baseURL("/" + rescueTeamId + "/join-requests"), body),
   // addTeamMember: (rescueTeamId: any) => async (body: any) =>
   //   axiosInstance.post(baseURL("/" + rescueTeamId + "members"), body),
 };

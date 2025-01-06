@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { getCurrentUser } from "@/lib/axios";
 import { cn } from "@/lib/utils";
 import { RequestData } from "@/types/models/rescue-request";
 import { RescueRequestItem } from "@/types/models/rescue-request-item";
@@ -7,8 +8,20 @@ import { useQueryClient } from "@tanstack/react-query";
 import { ArrowRight, ImagePlus } from "lucide-react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
+import toast from "react-hot-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { useState } from "react";
+import { TEAM_RESCUE_REQUEST_APIS } from "@/apis/team-rescue-request";
 
 const Middle = () => {
+  const [openDialog, setOpenDialog] = useState(false);
   const queryClient = useQueryClient();
   const { id } = useParams();
 
@@ -16,7 +29,23 @@ const Middle = () => {
     data: RequestData;
   }>(["rescue-request-detail", id])?.data;
 
-  console.log("\n🔥 ~ file: middle-page.tsx:15 ~ data::\n", data);
+  const user = getCurrentUser();
+
+  const registerSave = () => {
+    if (!user.rescueTeamId)
+      return toast.error("Vui lòng nhập/tạo đội cứu trợ để đảm bảo an toàn !");
+
+    setOpenDialog(true);
+  };
+
+  const handleRegister = async () => {
+    await TEAM_RESCUE_REQUEST_APIS.receivedSaveRescueReqeust(
+      user.rescueTeamId._id,
+      id
+    );
+
+    setOpenDialog(false);
+  };
 
   return (
     <div className="flex-1 flex flex-col gap-4">
@@ -33,6 +62,7 @@ const Middle = () => {
           <Button
             variant="outline"
             size="sm"
+            onClick={registerSave}
             className={cn("mt-4 border border-gray-300 bg-gray-200")}
           >
             Đăng ký cứu trợ
@@ -40,6 +70,24 @@ const Middle = () => {
           </Button>
         </CardContent>
       </Card>
+
+      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Đăng ký cứu trợ</DialogTitle>
+            <DialogDescription>
+              Bạn có chắc muốn đăng ký cứu trợ cho yêu cầu này
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setOpenDialog(false)}>
+              Huỷ bỏ
+            </Button>
+            <Button onClick={handleRegister}>Đăng ký</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <Card className="w-full rounded-sm">
         <CardHeader className="pb-3">
           <h2 className="text-lg font-medium">

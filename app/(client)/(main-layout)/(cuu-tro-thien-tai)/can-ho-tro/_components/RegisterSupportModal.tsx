@@ -221,7 +221,7 @@ export default function ModalRegisterSupport({
                 <div
                   key={item._id}
                   className={cn(
-                    "flex items-center gap-4 p-4 border rounded-lg transition-colors",
+                    "flex items-center gap-4 px-4 py-2 border rounded-lg transition-colors",
                     selectedItems[item._id]
                       ? "bg-blue-50 border-blue-200"
                       : "hover:bg-gray-50"
@@ -235,11 +235,11 @@ export default function ModalRegisterSupport({
                       onChange={() =>
                         handleCheckboxChange(item._id, !selectedItems[item._id])
                       }
-                      className="w-5 h-5 cursor-pointer rounded text-blue-500"
+                      className="w-4 h-4 cursor-pointer rounded text-blue-500"
                     />
                     <span className="flex-1 text-lg">{item.name}</span>
                   </label>
-                  <div className="flex items-center gap-3 min-w-[300px]">
+                  <div className="flex items-center gap-3 ml-auto">
                     <input
                       type="number"
                       min="0"
@@ -250,7 +250,7 @@ export default function ModalRegisterSupport({
                         handleQuantityChange(item._id, parseInt(e.target.value))
                       }
                       className={cn(
-                        "w-32 px-3 py-2 border rounded-lg disabled:bg-gray-100",
+                        "w-24 px-3 py-1 border rounded-lg disabled:bg-gray-100",
                         selectedItems[item._id] &&
                           "border-blue-200 focus:border-blue-500 focus:ring-blue-500"
                       )}

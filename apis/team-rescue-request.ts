@@ -8,6 +8,16 @@ export const TEAM_RESCUE_REQUEST_APIS = {
   getAllByRescueRequestId: (rescueRequestId: any) => async () =>
     axiosInstance.get(baseURL("/" + rescueRequestId + "/rescue-teams")),
 
+  receivedSaveRescueReqeust: async (
+    rescueTeamId: string,
+    rescueRequestId: string
+  ) =>
+    axiosInstance.get(
+      baseURL(
+        "/rescue-teams/" + rescueTeamId + "/rescue-requests/" + rescueRequestId
+      )
+    ),
+
   // getByPhoneNumber: async (phone: string) =>
   //   axiosInstance.get(baseURL("/phone/" + phone)),
 
