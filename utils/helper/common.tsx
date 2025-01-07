@@ -175,3 +175,14 @@ export const formatStatusMessagesReceivedRescueRequest = (data) => {
     } ${msg.items} lúc ${formatDate(msg.createdAt)}`,
   }));
 };
+
+export function convertTypeToDescription(type: any) {
+  const typeMapping = {
+    temporary_stop: "Địa điểm dừng chân",
+    residence: "Địa điểm tạm trú",
+    warehouse: "Kho tập kết",
+    commissariat: "Nơi tiếp tế lương thực",
+  };
+
+  return typeMapping[type] || "Loại địa điểm không hợp lệ";
+}

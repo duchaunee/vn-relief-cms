@@ -1,121 +1,24 @@
 "use client";
 
-import RequestReliefContext from "@/providers/app-context-provider/request-relief-provider";
+import RequestReliefContext, {
+  useRequestReliefContext,
+} from "@/providers/app-context-provider/request-relief-provider";
+import { useQuery } from "@tanstack/react-query";
+import { RESCUE_REQUEST_APIS } from "@/apis/rescue-request";
+import { transformData } from "@/utils/helper/common";
+import ModalContainer from "@/components/modal/modal-container";
+import RescueRequestForm from "@/components/modal/request-rescue-modal/rescue-form";
+import EmptyData from "@/constants/empty-data";
+import { CloudOff, SearchX } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
+import RescueRequestOtherForm from "@/components/modal/request-rescue-modal/rescue-other-form";
+import { RESCUE_TEAMS_APIS } from "@/apis/rescue-team";
 import { DisasterReliefDashboard } from "./_components/mapping-detail-ui/disaster-relief-dashboard";
-
-const SAMPLE_LOCATIONS = [
-  {
-    name: "Quế Võ, Bắc Ninh",
-    count: 4,
-    // ma xa
-    // ma huyen
-    // ma tinh
-    coordinates: {
-      lat: 17.1234,
-      lng: 106.5678,
-    },
-    groupRequest: [
-      {
-        id: 1,
-        status: "Đang chờ xác minh",
-        name: "Có đội cứu hộ nào bên Hà Can- Thượng Phong xin giúp đỡ...",
-        address: "Xã Liên Thủy, Huyện Lệ Thủy, Tỉnh Quảng Bình",
-        description: "Áo phao thiếu 1000 cái dự phòng cho thời gian tới",
-        imageUrl:
-          "https://images.unsplash.com/photo-1495001258031-d1b407bc1776?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8cmFuZG9tfGVufDB8fDB8fHww",
-      },
-      {
-        id: 2,
-        status: "Đang chờ xác minh",
-        name: "Có đội cứu hộ nào bên Hà Can- Thượng Phong xin giúp đỡ...",
-        address: "Xã Liên Thủy, Huyện Lệ Thủy, Tỉnh Quảng Bình",
-        description: "Áo phao thiếu 1000 cái dự phòng cho thời gian tới",
-        imageUrl:
-          "https://images.unsplash.com/photo-1495001258031-d1b407bc1776?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8cmFuZG9tfGVufDB8fDB8fHww",
-      },
-    ],
-  },
-  {
-    name: "Hà Nội",
-    count: 4,
-    // ma xa
-    // ma huyen
-    // ma tinh
-    coordinates: {
-      lat: 17.1234,
-      lng: 106.5678,
-    },
-    groupRequest: [
-      {
-        id: 1,
-        status: "Đang chờ xác minh",
-        name: "Có đội cứu hộ nào bên Hà Can- Thượng Phong xin giúp đỡ...",
-        address: "Xã Liên Thủy, Huyện Lệ Thủy, Tỉnh Quảng Bình",
-        description: "Áo phao thiếu 1000 cái dự phòng cho thời gian tới",
-        imageUrl:
-          "https://images.unsplash.com/photo-1495001258031-d1b407bc1776?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8cmFuZG9tfGVufDB8fDB8fHww",
-      },
-      {
-        id: 1,
-        status: "Đang chờ xác minh",
-        name: "Có đội cứu hộ nào bên Hà Can- Thượng Phong xin giúp đỡ...",
-        address: "Xã Liên Thủy, Huyện Lệ Thủy, Tỉnh Quảng Bình",
-        description: "Áo phao thiếu 1000 cái dự phòng cho thời gian tới",
-        imageUrl:
-          "https://images.unsplash.com/photo-1495001258031-d1b407bc1776?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8cmFuZG9tfGVufDB8fDB8fHww",
-      },
-      {
-        id: 1,
-        status: "Đang chờ xác minh",
-        name: "Có đội cứu hộ nào bên Hà Can- Thượng Phong xin giúp đỡ...",
-        address: "Xã Liên Thủy, Huyện Lệ Thủy, Tỉnh Quảng Bình",
-        description: "Áo phao thiếu 1000 cái dự phòng cho thời gian tới",
-        imageUrl:
-          "https://images.unsplash.com/photo-1495001258031-d1b407bc1776?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8cmFuZG9tfGVufDB8fDB8fHww",
-      },
-    ],
-  },
-  {
-    name: "Hà Nội",
-    count: 4,
-    // ma xa
-    // ma huyen
-    // ma tinh
-    coordinates: {
-      lat: 17.1234,
-      lng: 106.5678,
-    },
-    groupRequest: [
-      {
-        id: 1,
-        status: "Đang chờ xác minh",
-        name: "Có đội cứu hộ nào bên Hà Can- Thượng Phong xin giúp đỡ...",
-        address: "Xã Liên Thủy, Huyện Lệ Thủy, Tỉnh Quảng Bình",
-        description: "Áo phao thiếu 1000 cái dự phòng cho thời gian tới",
-        imageUrl:
-          "https://images.unsplash.com/photo-1495001258031-d1b407bc1776?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8cmFuZG9tfGVufDB8fDB8fHww",
-      },
-      {
-        id: 1,
-        status: "Đang chờ xác minh",
-        name: "Có đội cứu hộ nào bên Hà Can- Thượng Phong xin giúp đỡ...",
-        address: "Xã Liên Thủy, Huyện Lệ Thủy, Tỉnh Quảng Bình",
-        description: "Áo phao thiếu 1000 cái dự phòng cho thời gian tới",
-        imageUrl:
-          "https://images.unsplash.com/photo-1495001258031-d1b407bc1776?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8cmFuZG9tfGVufDB8fDB8fHww",
-      },
-      {
-        id: 1,
-        status: "Đang chờ xác minh",
-        name: "Có đội cứu hộ nào bên Hà Can- Thượng Phong xin giúp đỡ...",
-        address: "Xã Liên Thủy, Huyện Lệ Thủy, Tỉnh Quảng Bình",
-        description: "Áo phao thiếu 1000 cái dự phòng cho thời gian tới",
-        imageUrl:
-          "https://images.unsplash.com/photo-1495001258031-d1b407bc1776?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8cmFuZG9tfGVufDB8fDB8fHww",
-      },
-    ],
-  },
-];
+import RescueTeamForm from "@/components/modal/request-rescue-modal/rescue-team-form";
+import { getCurrentUser } from "@/lib/axios";
+import { useRouter } from "next/navigation";
+import { SUPPORT_LOCATION_APIS } from "@/apis/support-location";
+import TemporaryStopForm from "@/components/modal/request-rescue-modal/temporary-stop-form";
 
 const titleList = {
   title: "Danh sách các địa điêm dừng chân",
@@ -123,12 +26,60 @@ const titleList = {
 };
 
 export default function Page() {
+  const query = useQuery({
+    queryKey: ["support-location-temporary-stop"],
+    queryFn: SUPPORT_LOCATION_APIS.getAllByType("temporary_stop"),
+  });
+  const temporaryStopData = transformData(query?.data?.data);
+
+  const user = getCurrentUser();
+  const router = useRouter();
+  const { setOpen } = useRequestReliefContext();
+
+  const handleSignSupportLocation = async () => {
+    if (!user) return router.push("/dang-ky");
+    setOpen(true);
+  };
+
+  if (query.isFetching)
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <Spinner
+          size="lg"
+          className="bg-black dark:bg-white"
+          loading={query.isFetching}
+        />
+      </div>
+    );
+
   return (
     <RequestReliefContext>
-      <DisasterReliefDashboard
-        titleList={titleList}
-        locations={SAMPLE_LOCATIONS}
-      />
+      {temporaryStopData?.length == 0 ? (
+        <EmptyData
+          title="Chưa có thông tin địa điểm dừng chân nào"
+          description="Không tìm thấy thông tin địa điểm dừng chân nào.
+                      Vui lòng thử lại."
+          icon={<CloudOff className="h-8 w-8 text-gray-400" />}
+          removeText="Đăng ký địa điểm dừng chân"
+          onRemove={handleSignSupportLocation}
+        />
+      ) : (
+        <DisasterReliefDashboard
+          titleList={titleList}
+          locations={temporaryStopData}
+        />
+      )}
+      <ModalContainer
+        title="Đơn đăng ký địa điểm dừng chân"
+        description=""
+        buttons={{
+          primary: "Tạo địa điểm dừng chân",
+          secondary: "Huỷ bỏ",
+        }}
+        formId="temporary-stop-form-id"
+      >
+        <TemporaryStopForm />
+      </ModalContainer>
     </RequestReliefContext>
   );
 }

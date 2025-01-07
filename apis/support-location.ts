@@ -12,19 +12,20 @@ export const SUPPORT_LOCATION_APIS = {
   getAllByVehicleId: async (vehicleId: string) =>
     axiosInstance.get(baseURL("/vehicle-received/" + vehicleId)),
 
-  getAllByType: (type: string, from: "all" | string) => async () =>
-    axiosInstance.get(baseURL("/user/" + from + `?type=${type}`)),
+  getById: (id: any) => async () => axiosInstance.get(baseURL("/" + id)),
+
+  getAllByType:
+    (type: "temporary_stop" | "residence" | "warehouse" | "commissariat") =>
+    async () =>
+      axiosInstance.get(baseURL("/filter/by-type" + `?type=${type}`)),
   // getByPhoneNumber: async (phone: string) =>
   //   axiosInstance.get(baseURL("/phone/" + phone)),
 
   // getByUidFirebase: async (uid: string) =>
   //   axiosInstance.get(baseURL("/firebase/" + uid)),
 
-  save: async (rescueRequestId: any, body: any) =>
-    axiosInstance.post(
-      baseURL("/" + rescueRequestId + "/rescue-requests"),
-      body
-    ),
+  save: async (type: any, body: any) =>
+    axiosInstance.post(baseURL("/type/" + type), body),
   // addTeamMember: (rescueTeamId: any) => async (body: any) =>
   //   axiosInstance.post(baseURL("/" + rescueTeamId + "members"), body),
 };
