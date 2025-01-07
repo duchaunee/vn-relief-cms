@@ -31,7 +31,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { usePathname } from "next/navigation";
-import { handleLogout, isLogged } from "@/lib/axios";
+import {
+  getCurrentUser,
+  handleLogout,
+  isAuthenticatedByRole,
+  isLogged,
+} from "@/lib/axios";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/configs/firebase";
 
@@ -47,10 +52,6 @@ const Header = () => {
   //user
   const [userFromMongodb, setUserFromMongodb] = useState<{} | null | undefined>(
     undefined
-  );
-  console.log(
-    "\n🔥 ~ file: header.tsx:51 ~ userFromMongodb::\n",
-    userFromMongodb
   );
 
   useEffect(() => {
@@ -162,8 +163,10 @@ const Header = () => {
     );
   };
 
+  const user = getCurrentUser();
+
   return (
-    <header className="fixed inset-x-0 top-0 z-30 bg-white px-4 py-[10px] shadow-sm lg:px-5">
+    <header className="fixed h-[64px] inset-x-0 top-0 z-30 bg-white px-4 py-[10px] shadow-sm lg:px-5">
       <div className="flex items-center justify-between gap-5">
         <Link href="/" className="inline-block shrink-0 lg:ml-2.5">
           <Image
@@ -175,15 +178,21 @@ const Header = () => {
           />
         </Link>
 
-        <Link href="/">
-          <Image
-            src="/logo/logo-header-admin.png"
-            width={170}
-            height={45}
-            alt="Logo"
-            className=""
-          />
-        </Link>
+        {isAuthenticatedByRole("volunteer") && (
+          <Link href="/">
+            <Image
+              src="/logo/logo-header-admin.png"
+              width={170}
+              height={45}
+              alt="Logo"
+              className=""
+            />
+          </Link>
+        )}
+
+        {isAuthenticatedByRole("admin") && (
+          <p className="text-md font-medium mt-2">QUẢN TRỊ VIÊN VNRELIEF</p>
+        )}
 
         <div className="inline-flex items-center gap-3 sm:gap-5">
           <div className="hidden lg:block">

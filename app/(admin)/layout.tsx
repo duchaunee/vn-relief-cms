@@ -3,8 +3,10 @@ import { Roboto } from "next/font/google";
 
 import "../globals.css";
 import TanStackProvider from "@/providers/tan-stack-provider";
-import Header from "./components/header";
-import Sidebar from "./components/sidebar";
+import dynamic from "next/dynamic";
+
+const Sidebar = dynamic(() => import("./components/sidebar"), { ssr: false });
+const Header = dynamic(() => import("./components/header"), { ssr: false });
 
 const roboto = Roboto({
   weight: ["100", "300", "400", "500", "700", "900"],
@@ -12,8 +14,8 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: "VNRelief - Tình nguyện viên",
-  description: "VNRelief - Tình nguyện viên",
+  title: "VNRelief - Quản lý",
+  description: "VNRelief - Quản lý",
   icons: {
     icon: [
       {
@@ -47,7 +49,9 @@ export default function RootLayout({
         <TanStackProvider>
           <Header />
           <Sidebar />
-          {children}
+          <div id="main-content" className="mt-[64px] p-10 ml-[60px]">
+            {children}
+          </div>
         </TanStackProvider>
       </body>
     </html>

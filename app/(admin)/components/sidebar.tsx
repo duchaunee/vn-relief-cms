@@ -38,7 +38,7 @@ import RoleBadge from "@/components/badge-custom/badge-role";
 import { getCurrentUser, isAuthenticatedByRole } from "@/lib/axios";
 
 const Sidebar = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const pathName = usePathname();
   const user = getCurrentUser();
 
@@ -46,7 +46,7 @@ const Sidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
     const mainContent = document.getElementById("main-content");
     if (mainContent) {
-      mainContent.style.marginLeft = isSidebarOpen ? "260px" : "60px"; // Adjust this value as needed
+      mainContent.style.marginLeft = isSidebarOpen ? "260px" : "60px";
     }
   };
 
@@ -102,8 +102,7 @@ const Sidebar = () => {
             <X className="-mr-2 -mt-2 ml-auto size-4 hover:text-black" />
           </button>
         </div>
-        <Accordion
-          type="multiple"
+        <div
           collapsible
           className="sidemenu grow overflow-y-auto overflow-x-hidden px-2.5 pb-10 pt-2.5 transition-all"
           key={pathName}
@@ -120,7 +119,7 @@ const Sidebar = () => {
               </NavLink>
 
               <NavLink
-                href="/scrumboard"
+                href="/quan-ly/dot-thien-tai"
                 target="_blank"
                 isProfessionalPlanRoute={true}
                 className={`nav-link ${
@@ -130,102 +129,36 @@ const Sidebar = () => {
                 <SquareKanban className="size-[18px] shrink-0" />
                 <span>Quản lý đợt thiên tai</span>
               </NavLink>
+              <NavLink
+                href="/quan-ly/thong-ke"
+                target="_blank"
+                isProfessionalPlanRoute={true}
+                className={`nav-link ${
+                  pathName === "/scrumboard" && "!text-black"
+                }`}
+              >
+                <SquareKanban className="size-[18px] shrink-0" />
+                <span>Thống kê thiên tai</span>
+              </NavLink>
             </>
           ) : (
             <>
-              <AccordionItem value="item-2" className="p-0 shadow-none">
-                <AccordionTrigger
-                  defaultValue={
-                    ["/blog-list", "/blog-details", "/add-blog"].includes(
-                      pathName
-                    )
-                      ? "item-2"
-                      : ""
-                  }
-                  className="nav-link"
-                >
+              <div className="p-0 shadow-none">
+                <Link href={"/quan-ly/don-cuu-tro"} className="nav-link">
                   <SquareKanban className="size-[18px] shrink-0 -rotate-90" />
                   <span>Quản lý đơn cứu trợ</span>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <ul className="submenu space-y-2 pl-12 pr-5">
-                    <li>
-                      <NavLink
-                        href="/cuu-tro-khan-cap"
-                        target="_blank"
-                        isAccordion={true}
-                        isProfessionalPlanRoute={true}
-                      >
-                        Đơn cứu trợ khẩn cấp
-                      </NavLink>
-                    </li>
-                    <li>
-                      <NavLink
-                        href="/blog-details"
-                        target="_blank"
-                        isAccordion={true}
-                        isProfessionalPlanRoute={true}
-                      >
-                        Đơn xin hỗ trợ
-                      </NavLink>
-                    </li>
-                    <li>
-                      <NavLink
-                        href="/add-blog"
-                        target="_blank"
-                        isAccordion={true}
-                        isProfessionalPlanRoute={true}
-                      >
-                        Add New Blog
-                      </NavLink>
-                    </li>
-                  </ul>
-                </AccordionContent>
-              </AccordionItem>
+                </Link>
+              </div>
 
-              <AccordionItem value="item-3" className="p-0 shadow-none">
-                <AccordionTrigger className="nav-link">
-                  <ScrollText className="size-[18px] shrink-0" />
+              <div className="p-0 shadow-none">
+                <Link href={"/quan-ly/doi-cuu-tro"} className="nav-link">
+                  <SquareKanban className="size-[18px] shrink-0 -rotate-90" />
                   <span>Quản lý đội cứu trợ</span>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <ul className="submenu space-y-2 pl-12 pr-5">
-                    <li>
-                      <NavLink
-                        href="/invoice"
-                        target="_blank"
-                        isAccordion={true}
-                        isProfessionalPlanRoute={true}
-                      >
-                        Invoice
-                      </NavLink>
-                    </li>
-                    <li>
-                      <NavLink
-                        href="/invoice-details"
-                        target="_blank"
-                        isAccordion={true}
-                        isProfessionalPlanRoute={true}
-                      >
-                        Invoice details
-                      </NavLink>
-                    </li>
-                    <li>
-                      <NavLink
-                        href="/create-invoice"
-                        target="_blank"
-                        isAccordion={true}
-                        isProfessionalPlanRoute={true}
-                      >
-                        Create Invoice
-                      </NavLink>
-                    </li>
-                  </ul>
-                </AccordionContent>
-              </AccordionItem>
+                </Link>
+              </div>
             </>
           )}
-        </Accordion>
+        </div>
       </Card>
     </>
   );

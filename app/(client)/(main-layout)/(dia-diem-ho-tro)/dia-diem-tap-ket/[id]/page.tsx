@@ -16,6 +16,7 @@ export default function page() {
   });
 
   const twarehouseData = query?.data?.data ? query?.data?.data : [];
+  console.log("\n🔥 ~ file: page.tsx:19 ~ twarehouseData::\n", twarehouseData);
   if (twarehouseData?.length == 0) return;
 
   return (

@@ -37,11 +37,6 @@ export default function Page() {
   const router = useRouter();
   const { open, setOpen } = useRequestReliefContext();
 
-  const handleSignSupportLocation = () => {
-    if (!user) return router.push("/dang-ky");
-    setOpen(true);
-  };
-
   if (query.isFetching)
     return (
       <div className="w-full h-full flex items-center justify-center">
@@ -62,7 +57,6 @@ export default function Page() {
                       Vui lòng thử lại."
           icon={<CloudOff className="h-8 w-8 text-gray-400" />}
           removeText="Đăng ký địa điểm dừng chân"
-          onRemove={handleSignSupportLocation}
         />
       ) : (
         <DisasterReliefDashboard

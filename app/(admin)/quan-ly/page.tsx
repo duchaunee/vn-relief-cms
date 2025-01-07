@@ -1,7 +1,7 @@
 import React from "react";
 
 const page = () => {
-  return <div>QUAN LY</div>;
+  return <div>Bắt đầu với trang quản lý !</div>;
 };
 
 export default page;
