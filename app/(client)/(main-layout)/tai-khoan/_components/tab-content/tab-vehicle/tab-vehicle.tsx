@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -36,71 +36,59 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-// Mock Data
-const initialVehicleInfo = {
-  id: 1,
-  licensePlate: "74A-12345",
-  type: "Xe tải",
-  capacity: "2 tấn",
-  status: "active",
-  currentLocation: "Tỉnh Yên Bái",
-  supportCapability: "Vận chuyển hàng hóa, di dời người dân",
-};
-
-const initialDeliveries = [
-  {
-    id: 1,
-    title: "Vận chuyển lương thực",
-    pickupLocation: "Điểm tập kết A",
-    deliveryLocation: "Xã ABC",
-    status: "pending",
-    items: "Gạo: 100kg, Mì: 50 thùng",
-    requestId: "REQ001",
-  },
-  {
-    id: 2,
-    title: "Di dời người dân",
-    pickupLocation: "Phường XYZ",
-    deliveryLocation: "Điểm sơ tán B",
-    status: "in_progress",
-    items: "20 người",
-    requestId: "REQ002",
-  },
-  {
-    id: 3,
-    title: "Vận chuyển nhu yếu phẩm",
-    pickupLocation: "Kho hàng C",
-    deliveryLocation: "Điểm cứu trợ D",
-    status: "completed",
-    items: "Nước: 200 thùng, Mì: 100 thùng",
-    requestId: "REQ003",
-    confirmationImage: null,
-  },
-];
+import { VEHICLE_APIS } from "@/apis/vehicle";
+import { getCurrentUser } from "@/lib/axios";
 
 const VehicleManagementDashboard = () => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [editingVehicle, setEditingVehicle] = useState(null);
+  console.log(
+    "\n🔥 ~ file: tab-vehicle.tsx:46 ~ editingVehicle::\n",
+    editingVehicle
+  );
   const [deletingVehicle, setDeletingVehicle] = useState(null);
 
-  const [vehicleInfo] = useState(initialVehicleInfo);
-  const [deliveries, setDeliveries] = useState(initialDeliveries);
+  const [vehicleInfo, setVehicleInfo] = useState(null);
+  const [deliveries, setDeliveries] = useState([]);
   const [isUpdateStatusOpen, setIsUpdateStatusOpen] = useState(false);
   const [selectedDelivery, setSelectedDelivery] = useState(null);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedImagePreview, setSelectedImagePreview] = useState(null);
 
-  const handleEditVehicle = () => {
+  const user = getCurrentUser();
+
+  useEffect(() => {
+    const fetchVehicleData = async () => {
+      try {
+        const userId = user._id;
+        const response = (await VEHICLE_APIS.getVehicleByUserId(userId))?.data;
+        setVehicleInfo(response.vehicle);
+        setDeliveries(response.transportSuppliers);
+      } catch (error) {
+        console.error("Error fetching vehicle data:", error);
+      }
+    };
+
+    fetchVehicleData();
+  }, []);
+
+  const handleEditVehicle = async () => {
+    await VEHICLE_APIS.update(editingVehicle._id, {
+      licensePlate: editingVehicle.licensePlate,
+      vehicleType: editingVehicle.vehicleType,
+      status: editingVehicle.status,
+      supportCapability: editingVehicle.supportCapability,
+    });
     // Update vehicle info logic here
     setVehicleInfo(editingVehicle);
     setIsEditOpen(false);
     toast.success("Đã cập nhật thông tin phương tiện!");
   };
 
-  const handleDeleteVehicle = () => {
+  const handleDeleteVehicle = async () => {
+    await VEHICLE_APIS.delete(vehicleInfo._id);
     // Delete vehicle logic here
     setIsDeleteOpen(false);
     toast.success("Đã xóa phương tiện!");
@@ -162,18 +150,24 @@ const VehicleManagementDashboard = () => {
 
   const getStatusBadge = (status) => {
     switch (status) {
-      case "pending":
-        return <Badge variant="secondary">Chờ xử lý</Badge>;
-      case "in_progress":
-        return <Badge variant="default">Đang thực hiện</Badge>;
-      case "completed":
-        return <Badge variant="success">Hoàn thành</Badge>;
-      case "active":
-        return <Badge variant="success">Đang hoạt động</Badge>;
+      case "available":
+        return <Badge variant="secondary">Không hoạt động</Badge>;
+      case "unavailable":
+        return (
+          <Badge variant="secondary" className="text-green-500 bg-green-100">
+            Đang hoạt động
+          </Badge>
+        );
       default:
-        return <Badge>{status}</Badge>;
+        return <Badge>Đang hoạt động</Badge>;
     }
   };
+
+  if (!vehicleInfo) return;
+  console.log(
+    "\n🔥 ~ file: tab-vehicle.tsx:156 ~ vehicleInfo::\n",
+    vehicleInfo
+  );
 
   return (
     <div className="w-full p-4">
@@ -195,9 +189,9 @@ const VehicleManagementDashboard = () => {
                   <TableRow>
                     <TableHead>Biển số xe</TableHead>
                     <TableHead>Loại xe</TableHead>
-                    <TableHead>Tải trọng</TableHead>
+                    {/* <TableHead>Tải trọng</TableHead> */}
                     <TableHead>Trạng thái</TableHead>
-                    <TableHead>Vị trí hiện tại</TableHead>
+                    {/* <TableHead>Vị trí hiện tại</TableHead> */}
                     <TableHead>Khả năng hỗ trợ</TableHead>
                     <TableHead className="text-right">Thao tác</TableHead>
                   </TableRow>
@@ -205,10 +199,10 @@ const VehicleManagementDashboard = () => {
                 <TableBody>
                   <TableRow>
                     <TableCell>{vehicleInfo.licensePlate}</TableCell>
-                    <TableCell>{vehicleInfo.type}</TableCell>
-                    <TableCell>{vehicleInfo.capacity}</TableCell>
+                    <TableCell>{vehicleInfo.vehicleType}</TableCell>
+                    {/* <TableCell>{vehicleInfo.capacity}</TableCell> */}
                     <TableCell>{getStatusBadge(vehicleInfo.status)}</TableCell>
-                    <TableCell>{vehicleInfo.currentLocation}</TableCell>
+                    {/* <TableCell>{vehicleInfo.currentLocation}</TableCell> */}
                     <TableCell>{vehicleInfo.supportCapability}</TableCell>
                     <TableCell className="text-right">
                       <DropdownMenu>
@@ -221,7 +215,7 @@ const VehicleManagementDashboard = () => {
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem
                             onClick={() => {
-                              setEditingVehicle(vehicleInfo);
+                              setEditingVehicle({ ...vehicleInfo }); // Sao chép thông tin phương tiện vào editingVehicle
                               setIsEditOpen(true);
                             }}
                           >
@@ -269,52 +263,47 @@ const VehicleManagementDashboard = () => {
                       />
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="type" className="text-right">
+                      <Label htmlFor="vehicleType" className="text-right">
                         Loại xe
                       </Label>
                       <Input
-                        id="type"
-                        value={editingVehicle?.type || ""}
+                        id="vehicleType"
+                        value={editingVehicle?.vehicleType || ""}
                         onChange={(e) =>
                           setEditingVehicle((prev) => ({
                             ...prev,
-                            type: e.target.value,
+                            vehicleType: e.target.value,
                           }))
                         }
                         className="col-span-3"
                       />
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="capacity" className="text-right">
-                        Tải trọng
+                      <Label htmlFor="status" className="text-right">
+                        Trạng thái
                       </Label>
-                      <Input
-                        id="capacity"
-                        value={editingVehicle?.capacity || ""}
-                        onChange={(e) =>
+                      <Select
+                        value={editingVehicle?.status || ""}
+                        onValueChange={(value) =>
                           setEditingVehicle((prev) => ({
                             ...prev,
-                            capacity: e.target.value,
+                            status: value,
                           }))
                         }
                         className="col-span-3"
-                      />
-                    </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="currentLocation" className="text-right">
-                        Vị trí hiện tại
-                      </Label>
-                      <Input
-                        id="currentLocation"
-                        value={editingVehicle?.currentLocation || ""}
-                        onChange={(e) =>
-                          setEditingVehicle((prev) => ({
-                            ...prev,
-                            currentLocation: e.target.value,
-                          }))
-                        }
-                        className="col-span-3"
-                      />
+                      >
+                        <SelectTrigger className="w-[180px]">
+                          <SelectValue placeholder="Chọn trạng thái" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="unavailable">
+                            Đang hoạt động
+                          </SelectItem>
+                          <SelectItem value="available">
+                            Không hoạt động
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
                       <Label htmlFor="supportCapability" className="text-right">
@@ -439,7 +428,6 @@ const VehicleManagementDashboard = () => {
                   ))}
                 </TableBody>
               </Table>
-
               {/* View Image Dialog */}
               <Dialog
                 open={isUpdateStatusOpen}
@@ -531,5 +519,4 @@ const VehicleManagementDashboard = () => {
     </div>
   );
 };
-
 export default VehicleManagementDashboard;

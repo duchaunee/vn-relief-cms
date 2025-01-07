@@ -9,10 +9,16 @@ export const VEHICLE_APIS = {
 
   getById: (id: string) => async () => axiosInstance.get(baseURL("/" + id)),
 
+  getVehicleByUserId: async (userId: string) =>
+    axiosInstance.get(baseURL("/user/" + userId)),
+
   getVehicleBorrowsController: (vehicleId: string) => async () =>
     axiosInstance.get(baseURL("/" + vehicleId + "/borrows")),
 
   save: async (body: any) => axiosInstance.post(baseURL("/"), body),
-  // addTeamMember: (rescueTeamId: any) => async (body: any) =>
-  //   axiosInstance.post(baseURL("/" + rescueTeamId + "members"), body),
+
+  update: async (vehicleId: string, body: any) =>
+    axiosInstance.put(baseURL("/" + vehicleId), body),
+  delete: async (vehicleId: string) =>
+    axiosInstance.delete(baseURL("/" + vehicleId)),
 };

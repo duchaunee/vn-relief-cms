@@ -61,10 +61,6 @@ export const Header = () => {
             const userRolesData = await USER_ROLES_APIS.getAll(
               userFromMongodb.data._id
             );
-            console.log(
-              "\n🔥 ~ file: header.tsx:81 ~ userRolesData::\n",
-              userRolesData
-            );
 
             //nếu các role của user đều đang pending HOẶC user k có role nào --> cút
             if (userRolesData.data.length == 0) {

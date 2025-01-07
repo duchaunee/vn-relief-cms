@@ -12,10 +12,13 @@ export const TEAM_RESCUE_REQUEST_APIS = {
     rescueTeamId: string,
     rescueRequestId: string
   ) =>
-    axiosInstance.get(
+    axiosInstance.post(
       baseURL(
         "/rescue-teams/" + rescueTeamId + "/rescue-requests/" + rescueRequestId
-      )
+      ),
+      {
+        action: "accept",
+      }
     ),
 
   // getByPhoneNumber: async (phone: string) =>

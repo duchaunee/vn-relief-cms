@@ -15,4 +15,10 @@ export const RESCUE_REQUEST_APIS = {
 
   getById: (id: string) => async () => axiosInstance.get(baseURL("/" + id)),
   save: async (body: RequestData) => axiosInstance.post(baseURL("/"), body),
+
+  update: async (rescueRequestId: string, body: string) =>
+    axiosInstance.put(baseURL("/" + rescueRequestId), body),
+
+  delete: async (rescueRequestId: string) =>
+    axiosInstance.delete(baseURL("/" + rescueRequestId)),
 };

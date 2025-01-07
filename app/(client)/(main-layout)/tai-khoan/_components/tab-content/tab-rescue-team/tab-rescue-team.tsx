@@ -30,124 +30,88 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { UserPlus, LogOut } from "lucide-react";
 import toast from "react-hot-toast";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-// Mock Data
-const initialMembers = [
-  { id: 1, name: "Nguyễn Văn A", phone: "0123456789", role: "Member" },
-  { id: 2, name: "Trần Thị B", phone: "0987654321", role: "Member" },
-  { id: 3, name: "Lê Văn C", phone: "0369852147", role: "Member" },
-];
-
-const initialRequests = [
-  { id: 1, name: "Phạm Văn D", phone: "0123456780", status: "pending" },
-  { id: 2, name: "Hoàng Thị E", phone: "0987654322", status: "pending" },
-];
-
-const initialRescueRequests = [
-  {
-    id: 1,
-    title: "Hỗ trợ di dời dân",
-    location: "Xã Ngọc Xá, Huyện Quế VÕ",
-    priority: "high",
-    status: "pending",
-    description: "Hỗ trợ di dời 50 hộ dân trong vùng ngập lụt",
-  },
-  {
-    id: 2,
-    title: "Phân phát nhu yếu phẩm",
-    location: "Xã Việt Hùng, Đồng Xoài",
-    priority: "medium",
-    status: "in_progress",
-    description: "Phân phát lương thực, nước uống cho 100 hộ dân",
-  },
-  // {
-  //   id: 3,
-  //   title: "Sơ tán khẩn cấp",
-  //   location: "Thôn Bùng, Xã Từ Sơn",
-  //   priority: "high",
-  //   status: "completed",
-  //   description: "Sơ tán người dân khỏi vùng sạt lở",
-  // },
-];
+import { Skeleton } from "@/components/ui/skeleton";
+import { RESCUE_TEAMS_APIS } from "@/apis/rescue-team";
+import { getCurrentUser } from "@/lib/axios";
 
 const RescueTeamDashboard = () => {
-  const [teamMembers, setTeamMembers] = useState(initialMembers);
-  const [joinRequests, setJoinRequests] = useState(initialRequests);
-  const [rescueRequests, setRescueRequests] = useState(initialRescueRequests);
+  const user = getCurrentUser();
+  const queryClient = useQueryClient();
   const [invitePhone, setInvitePhone] = useState("");
   const [isInviteOpen, setIsInviteOpen] = useState(false);
   const [isLeaveOpen, setIsLeaveOpen] = useState(false);
   const [isConfirmRemoveOpen, setIsConfirmRemoveOpen] = useState(false);
   const [memberToRemove, setMemberToRemove] = useState(null);
 
-  const handleInviteMember = () => {
-    if (teamMembers.some((member) => member.phone === invitePhone)) {
-      toast.error("Số điện thoại này đã là thành viên của đội!");
-      return;
-    }
+  // Fetch team data
+  const { data: teamData, isLoading } = useQuery({
+    queryKey: ["team-details", user?._id],
+    queryFn: () => RESCUE_TEAMS_APIS.getTeamDetailsByUserId(user?._id),
+    enabled: !!user?._id,
+  });
 
-    const newMember = {
-      id: teamMembers.length + 1,
-      name: `Thành viên ${invitePhone}`,
-      phone: invitePhone,
-      role: "Member",
-    };
+  const inviteMutation = useMutation({
+    mutationFn: (phone) =>
+      RESCUE_TEAMS_APIS.inviteMember(teamData?.data?.team?._id, phone),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["team-details"]);
+      setInvitePhone("");
+      setIsInviteOpen(false);
+      toast.success("Đã mời thành viên thành công!");
+    },
+    onError: () => {
+      toast.error("Có lỗi xảy ra khi mời thành viên!");
+    },
+  });
 
-    setTeamMembers([...teamMembers, newMember]);
-    setInvitePhone("");
-    setIsInviteOpen(false);
-    toast.success("Đã mời thành viên thành công!");
-  };
+  const leaveTeamMutation = useMutation({
+    mutationFn: () => RESCUE_TEAMS_APIS.leaveTeam(teamData?.data?.team?._id),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["team-details"]);
+      setIsLeaveOpen(false);
+      toast.success("Đã rời khỏi đội thành công!");
+    },
+  });
 
-  const handleLeaveTeam = () => {
-    setIsLeaveOpen(false);
-    toast.success("Đã rời khỏi đội thành công!");
-  };
+  const removeMemberMutation = useMutation({
+    mutationFn: (memberId) =>
+      RESCUE_TEAMS_APIS.removeMember(teamData?.data?.team?._id, memberId),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["team-details"]);
+      setIsConfirmRemoveOpen(false);
+      setMemberToRemove(null);
+      toast.success("Đã xóa thành viên khỏi đội!");
+    },
+  });
 
-  const handleRemoveMember = (memberId) => {
-    setTeamMembers(teamMembers.filter((member) => member.id !== memberId));
-    setIsConfirmRemoveOpen(false);
-    setMemberToRemove(null);
-    toast.success("Đã xóa thành viên khỏi đội!");
-  };
+  const handleJoinRequestMutation = useMutation({
+    mutationFn: ({ userIdRequest, requestId, action }) =>
+      RESCUE_TEAMS_APIS.handleJoinRequest(
+        userIdRequest,
+        teamData?.data?.team?._id,
+        requestId,
+        action
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["team-details"]);
+      toast.success(
+        currentAction === "accept"
+          ? "Đã chấp nhận yêu cầu tham gia!"
+          : "Đã từ chối yêu cầu tham gia!"
+      );
+    },
+  });
 
-  const handleJoinRequest = (requestId, action) => {
-    if (action === "accept") {
-      const request = joinRequests.find((req) => req.id === requestId);
-      const newMember = {
-        id: teamMembers.length + 1,
-        name: request.name,
-        phone: request.phone,
-        role: "Member",
-      };
-      setTeamMembers([...teamMembers, newMember]);
-      toast.success("Đã chấp nhận yêu cầu tham gia!");
-    } else {
-      toast.success("Đã từ chối yêu cầu tham gia!");
-    }
-
-    setJoinRequests(joinRequests.filter((req) => req.id !== requestId));
-  };
-
-  const handleUpdateRescueStatus = (requestId, newStatus) => {
-    setRescueRequests((requests) =>
-      requests.map((req) =>
-        req.id === requestId ? { ...req, status: newStatus } : req
-      )
-    );
-    toast.success("Đã cập nhật trạng thái đơn cứu trợ!");
-  };
-
-  const getPriorityBadge = (priority) => {
-    switch (priority) {
-      case "high":
-        return <Badge variant="destructive">Cao</Badge>;
-      case "medium":
-        return <Badge variant="default">Trung bình</Badge>;
-      default:
-        return <Badge variant="secondary">Thấp</Badge>;
-    }
-  };
+  const updateRequestStatusMutation = useMutation({
+    mutationFn: ({ requestId, status }) =>
+      RESCUE_TEAMS_APIS.updateRequestStatus(requestId, status),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["team-details"]);
+      toast.success("Đã cập nhật trạng thái đơn cứu trợ!");
+    },
+  });
 
   const getStatusBadge = (status) => {
     switch (status) {
@@ -162,13 +126,32 @@ const RescueTeamDashboard = () => {
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="p-4">
+        <Skeleton className="w-full h-[200px]" />
+      </div>
+    );
+  }
+
+  const { team, members, pendingJoinRequests, assignedRequests } =
+    teamData?.data || {};
+
+  console.log(
+    "\n🔥 ~ file: tab-rescue-team.tsx:138 ~ pendingJoinRequests::\n",
+    pendingJoinRequests
+  );
   return (
     <div className="w-full p-4">
       <Tabs defaultValue="team" className="w-full">
         <TabsList className="grid w-full grid-cols-3 mb-4">
           <TabsTrigger value="team">Quản lý đội</TabsTrigger>
-          <TabsTrigger value="requests">Yêu cầu tham gia</TabsTrigger>
-          <TabsTrigger value="rescue">Đơn cứu trợ</TabsTrigger>
+          <TabsTrigger value="requests">
+            Yêu cầu tham gia ({pendingJoinRequests?.length || 0})
+          </TabsTrigger>
+          <TabsTrigger value="rescue">
+            Đơn cứu trợ ({assignedRequests?.length || 0})
+          </TabsTrigger>
         </TabsList>
 
         {/* Team Management Tab */}
@@ -176,7 +159,12 @@ const RescueTeamDashboard = () => {
           <Card>
             <CardHeader>
               <CardTitle className="flex justify-between items-center">
-                <span>Thành viên đội</span>
+                <div>
+                  <h3 className="text-lg font-bold">{team?.teamName}</h3>
+                  <p className="text-sm text-gray-500 mt-1">
+                    {team?.operationType}
+                  </p>
+                </div>
                 <div className="flex gap-2">
                   {/* Invite Member Dialog */}
                   <Dialog open={isInviteOpen} onOpenChange={setIsInviteOpen}>
@@ -205,8 +193,13 @@ const RescueTeamDashboard = () => {
                         >
                           Hủy
                         </Button>
-                        <Button onClick={handleInviteMember}>
-                          Mời thành viên
+                        <Button
+                          onClick={() => inviteMutation.mutate(invitePhone)}
+                          disabled={inviteMutation.isPending}
+                        >
+                          {inviteMutation.isPending
+                            ? "Đang xử lý..."
+                            : "Mời thành viên"}
                         </Button>
                       </DialogFooter>
                     </DialogContent>
@@ -234,8 +227,14 @@ const RescueTeamDashboard = () => {
                         >
                           Hủy
                         </Button>
-                        <Button variant="destructive" onClick={handleLeaveTeam}>
-                          Xác nhận rời đội
+                        <Button
+                          variant="destructive"
+                          onClick={() => leaveTeamMutation.mutate()}
+                          disabled={leaveTeamMutation.isPending}
+                        >
+                          {leaveTeamMutation.isPending
+                            ? "Đang xử lý..."
+                            : "Xác nhận rời đội"}
                         </Button>
                       </DialogFooter>
                     </DialogContent>
@@ -253,14 +252,14 @@ const RescueTeamDashboard = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {teamMembers.map((member) => (
-                    <TableRow key={member.id}>
+                  {members?.map((member) => (
+                    <TableRow key={member._id}>
                       <TableCell>{member.name}</TableCell>
                       <TableCell>{member.phone}</TableCell>
                       <TableCell>
                         <Dialog
                           open={
-                            isConfirmRemoveOpen && memberToRemove === member.id
+                            isConfirmRemoveOpen && memberToRemove === member._id
                           }
                           onOpenChange={(open) => {
                             setIsConfirmRemoveOpen(open);
@@ -271,7 +270,8 @@ const RescueTeamDashboard = () => {
                             <Button
                               variant="destructive"
                               size="sm"
-                              onClick={() => setMemberToRemove(member.id)}
+                              onClick={() => setMemberToRemove(member._id)}
+                              disabled={member._id === user?._id}
                             >
                               Xóa
                             </Button>
@@ -296,9 +296,14 @@ const RescueTeamDashboard = () => {
                               </Button>
                               <Button
                                 variant="destructive"
-                                onClick={() => handleRemoveMember(member.id)}
+                                onClick={() =>
+                                  removeMemberMutation.mutate(member._id)
+                                }
+                                disabled={removeMemberMutation.isPending}
                               >
-                                Xác nhận xóa
+                                {removeMemberMutation.isPending
+                                  ? "Đang xử lý..."
+                                  : "Xác nhận xóa"}
                               </Button>
                             </DialogFooter>
                           </DialogContent>
@@ -329,10 +334,10 @@ const RescueTeamDashboard = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {joinRequests.map((request) => (
-                    <TableRow key={request.id}>
-                      <TableCell>{request.name}</TableCell>
-                      <TableCell>{request.phone}</TableCell>
+                  {pendingJoinRequests?.map((request) => (
+                    <TableRow key={request._id}>
+                      <TableCell>{request.user.name}</TableCell>
+                      <TableCell>{request.user.phone}</TableCell>
                       <TableCell>
                         <Badge>Chờ duyệt</Badge>
                       </TableCell>
@@ -342,8 +347,13 @@ const RescueTeamDashboard = () => {
                             variant="default"
                             size="sm"
                             onClick={() =>
-                              handleJoinRequest(request.id, "accept")
+                              handleJoinRequestMutation.mutate({
+                                userIdRequest: request.user._id,
+                                requestId: request._id,
+                                action: "accept",
+                              })
                             }
+                            disabled={handleJoinRequestMutation.isPending}
                           >
                             Chấp nhận
                           </Button>
@@ -351,8 +361,12 @@ const RescueTeamDashboard = () => {
                             variant="destructive"
                             size="sm"
                             onClick={() =>
-                              handleJoinRequest(request.id, "reject")
+                              handleJoinRequestMutation.mutate({
+                                requestId: request._id,
+                                action: "reject",
+                              })
                             }
+                            disabled={handleJoinRequestMutation.isPending}
                           >
                             Từ chối
                           </Button>
@@ -360,6 +374,13 @@ const RescueTeamDashboard = () => {
                       </TableCell>
                     </TableRow>
                   ))}
+                  {pendingJoinRequests?.length === 0 && (
+                    <TableRow>
+                      <TableCell colSpan={4} className="text-center py-4">
+                        Không có yêu cầu tham gia nào
+                      </TableCell>
+                    </TableRow>
+                  )}
                 </TableBody>
               </Table>
             </CardContent>
@@ -378,33 +399,35 @@ const RescueTeamDashboard = () => {
                   <TableRow>
                     <TableHead>Tiêu đề</TableHead>
                     <TableHead>Địa điểm</TableHead>
-                    {/* <TableHead>Độ ưu tiên</TableHead> */}
                     <TableHead>Trạng thái</TableHead>
                     <TableHead>Thao tác</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {rescueRequests.map((request) => (
-                    <TableRow key={request.id}>
+                  {assignedRequests?.map((request) => (
+                    <TableRow key={request._id}>
                       <TableCell>
                         <div>
-                          <div className="font-medium">{request.title}</div>
+                          <div className="font-medium">
+                            {request.rescueRequest.title}
+                          </div>
                           <div className="text-sm text-gray-500">
-                            {request.description}
+                            {request.rescueRequest.description}
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell>{request.location}</TableCell>
-                      {/* <TableCell>
-                        {getPriorityBadge(request.priority)}
-                      </TableCell> */}
+                      <TableCell>{request.rescueRequest.address}</TableCell>
                       <TableCell>{getStatusBadge(request.status)}</TableCell>
                       <TableCell>
                         <Select
                           value={request.status}
                           onValueChange={(value) =>
-                            handleUpdateRescueStatus(request.id, value)
+                            updateRequestStatusMutation.mutate({
+                              requestId: request._id,
+                              status: value,
+                            })
                           }
+                          disabled={updateRequestStatusMutation.isPending}
                         >
                           <SelectTrigger className="w-[200px]">
                             <SelectValue placeholder="Cập nhật trạng thái" />
@@ -422,9 +445,9 @@ const RescueTeamDashboard = () => {
                       </TableCell>
                     </TableRow>
                   ))}
-                  {rescueRequests.length === 0 && (
+                  {assignedRequests?.length === 0 && (
                     <TableRow>
-                      <TableCell colSpan={5} className="text-center py-4">
+                      <TableCell colSpan={4} className="text-center py-4">
                         Chưa có đơn cứu trợ nào
                       </TableCell>
                     </TableRow>

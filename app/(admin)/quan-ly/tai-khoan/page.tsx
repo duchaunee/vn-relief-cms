@@ -224,7 +224,7 @@ const UserAccountDashboard = () => {
       phone: "",
       roles: [],
       fbLink: "",
-      wardCode: "|0|",
+      wardCode: "||",
     });
   };
 

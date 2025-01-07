@@ -84,14 +84,15 @@ export function NavUser({
                 </DropdownMenuItem>
               </Link>
               {/* Néu đã đăng nhập, và không phải user thường + TVĐCT, thì mới show cái này (TNV. admin) */}
-              {isAuthenticatedByRole("volunteer") && (
-                <Link href="/quan-ly">
-                  <DropdownMenuItem>
-                    <CreditCard />
-                    Trang quản lý
-                  </DropdownMenuItem>
-                </Link>
-              )}
+              {isAuthenticatedByRole("volunteer") ||
+                (isAuthenticatedByRole("admin") && (
+                  <Link href="/quan-ly">
+                    <DropdownMenuItem>
+                      <CreditCard />
+                      Trang quản lý
+                    </DropdownMenuItem>
+                  </Link>
+                ))}
               {/* <Link href="/thong-bao">
                 <DropdownMenuItem className="flex lg:hidden">
                   <Bell />

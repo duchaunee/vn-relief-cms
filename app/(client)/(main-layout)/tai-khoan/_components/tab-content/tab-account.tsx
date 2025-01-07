@@ -2,32 +2,23 @@ import { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { RequiredLabel } from "@/components/require-field/require-label";
-import dataLocation from "@/constants/location.json";
-import { findProvinceByCode } from "@/utils/helper/common";
 import toast from "react-hot-toast";
 import { getCurrentUser } from "@/lib/axios";
+import { USER_APIS } from "@/apis/user";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface UserFormData {
   name: string;
   phone: string;
   fbLink: string;
-  wardCode: string;
 }
 
 interface ValidationErrors {
   name?: string;
   phone?: string;
   fbLink?: string;
-  wardCode?: string;
 }
 
 const FormError = ({ message }: { message: string }) => (
@@ -41,18 +32,9 @@ export default function UserForm() {
     name: "",
     phone: "",
     fbLink: "",
-    wardCode: "",
   });
 
   const [errors, setErrors] = useState<ValidationErrors>({});
-
-  // Location state
-  const [provinces] = useState(dataLocation);
-  const [selectedProvince, setSelectedProvince] = useState<number | null>(null);
-  const [selectedDistrict, setSelectedDistrict] = useState<number | null>(null);
-  const [selectedWard, setSelectedWard] = useState<number | null>(null);
-  const [districts, setDistricts] = useState<any[]>([]);
-  const [wards, setWards] = useState<any[]>([]);
 
   useEffect(() => {
     if (user) {
@@ -60,76 +42,9 @@ export default function UserForm() {
         name: user.name || "",
         phone: user.phone || "",
         fbLink: user.fbLink || "",
-        wardCode: user.wardCode || "",
       });
-
-      // Parse location from wardCode
-      if (user.wardCode) {
-        const [wardStr, districtStr, provinceStr] = user.wardCode.split("|");
-        const province = parseInt(provinceStr);
-        const district = parseInt(districtStr);
-        const ward = parseInt(wardStr);
-
-        if (!isNaN(province)) {
-          setSelectedProvince(province);
-          const provinceData = findProvinceByCode(province);
-          console.log(
-            "\n🔥 ~ file: tab-account.tsx:76 ~ provinceData::\n",
-            provinceData
-          );
-          if (provinceData) {
-            setDistricts(provinceData.code);
-
-            if (!isNaN(district)) {
-              setSelectedDistrict(district);
-              const districtData = provinceData.districts.find(
-                (d) => d.code === district
-              );
-              if (districtData) {
-                setWards(districtData.code);
-
-                if (!isNaN(ward)) {
-                  setSelectedWard(ward);
-                }
-              }
-            }
-          }
-        }
-      }
     }
   }, []);
-
-  // Update districts when province changes
-  useEffect(() => {
-    if (selectedProvince) {
-      const province = findProvinceByCode(selectedProvince);
-      if (province) {
-        setDistricts(province.districts);
-        // Clear subordinate selections
-        if (!selectedDistrict) {
-          setWards([]);
-        }
-      }
-    } else {
-      setDistricts([]);
-      setWards([]);
-    }
-  }, [selectedProvince]);
-
-  // Update wards when district changes
-  useEffect(() => {
-    if (selectedProvince && selectedDistrict) {
-      const province = findProvinceByCode(selectedProvince);
-      const district = province?.districts.find(
-        (d) => d.code === selectedDistrict
-      );
-      if (district) {
-        setWards(district.wards);
-      }
-    } else {
-      setWards([]);
-    }
-  }, [selectedProvince, selectedDistrict]);
 
   const validateForm = () => {
     const newErrors: ValidationErrors = {};
@@ -152,10 +67,6 @@ export default function UserForm() {
       newErrors.fbLink = "Link Facebook nên bắt đầu bằng https://facebook.com";
     }
 
-    if (!formData.wardCode.trim()) {
-      newErrors.wardCode = "Vui lòng chọn địa điểm";
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -166,12 +77,13 @@ export default function UserForm() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const queryClient = useQueryClient();
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validateForm()) {
       try {
-        // Here you would typically update the user data through an API
-        console.log("Updating user data:", formData);
+        await USER_APIS.update(user?._id, formData);
+        // queryClient.refetchQueries()
         toast.success("Đã cập nhật thông tin thành công");
       } catch (error) {
         console.error("Error updating user info:", error);

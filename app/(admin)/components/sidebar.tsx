@@ -109,37 +109,32 @@ const Sidebar = () => {
         >
           {isAuthenticatedByRole("admin") ? (
             <>
-              <NavLink
+              <Link
                 href="/quan-ly/tai-khoan"
                 className={`nav-link ${pathName === "/chat" && "!text-black"}`}
-                isProfessionalPlanRoute={true}
               >
                 <MessageSquareText className="size-[18px] shrink-0" />
                 <span>Quản lý tài khoản</span>
-              </NavLink>
+              </Link>
 
-              <NavLink
+              <Link
                 href="/quan-ly/dot-thien-tai"
-                target="_blank"
-                isProfessionalPlanRoute={true}
                 className={`nav-link ${
                   pathName === "/scrumboard" && "!text-black"
                 }`}
               >
                 <SquareKanban className="size-[18px] shrink-0" />
                 <span>Quản lý đợt thiên tai</span>
-              </NavLink>
-              <NavLink
+              </Link>
+              <Link
                 href="/quan-ly/thong-ke"
-                target="_blank"
-                isProfessionalPlanRoute={true}
                 className={`nav-link ${
                   pathName === "/scrumboard" && "!text-black"
                 }`}
               >
                 <SquareKanban className="size-[18px] shrink-0" />
                 <span>Thống kê thiên tai</span>
-              </NavLink>
+              </Link>
             </>
           ) : (
             <>

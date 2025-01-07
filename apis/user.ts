@@ -17,6 +17,9 @@ export const USER_APIS = {
     axiosInstance.get(baseURL("/firebase/" + uid)),
 
   save: async (body: any) => axiosInstance.post(baseURL("/"), body),
+
+  update: async (userId: string, body: any) =>
+    axiosInstance.put(baseURL("/" + userId), body),
   // addTeamMember: (rescueTeamId: any) => async (body: any) =>
   //   axiosInstance.post(baseURL("/" + rescueTeamId + "members"), body),
 };
