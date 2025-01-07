@@ -117,7 +117,7 @@ const Sidebar = () => {
                 <span>Quản lý tài khoản</span>
               </Link>
 
-              <Link
+              {/* <Link
                 href="/quan-ly/dot-thien-tai"
                 className={`nav-link ${
                   pathName === "/scrumboard" && "!text-black"
@@ -125,7 +125,7 @@ const Sidebar = () => {
               >
                 <SquareKanban className="size-[18px] shrink-0" />
                 <span>Quản lý đợt thiên tai</span>
-              </Link>
+              </Link> */}
               <Link
                 href="/quan-ly/thong-ke"
                 className={`nav-link ${

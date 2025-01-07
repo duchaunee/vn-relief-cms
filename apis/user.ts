@@ -4,8 +4,8 @@ import _ from "lodash";
 const baseURL = (endpoint: string) => "users" + endpoint;
 
 export const USER_APIS = {
-  getAll: (status: string) => async () =>
-    axiosInstance.get(baseURL(`/?status=${status}`)),
+  getAll: (status?: string) => async () =>
+    axiosInstance.get(baseURL(status ? `?status=${status}` : "")),
 
   getByRole: (role: (0 | 1 | 2 | 3 | 4 | 5)[]) => async () =>
     axiosInstance.get(baseURL(`/roles?roles=${role}`)),

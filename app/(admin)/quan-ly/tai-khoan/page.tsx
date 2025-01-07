@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -41,88 +41,22 @@ import {
 } from "@/components/ui/dialog";
 import toast from "react-hot-toast";
 
-const roles = [
-  {
-    _id: "677d0534e8f3952639005d9f",
-    code: 0,
-    name: "Admin",
-    description: "Admin nền tảng VNRelief",
-  },
-  {
-    _id: "677d0534e8f3952639005da0",
-    code: 1,
-    name: "Thành viên đội cứu trợ",
-    description: "Tham gia trực tiếp vào các hoạt động cứu trợ",
-  },
-  {
-    _id: "677d0534e8f3952639005da1",
-    code: 2,
-    name: "Tình nguyện viên thu thập",
-    description: "Thu thập thông tin từ các nguồn và cập nhật lên hệ thống",
-  },
-  {
-    _id: "677d0534e8f3952639005da2",
-    code: 3,
-    name: "Tình nguyện viên hotline",
-    description: "Tiếp nhận và xử lý các cuộc gọi hỗ trợ",
-  },
-  {
-    _id: "677d0534e8f3952639005da3",
-    code: 4,
-    name: "Tình nguyện viên xác minh",
-    description: "Xác minh và xử lý thông tin từ các nguồn tin cậy",
-  },
-  {
-    _id: "677d0534e8f3952639005da4",
-    code: 5,
-    name: "Thành viên thường",
-    description:
-      "Người dùng thường của hệ thống, theo dõi, ủng hộ các vùng thiên tai",
-  },
-];
-
-// Dữ liệu tài khoản mẫu
-const initialAccounts = [
-  {
-    id: 1,
-    name: "Nguyễn Văn A",
-    phone: "0987654321",
-    roles: ["677d0534e8f3952639005d9f", "677d0534e8f3952639005da0"],
-    fbLink: "https://www.facebook.com/nguyenvana",
-    wardCode: "01|123|12345",
-    status: "active",
-  },
-  {
-    id: 2,
-    name: "Trần Thị B",
-    phone: "0123456789",
-    roles: ["677d0534e8f3952639005da1"],
-    fbLink: "https://www.facebook.com/tranthib",
-    wardCode: "02|456|45678",
-    status: "pending",
-  },
-  {
-    id: 3,
-    name: "Lê Văn C",
-    phone: "0918273645",
-    roles: ["677d0534e8f3952639005da4"],
-    fbLink: "https://www.facebook.com/levanc",
-    wardCode: "03|789|78901",
-    status: "inactive",
-  },
-];
+import { USER_APIS } from "@/apis/user";
+import { USER_ROLES_APIS } from "@/apis/user-role";
+import { ROLES_APIS } from "@/apis/roles";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { getCurrentUser } from "@/lib/axios";
 
 const UserAccountDashboard = () => {
+  const queryClient = useQueryClient();
+
   // Thêm state cho edit modal
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingAccount, setEditingAccount] = useState(null);
 
   // Handler mở modal sửa
   const openEditModal = (account) => {
-    setEditingAccount({
-      ...account,
-      wardCode: account.wardCode || "||", // Đảm bảo có wardCode để split
-    });
+    setEditingAccount(account);
     setIsEditModalOpen(true);
   };
 
@@ -152,11 +86,6 @@ const UserAccountDashboard = () => {
       errors.fbLink = "Link Facebook không hợp lệ";
     }
 
-    const [province, district, ward] = data.wardCode.split("|");
-    if (!province || !district || !ward) {
-      errors.wardCode = "Vui lòng nhập đầy đủ thông tin địa bàn";
-    }
-
     if (!data.roles?.length) {
       errors.roles = "Vui lòng chọn ít nhất một quyền";
     }
@@ -165,7 +94,7 @@ const UserAccountDashboard = () => {
   };
 
   // Handler cập nhật tài khoản
-  const handleUpdateAccount = () => {
+  const handleUpdateAccount = async () => {
     const errors = validateForm(editingAccount);
 
     if (Object.keys(errors).length > 0) {
@@ -176,19 +105,21 @@ const UserAccountDashboard = () => {
       return;
     }
 
-    setAccounts(
-      accounts.map((account) =>
-        account.id === editingAccount.id ? { ...editingAccount } : account
-      )
-    );
-
-    toast.success("Cập nhật thông tin tài khoản thành công!");
-    closeEditModal();
+    try {
+      await USER_APIS.update(editingAccount._id, editingAccount);
+      queryClient.refetchQueries(["users"]);
+      toast.success("Cập nhật thông tin tài khoản thành công!");
+      closeEditModal();
+    } catch (error) {
+      console.error(error);
+      toast.error("Có lỗi xảy ra khi cập nhật tài khoản");
+    }
   };
-  //////////////////////////////////////
 
-  const [accounts, setAccounts] = useState(initialAccounts);
+  const [accounts, setAccounts] = useState([]);
+  console.log("\n🔥 ~ file: page.tsx:174 ~ accounts::\n", accounts);
   const [selectedAccount, setSelectedAccount] = useState(null);
+
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [newAccount, setNewAccount] = useState({
@@ -196,7 +127,6 @@ const UserAccountDashboard = () => {
     phone: "",
     roles: [],
     fbLink: "",
-    wardCode: "|0|",
   });
 
   const openCreateModal = () => {
@@ -209,6 +139,7 @@ const UserAccountDashboard = () => {
   };
 
   const openViewModal = (account) => {
+    console.log("\n🔥 ~ file: page.tsx:197 ~ account::\n", account);
     setSelectedAccount(account);
     setIsViewModalOpen(true);
   };
@@ -224,31 +155,43 @@ const UserAccountDashboard = () => {
       phone: "",
       roles: [],
       fbLink: "",
-      wardCode: "||",
     });
   };
 
-  const handleCreateAccount = () => {
-    if (newAccount.name && newAccount.phone) {
-      setAccounts([
-        ...accounts,
-        {
-          ...newAccount,
-          id: accounts.length + 1,
-          status: "pending",
-        },
-      ]);
-      closeCreateModal();
-      toast.success("Tài khoản mới đã được tạo!");
-    } else {
-      toast.error("Vui lòng điền đầy đủ thông tin.");
+  const handleCreateAccount = async () => {
+    try {
+      // Tạo user
+      const createUserData = await USER_APIS.save({
+        ...newAccount,
+        accountStatus: "active",
+      });
+
+      if (createUserData?.data?.data?._id) {
+        // Tạo user role
+        const createUserRoles = await USER_ROLES_APIS.save(
+          createUserData.data.data._id,
+          newAccount.roles.map((roleId) => ({
+            roleId,
+            status: "accept",
+          }))
+        );
+
+        closeCreateModal();
+        toast.success("Tài khoản mới đã được tạo!");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Có lỗi xảy ra khi tạo tài khoản");
     }
   };
 
-  const handleUpdateAccountStatus = (accountId, newStatus) => {
+  const handleUpdateAccountStatus = async (accountId, newStatus) => {
+    await USER_APIS.update(accountId, { accountStatus: newStatus });
     setAccounts(
       accounts.map((account) =>
-        account.id === accountId ? { ...account, status: newStatus } : account
+        account._id === accountId
+          ? { ...account, accountStatus: newStatus }
+          : account
       )
     );
     toast.success("Trạng thái tài khoản đã được cập nhật!");
@@ -257,11 +200,35 @@ const UserAccountDashboard = () => {
   const handleApproveAccount = (accountId) => {
     setAccounts(
       accounts.map((account) =>
-        account.id === accountId ? { ...account, status: "active" } : account
+        account.id === accountId
+          ? { ...account, accountStatus: "active" }
+          : account
       )
     );
     toast.success("Tài khoản đã được phê duyệt!");
   };
+
+  const user = getCurrentUser();
+  const userQuery = useQuery({
+    queryKey: ["users"],
+    queryFn: USER_APIS.getAll(),
+  });
+  console.log("\n🔥 ~ file: page.tsx:263 ~ userQuery::\n", userQuery);
+
+  useEffect(() => {
+    if (userQuery?.data?.data)
+      setAccounts(
+        userQuery?.data?.data.filter((account) => account._id != user._id)
+      );
+  }, [userQuery?.data]);
+
+  const userRoleQuery = useQuery({
+    queryKey: ["roles"],
+    queryFn: ROLES_APIS.getAll,
+  });
+  const roles = userRoleQuery?.data?.data || [];
+
+  if (roles?.length == 0) return;
 
   return (
     <div className="container mx-auto py-6">
@@ -294,16 +261,16 @@ const UserAccountDashboard = () => {
                   <TableCell>
                     <Badge
                       variant={
-                        account.status === "active"
+                        account.accountStatus === "active"
                           ? "default"
-                          : account.status === "pending"
+                          : account.accountStatus === "pending"
                           ? "warning"
                           : "destructive"
                       }
                     >
-                      {account.status === "active"
+                      {account.accountStatus === "active"
                         ? "Hoạt động"
-                        : account.status === "pending"
+                        : account.accountStatus === "pending"
                         ? "Đang chờ duyệt"
                         : "Bị khóa"}
                     </Badge>
@@ -328,7 +295,7 @@ const UserAccountDashboard = () => {
                         >
                           Sửa thông tin
                         </DropdownMenuItem>
-                        {account.status === "pending" && (
+                        {account.accountStatus === "pending" && (
                           <DropdownMenuItem
                             onClick={() => handleApproveAccount(account.id)}
                           >
@@ -338,14 +305,14 @@ const UserAccountDashboard = () => {
                         <DropdownMenuItem
                           onClick={() =>
                             handleUpdateAccountStatus(
-                              account.id,
-                              account.status === "active"
+                              account._id,
+                              account.accountStatus === "active"
                                 ? "inactive"
                                 : "active"
                             )
                           }
                         >
-                          {account.status === "active"
+                          {account.accountStatus === "active"
                             ? "Khóa tài khoản"
                             : "Mở khóa tài khoản"}
                         </DropdownMenuItem>
@@ -442,50 +409,6 @@ const UserAccountDashboard = () => {
                 ))}
               </div>
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label className="text-right">Địa bàn</Label>
-              <div className="col-span-3 flex items-center space-x-2">
-                <Input
-                  value={newAccount.wardCode.split("|")[0]}
-                  onChange={(e) =>
-                    setNewAccount({
-                      ...newAccount,
-                      wardCode: `${e.target.value}|${
-                        newAccount.wardCode.split("|")[1]
-                      }|${newAccount.wardCode.split("|")[2]}`,
-                    })
-                  }
-                  className="w-1/3"
-                  placeholder="Tỉnh/TP"
-                />
-                <Input
-                  value={newAccount.wardCode.split("|")[1]}
-                  onChange={(e) =>
-                    setNewAccount({
-                      ...newAccount,
-                      wardCode: `${newAccount.wardCode.split("|")[0]}|${
-                        e.target.value
-                      }|${newAccount.wardCode.split("|")[2]}`,
-                    })
-                  }
-                  className="w-1/3"
-                  placeholder="Quận/Huyện"
-                />
-                <Input
-                  value={newAccount.wardCode.split("|")[2]}
-                  onChange={(e) =>
-                    setNewAccount({
-                      ...newAccount,
-                      wardCode: `${newAccount.wardCode.split("|")[0]}|${
-                        newAccount.wardCode.split("|")[1]
-                      }|${e.target.value}`,
-                    })
-                  }
-                  className="w-1/3"
-                  placeholder="Phường/Xã"
-                />
-              </div>
-            </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={closeCreateModal}>
@@ -535,7 +458,9 @@ const UserAccountDashboard = () => {
                     <div key={role._id} className="flex items-center space-x-2">
                       <Checkbox
                         id={`view-${role._id}`}
-                        checked={selectedAccount.roles.includes(role._id)}
+                        checked={selectedAccount.roles
+                          .map((role) => role.roleId.code)
+                          .includes(role._id)}
                         disabled
                       />
                       <Label htmlFor={`view-${role._id}`} className="space-x-2">
@@ -548,26 +473,10 @@ const UserAccountDashboard = () => {
                   ))}
                 </div>
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label className="text-right">Địa bàn</Label>
-                <div className="col-span-3">
-                  <div className="flex space-x-2">
-                    <div className="w-1/3 p-2 bg-gray-100 rounded">
-                      {selectedAccount.wardCode.split("|")[0]}
-                    </div>
-                    <div className="w-1/3 p-2 bg-gray-100 rounded">
-                      {selectedAccount.wardCode.split("|")[1]}
-                    </div>
-                    <div className="w-1/3 p-2 bg-gray-100 rounded">
-                      {selectedAccount.wardCode.split("|")[2]}
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           )}
           <DialogFooter>
-            {selectedAccount?.status === "pending" && (
+            {selectedAccount?.accountStatus === "pending" && (
               <Button
                 onClick={() => {
                   handleApproveAccount(selectedAccount.id);
@@ -580,17 +489,21 @@ const UserAccountDashboard = () => {
             )}
             <Button
               variant={
-                selectedAccount?.status === "active" ? "destructive" : "default"
+                selectedAccount?.accountStatus === "active"
+                  ? "destructive"
+                  : "default"
               }
               onClick={() => {
                 handleUpdateAccountStatus(
-                  selectedAccount.id,
-                  selectedAccount.status === "active" ? "inactive" : "active"
+                  selectedAccount._id,
+                  selectedAccount.accountStatus === "active"
+                    ? "inactive"
+                    : "active"
                 );
                 closeViewModal();
               }}
             >
-              {selectedAccount?.status === "active"
+              {selectedAccount?.accountStatus === "active"
                 ? "Khóa tài khoản"
                 : "Mở khóa tài khoản"}
             </Button>
@@ -695,50 +608,6 @@ const UserAccountDashboard = () => {
                       </Label>
                     </div>
                   ))}
-                </div>
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label className="text-right">Địa bàn</Label>
-                <div className="col-span-3 flex items-center space-x-2">
-                  <Input
-                    value={editingAccount.wardCode.split("|")[0]}
-                    onChange={(e) =>
-                      setEditingAccount({
-                        ...editingAccount,
-                        wardCode: `${e.target.value}|${
-                          editingAccount.wardCode.split("|")[1]
-                        }|${editingAccount.wardCode.split("|")[2]}`,
-                      })
-                    }
-                    className="w-1/3"
-                    placeholder="Tỉnh/TP"
-                  />
-                  <Input
-                    value={editingAccount.wardCode.split("|")[1]}
-                    onChange={(e) =>
-                      setEditingAccount({
-                        ...editingAccount,
-                        wardCode: `${editingAccount.wardCode.split("|")[0]}|${
-                          e.target.value
-                        }|${editingAccount.wardCode.split("|")[2]}`,
-                      })
-                    }
-                    className="w-1/3"
-                    placeholder="Quận/Huyện"
-                  />
-                  <Input
-                    value={editingAccount.wardCode.split("|")[2]}
-                    onChange={(e) =>
-                      setEditingAccount({
-                        ...editingAccount,
-                        wardCode: `${editingAccount.wardCode.split("|")[0]}|${
-                          editingAccount.wardCode.split("|")[1]
-                        }|${e.target.value}`,
-                      })
-                    }
-                    className="w-1/3"
-                    placeholder="Phường/Xã"
-                  />
                 </div>
               </div>
             </div>
