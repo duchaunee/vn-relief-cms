@@ -20,37 +20,27 @@ export default function Page() {
   const newsItems = [
     {
       id: 1,
-      title: "Severe Flooding in Central Region",
+      title: "Lũ lụt nghiêm trọng tại khu vực miền Trung",
       description:
-        "Heavy rainfall has caused widespread flooding affecting multiple districts...",
-      severity: "high",
+        "Mưa lớn đã gây ra lũ lụt lan rộng, ảnh hưởng đến nhiều huyện... ",
+      severity: "cao",
       affectedHouseholds: 150,
       location: {
-        ward: "Ward A",
-        district: "District 1",
-        province: "Central Province",
+        ward: "Phường A",
+        district: "Quận 1",
+        province: "Tỉnh Miền Trung",
       },
       images: [
         "https://lh3.googleusercontent.com/d/19Fn5uezT-bM3CgUO0-faji-F9wrMIaky",
-        "https://lh3.googleusercontent.com/d/19Fn5uezT-bM3CgUO0-faji-F9wrMIaky",
-        "https://lh3.googleusercontent.com/d/19Fn5uezT-bM3CgUO0-faji-F9wrMIaky",
-        "https://lh3.googleusercontent.com/d/19Fn5uezT-bM3CgUO0-faji-F9wrMIaky",
-        "https://lh3.googleusercontent.com/d/19Fn5uezT-bM3CgUO0-faji-F9wrMIaky",
-        "https://lh3.googleusercontent.com/d/19Fn5uezT-bM3CgUO0-faji-F9wrMIaky",
-        "https://lh3.googleusercontent.com/d/19Fn5uezT-bM3CgUO0-faji-F9wrMIaky",
-        "https://lh3.googleusercontent.com/d/19Fn5uezT-bM3CgUO0-faji-F9wrMIaky",
-        "https://lh3.googleusercontent.com/d/19Fn5uezT-bM3CgUO0-faji-F9wrMIaky",
-        "https://lh3.googleusercontent.com/d/19Fn5uezT-bM3CgUO0-faji-F9wrMIaky",
-        "https://lh3.googleusercontent.com/d/19Fn5uezT-bM3CgUO0-faji-F9wrMIaky",
       ],
       reporter: {
-        name: "John Doe",
+        name: "Anh Minh",
         avatar: "/api/placeholder/40/40",
         role: 0,
         timestamp: "2024-03-15T10:30:00",
       },
     },
-    // ... other news items
+    // ... các mục tin khác
   ];
 
   const [selectedNews, setSelectedNews] = useState(null);

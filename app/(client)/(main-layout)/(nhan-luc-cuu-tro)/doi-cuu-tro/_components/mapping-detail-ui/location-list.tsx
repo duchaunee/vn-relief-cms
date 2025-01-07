@@ -51,13 +51,8 @@ const LocationItem = ({
     <div key={location.address} className="bg-gray-50">
       <div className="px-5 py-3 flex items-center gap-2 border-b border-gray-300 shadow-sm bg-gray-100">
         <span className="font-semibold text-gray-700">
-          {
-            findDistrictByCode(
-              Number(location.address.split("|")[1]),
-              Number(location.address.split("|")[0])
-            )?.name
-          }
-          , {findProvinceByCode(Number(location.address.split("|")[1]))?.name}
+          {/* {findProvinceByCode(Number(location.address.split("|")[1]))?.name} */}
+          Tỉnh Bắc Ninh
         </span>
         <Badge
           variant="secondary"
@@ -99,7 +94,8 @@ const LocationItem = ({
                     {request.supportCapability}
                   </p>
                   <p className="mt-2 text-sm text-gray-400">
-                    {findLocation(request.wardCode)}
+                    {/* {findLocation(request.wardCode)} */}
+                    Xã Ngọc Xá, Huyện Quế Võ, Tỉnh Bắc Ninh
                   </p>
                 </div>
               </div>

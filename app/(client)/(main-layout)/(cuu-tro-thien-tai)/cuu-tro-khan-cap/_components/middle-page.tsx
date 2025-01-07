@@ -43,7 +43,7 @@ const Middle = () => {
       user.rescueTeamId._id,
       id
     );
-
+    toast.success("Đăng ký thành công !");
     setOpenDialog(false);
   };
 

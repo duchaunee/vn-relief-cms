@@ -47,7 +47,7 @@ const initialRescueRequests = [
   {
     id: 1,
     title: "Hỗ trợ di dời dân",
-    location: "Xã ABC, Huyện XYZ",
+    location: "Xã Ngọc Xá, Huyện Quế VÕ",
     priority: "high",
     status: "pending",
     description: "Hỗ trợ di dời 50 hộ dân trong vùng ngập lụt",
@@ -55,19 +55,19 @@ const initialRescueRequests = [
   {
     id: 2,
     title: "Phân phát nhu yếu phẩm",
-    location: "Phường DEF, Quận UVW",
+    location: "Xã Việt Hùng, Đồng Xoài",
     priority: "medium",
     status: "in_progress",
     description: "Phân phát lương thực, nước uống cho 100 hộ dân",
   },
-  {
-    id: 3,
-    title: "Sơ tán khẩn cấp",
-    location: "Thôn GHI, Xã JKL",
-    priority: "high",
-    status: "completed",
-    description: "Sơ tán người dân khỏi vùng sạt lở",
-  },
+  // {
+  //   id: 3,
+  //   title: "Sơ tán khẩn cấp",
+  //   location: "Thôn Bùng, Xã Từ Sơn",
+  //   priority: "high",
+  //   status: "completed",
+  //   description: "Sơ tán người dân khỏi vùng sạt lở",
+  // },
 ];
 
 const RescueTeamDashboard = () => {

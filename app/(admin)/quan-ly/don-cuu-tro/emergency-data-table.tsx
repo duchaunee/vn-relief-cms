@@ -64,14 +64,13 @@ export default function EmergencyDataTable() {
 
   const user = getCurrentUser();
   const dataQuery = useQuery({
-    queryKey: ["rescuerequest-account", user._id],
+    queryKey: ["rescuerequest-account", user?._id],
     queryFn: RESCUE_REQUEST_APIS.getAll(),
   });
 
   const res = dataQuery?.data?.data;
 
   useEffect(() => {
-    console.log("\n🔥 ~ file: emergency-data-table.tsx:73 ~ res::\n", res);
     if (res && res?.length > 0) setData(res);
   }, [dataQuery.data]);
 

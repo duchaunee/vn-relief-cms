@@ -44,7 +44,7 @@ const initialVehicleInfo = {
   type: "Xe tải",
   capacity: "2 tấn",
   status: "active",
-  currentLocation: "Phường ABC, Quận XYZ",
+  currentLocation: "Tỉnh Yên Bái",
   supportCapability: "Vận chuyển hàng hóa, di dời người dân",
 };
 
