@@ -67,7 +67,7 @@ const handleImageUpload = async (files: File[]) => {
   }
 };
 
-export default function TemporaryStopForm() {
+export default function ResidenceForm() {
   const [formData, setFormData] = useState<SupportLocationForm>({
     currentSituation: "",
     supportAbility: "",
@@ -189,12 +189,12 @@ export default function TemporaryStopForm() {
           images: imageUrls,
         };
 
-        await SUPPORT_LOCATION_APIS.save("temporary_stop", {
-          locationType: "temporary_stop",
+        await SUPPORT_LOCATION_APIS.save("residence", {
+          locationType: "residence",
           userId: user._id,
           ...submitData,
         });
-        queryClient.invalidateQueries("support-location-temporary-stop");
+        queryClient.invalidateQueries("support-location-residence");
         toast.success("Đã lưu thông tin thành công");
       } catch (error) {
         console.error("Error submitting form:", error);
@@ -208,11 +208,7 @@ export default function TemporaryStopForm() {
   return (
     <Card className="mx-auto w-full border-none shadow-none">
       <CardContent>
-        <form
-          id="temporary-stop-form-id"
-          onSubmit={onSubmit}
-          className="space-y-8"
-        >
+        <form id="residence-form-id" onSubmit={onSubmit} className="space-y-8">
           {/* Current Situation */}
           <div className="space-y-2">
             <RequiredLabel>

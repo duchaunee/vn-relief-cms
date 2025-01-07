@@ -56,20 +56,6 @@ export function DisasterReliefDashboard({
           onLocationSelect={setSelectedLocation}
         />
       </div>
-
-      <ModalContainer
-        open={open}
-        onOpenChange={(value: boolean) => setOpen(value)}
-        title="Gửi thông tin cứu trợ khẩn cấp"
-        description="Việc gửi đơn sẽ cần xác minh đề phòng trường hợp giả mạo"
-        button={{
-          primary: "Gửi đơn cứu trợ",
-          secondary: "Lưu bản nháp",
-        }}
-        formId="rescue-form-id"
-      >
-        <RescueRequestForm />
-      </ModalContainer>
     </div>
   );
 }

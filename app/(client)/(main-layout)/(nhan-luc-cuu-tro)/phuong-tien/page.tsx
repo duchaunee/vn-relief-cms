@@ -33,9 +33,6 @@ export default function Page() {
   const vehiclesData = transformData(query?.data?.data);
   console.log("\n🔥 ~ file: page.tsx:34 ~ vehiclesData::\n", vehiclesData);
 
-  const user = getCurrentUser();
-  const router = useRouter();
-
   if (query.isFetching)
     return (
       <div className="w-full h-full flex items-center justify-center">

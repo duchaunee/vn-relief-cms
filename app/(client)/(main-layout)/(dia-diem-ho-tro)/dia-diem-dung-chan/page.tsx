@@ -19,6 +19,7 @@ import { getCurrentUser } from "@/lib/axios";
 import { useRouter } from "next/navigation";
 import { SUPPORT_LOCATION_APIS } from "@/apis/support-location";
 import TemporaryStopForm from "@/components/modal/request-rescue-modal/temporary-stop-form";
+import { useEffect } from "react";
 
 const titleList = {
   title: "Danh sách các địa điêm dừng chân",
@@ -34,9 +35,9 @@ export default function Page() {
 
   const user = getCurrentUser();
   const router = useRouter();
-  const { setOpen } = useRequestReliefContext();
+  const { open, setOpen } = useRequestReliefContext();
 
-  const handleSignSupportLocation = async () => {
+  const handleSignSupportLocation = () => {
     if (!user) return router.push("/dang-ky");
     setOpen(true);
   };

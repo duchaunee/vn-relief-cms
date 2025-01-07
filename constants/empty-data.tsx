@@ -1,5 +1,7 @@
+import { getCurrentUser } from "@/lib/axios";
 import { useRequestReliefContext } from "@/providers/app-context-provider/request-relief-provider";
 import { SearchX } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 const EmptyData = ({
@@ -15,7 +17,15 @@ const EmptyData = ({
   description: string;
   removeText: any;
 }) => {
-  const { open, setOpen } = useRequestReliefContext();
+  const { setOpen } = useRequestReliefContext();
+
+  const user = getCurrentUser();
+  const router = useRouter();
+
+  const handleOpenModal = async () => {
+    if (!user) return router.push("/dang-ky");
+    setOpen(true);
+  };
 
   return (
     <div className="h-full w-full flex flex-col items-center justify-center p-8 rounded-lg">
@@ -25,7 +35,7 @@ const EmptyData = ({
         {description}
       </p>
       <button
-        onClick={onRemove ?? (() => setOpen(true))}
+        onClick={onRemove ?? handleOpenModal}
         className="mt-4 text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
       >
         {removeText}

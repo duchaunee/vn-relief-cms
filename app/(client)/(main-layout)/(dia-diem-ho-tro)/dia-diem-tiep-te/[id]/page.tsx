@@ -1,8 +1,27 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import { LeftPage, MiddlePage, RightPage } from "../_components";
+import { useParams } from "next/navigation";
+import { RESCUE_TEAMS_APIS } from "@/apis/rescue-team";
+import { VEHICLE_APIS } from "@/apis/vehicle";
+import { SUPPORT_LOCATION_APIS } from "@/apis/support-location";
 
 export default function page() {
+  const { id } = useParams();
+
+  const query = useQuery({
+    queryKey: ["commissariat-detail", id],
+    queryFn: SUPPORT_LOCATION_APIS.getById(id as string),
+  });
+
+  const commissariatData = query?.data?.data ? query?.data?.data : [];
+  console.log(
+    "\n🔥 ~ file: page.tsx:19 ~ commissariatData::\n",
+    commissariatData
+  );
+  if (commissariatData?.length == 0) return;
+
   return (
     <div className="w-full p-0 lg:p-4">
       {/* <BackButton text="Thông tin cần cứu trợ VN133" onClick={handleBack} /> */}
