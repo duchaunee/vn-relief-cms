@@ -4,7 +4,15 @@ import RescueTeamDashboard from "@/app/(client)/(main-layout)/tai-khoan/_compone
 import VehicleManagementDashboard from "@/app/(client)/(main-layout)/tai-khoan/_components/tab-content/tab-vehicle/tab-vehicle";
 import WarehouseDashboard from "@/app/(client)/(main-layout)/tai-khoan/_components/tab-content/tab-warehouse/tab-warehouse";
 
-import { Bell, CircleUser, CreditCard, Eye, PaintBucket } from "lucide-react";
+import {
+  Bell,
+  CircleUser,
+  CreditCard,
+  Eye,
+  Kanban,
+  PaintBucket,
+  SquareChartGantt,
+} from "lucide-react";
 
 export const menuAccountItems = [
   {
@@ -29,13 +37,13 @@ export const menuAccountItems = [
     value: "vehicle",
     label: "Quản lý phương tiện của bạn",
     component: VehicleManagementDashboard,
-    icon: PaintBucket,
+    icon: Kanban,
   },
   {
     value: "warehouse",
     label: "Quản lý địa điểm tập kết của bạn",
-    component: VehicleManagementDashboard,
-    icon: PaintBucket,
+    component: WarehouseDashboard,
+    icon: SquareChartGantt,
   },
   // {
   //   value: "display",

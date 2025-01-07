@@ -4,6 +4,7 @@ import { Roboto } from "next/font/google";
 import "../globals.css";
 import TanStackProvider from "@/providers/tan-stack-provider";
 import dynamic from "next/dynamic";
+import { Toaster } from "react-hot-toast";
 
 const Sidebar = dynamic(() => import("./components/sidebar"), { ssr: false });
 const Header = dynamic(() => import("./components/header"), { ssr: false });
@@ -46,6 +47,7 @@ export default function RootLayout({
         />
       </head>
       <body className={roboto.className} id="admin">
+        <Toaster />
         <TanStackProvider>
           <Header />
           <Sidebar />

@@ -5,8 +5,9 @@ const baseURL = (endpoint: string) => "rescue-teams" + endpoint;
 
 export const RESCUE_TEAMS_APIS = {
   // Các API hiện có
-  getAll: (status: string) => async () =>
-    axiosInstance.get(baseURL(`?status=${status}`)),
+  getAll: (status?: string) => async () =>
+    axiosInstance.get(baseURL(status ? `?status=${status}` : "/")),
+
   getById: (id: string) => async () => axiosInstance.get(baseURL("/" + id)),
   save: async (body: any) => axiosInstance.post(baseURL("/"), body),
   addTeamMember: (rescueTeamId: string) => async (body: any) =>
@@ -42,4 +43,7 @@ export const RESCUE_TEAMS_APIS = {
     axiosInstance.put(baseURL(`/team-rescue-requests/${requestId}/status`), {
       status,
     }),
+
+  update: async (rescueTeamId: string, body: string) =>
+    axiosInstance.put(baseURL("/" + rescueTeamId), body),
 };

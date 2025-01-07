@@ -25,6 +25,15 @@ import { getCurrentUser } from "@/lib/axios";
 import { RESCUE_REQUEST_APIS } from "@/apis/rescue-request";
 import RoleBadge from "@/components/badge-custom/badge-role";
 import ColorBadge from "@/components/badge-custom/badge-custom-color";
+import VerificationDialog from "./change-status-dialog";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import EmergencyReliefForm from "./emergency-relief-form";
 
 interface EmergencyData {
   _id: string;
@@ -48,6 +57,7 @@ export default function EmergencyDataTable() {
 
   const [viewItem, setViewItem] = useState<EmergencyData | null>(null);
   const [editItem, setEditItem] = useState<EmergencyData | null>(null);
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [deleteItem, setDeleteItem] = useState<EmergencyData | null>(null);
 
   const handleEdit = (updatedItem: EmergencyData) => {
@@ -64,8 +74,8 @@ export default function EmergencyDataTable() {
 
   const user = getCurrentUser();
   const dataQuery = useQuery({
-    queryKey: ["rescuerequest-account", user?._id],
-    queryFn: RESCUE_REQUEST_APIS.getAll(),
+    queryKey: ["rescuerequest"],
+    queryFn: RESCUE_REQUEST_APIS.getAll(null),
   });
 
   const res = dataQuery?.data?.data;
@@ -74,10 +84,19 @@ export default function EmergencyDataTable() {
     if (res && res?.length > 0) setData(res);
   }, [dataQuery.data]);
 
-  if (res && res?.length == 0) return;
+  if (!res) return;
 
   return (
-    <div className="container mx-auto pb-10">
+    <div className="container mx-auto pb-10 bg-white p-4">
+      {/* <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl font-semibold">Danh sách đơn cứu trợ</h2>
+        <Button
+          onClick={() => setShowCreateDialog(true)}
+          className="bg-primary text-white hover:bg-primary/90"
+        >
+          Tạo đơn cứu trợ
+        </Button>
+      </div> */}
       <Table>
         <TableHeader>
           <TableRow>
@@ -89,49 +108,55 @@ export default function EmergencyDataTable() {
             <TableHead className="text-right">Hành động</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
-          {data.map((item) => (
-            <TableRow key={item._id}>
-              <TableCell className="font-medium">{item.title}</TableCell>
-              <TableCell>
-                {item.type == "other" ? "Cần hỗ trợ" : "Khẩn cấp"}
-              </TableCell>
-              <TableCell>{item.numberOfPeopleNeedingHelp}</TableCell>
-              <TableCell>
-                {item.status.verify == "pending" ? (
-                  <ColorBadge text="Đang chờ xác minh" variant="yellow" />
-                ) : (
-                  <ColorBadge text="Đã xác minh" variant="green" />
-                )}
-                {/* / Có người nhận:{" "} {item.status.recipient} */}
-              </TableCell>
-              <TableCell>
-                {new Date(item.createdAt).toLocaleDateString()}
-              </TableCell>
-              <TableCell className="text-right">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="h-8 w-8 p-0">
-                      <span className="sr-only">Mở menu</span>
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => setViewItem(item)}>
-                      Xem
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setEditItem(item)}>
-                      Cập nhật trạng thái
-                    </DropdownMenuItem>
-                    {/* <DropdownMenuItem onClick={() => setDeleteItem(item)}>
-                      Xoá
-                    </DropdownMenuItem> */}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
+        {data && data?.length > 0 ? (
+          data.map((item) => (
+            <TableBody>
+              <TableRow key={item._id}>
+                <TableCell className="font-medium">{item.title}</TableCell>
+                <TableCell>
+                  {item.type == "other" ? "Cần hỗ trợ" : "Khẩn cấp"}
+                </TableCell>
+                <TableCell>{item.numberOfPeopleNeedingHelp}</TableCell>
+                <TableCell>
+                  {item.status.verify == "pending" ? (
+                    <ColorBadge text="Đang chờ xác minh" variant="yellow" />
+                  ) : (
+                    <ColorBadge text="Đã xác minh" variant="green" />
+                  )}
+                  {/* / Có người nhận:{" "} {item.status.recipient} */}
+                </TableCell>
+                <TableCell>
+                  {new Date(item.createdAt).toLocaleDateString()}
+                </TableCell>
+                <TableCell className="text-right">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="h-8 w-8 p-0">
+                        <span className="sr-only">Mở menu</span>
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => setViewItem(item)}>
+                        Xem
+                      </DropdownMenuItem>
+                      {/* <DropdownMenuItem onClick={() => setEditItem(item)}>
+                        Sửa thông tin
+                      </DropdownMenuItem> */}
+                      <DropdownMenuItem onClick={() => setDeleteItem(item)}>
+                        Cập nhật trạng thái đơn
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          ))
+        ) : (
+          <p className="text-muted-foreground text-center mt-[40px]">
+            Chưa có đơn cứu trợ nào
+          </p>
+        )}
       </Table>
 
       {viewItem && (
@@ -147,12 +172,26 @@ export default function EmergencyDataTable() {
       )}
 
       {deleteItem && (
-        <DeleteConfirmDialog
+        <VerificationDialog
           item={deleteItem}
           onConfirm={() => handleDelete(deleteItem._id)}
           onCancel={() => setDeleteItem(null)}
         />
       )}
+
+      <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
+        <DialogContent className="max-w-[800px] max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Tạo đơn cứu trợ mới</DialogTitle>
+          </DialogHeader>
+          <EmergencyReliefForm
+            onSubmitSuccess={() => {
+              setShowCreateDialog(false);
+              dataQuery.refetch(); // Refresh the data after creating
+            }}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

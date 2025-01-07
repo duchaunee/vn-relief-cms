@@ -21,7 +21,7 @@ export default function EmergencyReliefForm() {
   const [peopleCount, setPeopleCount] = useState(1);
 
   return (
-    <form className="max-w-2xl mx-auto">
+    <form className="w-fit mx-auto">
       <Card className="mb-4">
         <CardHeader>
           <CardTitle>Người gửi thông tin?</CardTitle>

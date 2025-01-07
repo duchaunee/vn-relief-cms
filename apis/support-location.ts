@@ -21,6 +21,8 @@ export const SUPPORT_LOCATION_APIS = {
   // getByPhoneNumber: async (phone: string) =>
   //   axiosInstance.get(baseURL("/phone/" + phone)),
 
+  getAllWarehouseByUserId: async (userId: string) =>
+    axiosInstance.get(baseURL("/user/" + userId + "?type=warehouse")),
   // getByUidFirebase: async (uid: string) =>
   //   axiosInstance.get(baseURL("/firebase/" + uid)),
 
