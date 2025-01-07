@@ -45,7 +45,7 @@ const Middle = () => {
   //get all vehicle of user
   const vehiclesQuery = useQuery({
     queryKey: ["vehicles", id],
-    queryFn: VEHICLE_APIS.getAllByUserId(getCurrentUser()?._id),
+    queryFn: VEHICLE_APIS.getAllByType(getCurrentUser()?._id),
     enabled: !!getCurrentUser(),
   });
 

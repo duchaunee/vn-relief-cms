@@ -14,6 +14,7 @@ import {
 import { RESCUE_TEAMS_APIS } from "@/apis/rescue-team";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRequestReliefContext } from "@/providers/app-context-provider/request-relief-provider";
+import { getCurrentUser } from "@/lib/axios";
 
 interface FormData {
   teamName: string;
@@ -93,10 +94,13 @@ const RescueTeamForm = () => {
 
   const { open, setOpen } = useRequestReliefContext();
   const queryClient = useQueryClient();
+  const user = getCurrentUser();
 
   const createRescueTeamMutation = useMutation({
-    mutationFn: (body: any) => RESCUE_TEAMS_APIS.save(body),
+    mutationFn: (body: any) =>
+      RESCUE_TEAMS_APIS.save({ userId: user._id, ...body }),
     onSuccess: async (data: any) => {
+      console.log("\n🔥 ~ file: rescue-team-form.tsx:103 ~ data::\n", data);
       if (data.statusCode == 201) {
         toast.success(
           "Đăng ký thành công, vui lòng liên hệ Tình nguyện viên để duyệt !"

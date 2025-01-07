@@ -1,21 +1,22 @@
-// import axiosInstance from "@/lib/axios";
-// import _ from "lodash";
+import axiosInstance from "@/lib/axios";
+import _ from "lodash";
 
-// const baseURL = (endpoint: string) => "vehicles" + endpoint;
+const baseURL = (endpoint: string) => "borrow-vehicles" + endpoint;
 
-// export const BORROW_VEHICLE_APIS = {
-//   getAllByUserId: (userId: string) => async () =>
-//     axiosInstance.get(baseURL(`?userId=${userId}`)),
+export const BORROW_VEHICLE_APIS = {
+  getAllByUserId: (userId: string) => async () =>
+    axiosInstance.get(baseURL(`?userId=${userId}`)),
 
-//   // getByPhoneNumber: async (phone: string) =>
-//   //   axiosInstance.get(baseURL("/phone/" + phone)),
+  // getAllByVehicleId: (vehicleId: string) => async () =>
+  //   axiosInstance.get(baseURL(`?userId=${vehicleId}`)),
 
-//   // getByUidFirebase: async (uid: string) =>
-//   //   axiosInstance.get(baseURL("/firebase/" + uid)),
+  // getByPhoneNumber: async (phone: string) =>
+  //   axiosInstance.get(baseURL("/phone/" + phone)),
 
-//   save: async (body: any) => axiosInstance.post(baseURL("/"), body),
-//   // addTeamMember: (rescueTeamId: any) => async (body: any) =>
-//   //   axiosInstance.post(baseURL("/" + rescueTeamId + "members"), body),
-// };
+  // getByUidFirebase: async (uid: string) =>
+  //   axiosInstance.get(baseURL("/firebase/" + uid)),
 
-//GET CÙNG LUÔN BẢNG PHƯƠNG TIỆN
+  save: async (body: any) => axiosInstance.post(baseURL("/borrow"), body),
+  // addTeamMember: (rescueTeamId: any) => async (body: any) =>
+  //   axiosInstance.post(baseURL("/" + rescueTeamId + "members"), body),
+};

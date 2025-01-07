@@ -33,6 +33,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { getCurrentUser } from "@/lib/axios";
+import { useRouter } from "next/navigation";
 
 interface LocationListProps {
   expand: boolean;
@@ -217,6 +219,9 @@ export function LocationList({
     [locations, debouncedValue]
   );
 
+  const user = getCurrentUser();
+  const router = useRouter();
+
   return (
     <div className="flex-1 flex h-full min-h-0 flex-col bg-[#fcfcfc] border border-gray-300">
       <div className="fixed z-[20] h-14 lg:h-auto lg:static top-14 left-0 right-0 flex items-center justify-between p-2 px-2 lg:px-5 bg-[#f1f1f1] border-b border-b-gray-300">
@@ -233,6 +238,7 @@ export function LocationList({
           </div>
           <Button
             onClick={() => {
+              if (!user) return router.push("/dang-ky");
               setOpen((prev) => !prev);
             }}
             className="flex-1 lg:flex-none bg-red-600 text-white hover:bg-red-500"

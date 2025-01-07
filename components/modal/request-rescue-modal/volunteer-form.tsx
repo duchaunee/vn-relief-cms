@@ -64,14 +64,8 @@ const VolunteerForm = () => {
       [2, 3, 4].includes(role.code)
     ) || [];
 
-  useEffect(() => {
-    document.addEventListener("open-dialog-sign", handleConfirm);
-  }, []);
-
-  const onSubmit = async () => {};
-
   return (
-    <form id="volunteer-form-id" onSubmit={onSubmit} className="space-y-6 px-4">
+    <form id="volunteer-form-id" onSubmit={() => {}} className="space-y-6 px-4">
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-[500px] bg-white max-h-[90vh] overflow-y-auto">
           <DialogHeader>

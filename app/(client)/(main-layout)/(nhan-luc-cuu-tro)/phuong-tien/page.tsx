@@ -17,6 +17,8 @@ import { DisasterReliefDashboard } from "./_components/mapping-detail-ui/disaste
 import RescueTeamForm from "@/components/modal/request-rescue-modal/rescue-team-form";
 import { getCurrentUser } from "@/lib/axios";
 import { useRouter } from "next/navigation";
+import { VEHICLE_APIS } from "@/apis/vehicle";
+import VehicleForm from "@/components/modal/request-rescue-modal/vehicle-form";
 
 const titleList = {
   title: "Danh sách các phương tiện",
@@ -25,16 +27,14 @@ const titleList = {
 
 export default function Page() {
   const query = useQuery({
-    queryKey: ["rescue-team"],
-    queryFn: RESCUE_TEAMS_APIS.getAll("active"),
+    queryKey: ["vehicles"],
+    queryFn: VEHICLE_APIS.getAllByType("all"),
   });
-  const rescueRequestData = transformData(query?.data?.data);
+  const vehiclesData = transformData(query?.data?.data);
+  console.log("\n🔥 ~ file: page.tsx:34 ~ vehiclesData::\n", vehiclesData);
 
   const user = getCurrentUser();
   const router = useRouter();
-  const handleSignVolunteer = async () => {
-    if (!user) return router.push("/dang-ky");
-  };
 
   if (query.isFetching)
     return (
@@ -49,31 +49,31 @@ export default function Page() {
 
   return (
     <RequestReliefContext>
-      {rescueRequestData?.length == 0 ? (
+      {vehiclesData?.length == 0 ? (
         <EmptyData
-          title="Chưa có thông tin đội cứu trợ nào"
+          title="Chưa có thông tin phương tiện nào"
           description="Không tìm thấy thông tin phương tiện nào.
                       Vui lòng thử lại."
           icon={<CloudOff className="h-8 w-8 text-gray-400" />}
           removeText="Đăng ký phương tiện"
-          onRemove={handleSignVolunteer}
+          // onRemove={handleSignVolunteer}
         />
       ) : (
         <DisasterReliefDashboard
           titleList={titleList}
-          locations={rescueRequestData}
+          locations={vehiclesData}
         />
       )}
       <ModalContainer
         title="Đơn đăng ký phương tiện"
-        description=""
+        description="Đăng ký phương tiện để giúp đỡ chở hàng hoá thiện nguyện"
         buttons={{
-          primary: "Tạo đội cứu trợ",
+          primary: "Đăng ký phương tiện",
           secondary: "Huỷ bỏ",
         }}
-        formId="vehicle-id"
+        formId="vehicle-form-id"
       >
-        <RescueTeamForm />
+        <VehicleForm />
       </ModalContainer>
     </RequestReliefContext>
   );
