@@ -59,28 +59,6 @@ export function ReliefMap({
           ))}
         </GoogleMap>
       </LoadScript>
-      {showButton && (
-        <div className="absolute left-4 top-4 z-0 flex gap-2 rounded-md bg-white p-1 shadow-lg">
-          <button
-            onClick={() => setMapType("roadmap")}
-            className={`rounded px-3 py-1 text-sm ${
-              mapType === "roadmap" ? "bg-primary text-white" : "bg-transparent"
-            }`}
-          >
-            Map
-          </button>
-          <button
-            onClick={() => setMapType("satellite")}
-            className={`rounded px-3 py-1 text-sm ${
-              mapType === "satellite"
-                ? "bg-primary text-white"
-                : "bg-transparent"
-            }`}
-          >
-            Satellite
-          </button>
-        </div>
-      )}
     </div>
   );
 }

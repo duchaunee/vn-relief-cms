@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { ReliefMap } from "./relief-map";
 import { LocationList } from "./location-list";
 import { Location } from "@/types/location";
 import { cn } from "@/lib/utils";
 import { useRequestReliefContext } from "@/providers/app-context-provider/request-relief-provider";
+import { ReliefMap } from "@/components/mapping-detail-ui/relief-map";
 
 export function DisasterReliefDashboard({ titleList, locations }: any) {
   const [selectedLocation, setSelectedLocation] = useState<Location>();

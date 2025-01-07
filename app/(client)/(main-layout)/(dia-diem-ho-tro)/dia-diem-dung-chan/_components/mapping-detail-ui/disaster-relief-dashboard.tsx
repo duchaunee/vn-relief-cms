@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { ReliefMap } from "./relief-map";
 import { LocationList } from "./location-list";
 import { Location } from "@/types/location";
 import { cn } from "@/lib/utils";
 import { useRequestReliefContext } from "@/providers/app-context-provider/request-relief-provider";
 import ModalContainer from "@/components/modal/modal-container";
 import RescueRequestForm from "@/components/modal/request-rescue-modal/rescue-form";
+import { ReliefMap } from "@/components/mapping-detail-ui/relief-map";
 
 interface DisasterReliefDashboardProps {
   titleList: {
